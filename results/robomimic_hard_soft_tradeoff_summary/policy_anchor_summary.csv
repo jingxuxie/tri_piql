@@ -1,0 +1,6 @@
+analysis,best_hard_method,best_hard_20k,soft_weighted_20k,all_demo_20k,oracle_positive_20k,source
+can_paired_80p80b,coverage-aware score-gap,0.900,,,,results/robomimic_official_bc_rnn_gap_min40_3seed_summary/REPORT.md
+can_paired_40p80b,mass-capped adaptive,0.733,0.567,,,results/robomimic_official_bc_rnn_pos40_bad80_3seed_summary/REPORT.md
+can_paired_20p80b,top20 precision,0.667,,,,results/robomimic_official_bc_rnn_top20_stress_p20_b80_3seed_summary/REPORT.md
+lift_mg_sparse,pos-min calibrated threshold,0.667,0.533,0.200,0.633,results/robomimic_lift_mg_official_bc_rnn_controls_3seed_summary/REPORT.md
+can_mg_sparse,pos-p10 calibrated threshold,0.167,0.333,0.100,0.200,results/robomimic_can_mg_official_bc_rnn_controls_3seed_summary/REPORT.md

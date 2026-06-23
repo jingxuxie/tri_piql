@@ -1,0 +1,6 @@
+method,success_rate,avg_return,avg_len
+bc_labeled_positive,0.0,0.0,400.0
+bc_pos_unlabeled,0.0,0.0,400.0
+bc_all,0.0,0.0,400.0
+weighted_bc_state_action,0.0,0.0,400.0
+bc_positive_sa_rerank_noise0.1_penalty0.05,0.0,0.0,400.0

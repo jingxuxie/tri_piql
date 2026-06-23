@@ -1,0 +1,17 @@
+source,seed,train_demos,train_positive_demos,train_negative_demos,selected_unlabeled_demos,selected_hidden_positive_demos,selected_hidden_bad_demos,selected_hidden_positive_purity,eval_episodes,eval_horizon,success_5k,success_10k,success_15k,success_20k,best_checkpoint_success
+pos-min calibrated threshold,0,240,213,27,230,203,27,0.883,10,150,0.200,0.400,0.600,0.800,0.800
+pos-min calibrated threshold,1,254,216,38,244,206,38,0.844,10,150,0.200,0.200,0.500,0.400,0.500
+pos-min calibrated threshold,2,248,216,32,238,206,32,0.866,10,150,0.000,0.200,0.500,0.800,0.800
+pos-min calibrated threshold,mean,247.333,215.000,32.333,237.333,205.000,32.333,0.864,10,150,0.133,0.267,0.533,0.667,0.700
+classifier probability weighted sampler,0,1430,286,1144,1420,276,1144,0.194,10,150,0.000,0.000,0.600,0.500,0.600
+classifier probability weighted sampler,1,1430,286,1144,1420,276,1144,0.194,10,150,0.100,0.400,0.300,0.700,0.700
+classifier probability weighted sampler,2,1430,286,1144,1420,276,1144,0.194,10,150,0.100,0.500,0.600,0.400,0.600
+classifier probability weighted sampler,mean,1430.000,286.000,1144.000,1420.000,276.000,1144.000,0.194,10,150,0.067,0.300,0.500,0.533,0.633
+all train positives,0,286,286,0,276,276,0,1.000,10,150,0.200,0.300,0.700,0.800,0.800
+all train positives,1,286,286,0,276,276,0,1.000,10,150,0.100,0.400,0.700,0.500,0.700
+all train positives,2,286,286,0,276,276,0,1.000,10,150,0.200,0.600,0.700,0.600,0.700
+all train positives,mean,286.000,286.000,0.000,276.000,276.000,0.000,1.000,10,150,0.167,0.433,0.700,0.633,0.733
+all train demos,0,1440,286,1154,1420,276,1144,0.194,10,150,0.100,0.100,0.300,0.100,0.300
+all train demos,1,1440,286,1154,1420,276,1144,0.194,10,150,0.000,0.000,0.200,0.300,0.300
+all train demos,2,1440,286,1154,1420,276,1144,0.194,10,150,0.100,0.000,0.000,0.200,0.200
+all train demos,mean,1440.000,286.000,1154.000,1420.000,276.000,1144.000,0.194,10,150,0.067,0.033,0.167,0.200,0.267

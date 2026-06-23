@@ -1,0 +1,9 @@
+rule,selected,hidden_positive,hidden_bad,purity
+top_posx2,20.0,20.0,0.0,1.000
+top_posx3,30.0,30.0,0.0,1.000
+top_posx4,40.0,35.0,5.0,0.875
+pos_p10,16.3,16.3,0.0,1.000
+pos_min,19.3,19.3,0.0,1.000
+adaptive_masscap,36.0,35.0,1.0,0.972
+mid_mean,38.7,35.0,3.7,0.905
+neg_max,59.7,35.0,24.7,0.587

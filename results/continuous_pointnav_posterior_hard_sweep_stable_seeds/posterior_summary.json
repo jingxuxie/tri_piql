@@ -1,0 +1,38 @@
+[
+  {
+    "bad_frac": 0.9,
+    "prior": 0.05,
+    "posterior_mean": 0.050000001986821495,
+    "demo_weight_purity_mean": 0.9999999999998476,
+    "demo_weight_purity_std": 1.645655019055187e-13,
+    "transition_weight_purity_mean": 0.999999999999955,
+    "transition_weight_purity_std": 4.9469043068511154e-14
+  },
+  {
+    "bad_frac": 0.9,
+    "prior": 0.1,
+    "posterior_mean": 0.09999997665484746,
+    "demo_weight_purity_mean": 0.9999998318068695,
+    "demo_weight_purity_std": 2.3786072909962284e-07,
+    "transition_weight_purity_mean": 0.999999949705659,
+    "transition_weight_purity_std": 7.112686157357781e-08
+  },
+  {
+    "bad_frac": 0.95,
+    "prior": 0.05,
+    "posterior_mean": 0.05000000695387522,
+    "demo_weight_purity_mean": 0.8518517958199655,
+    "demo_weight_purity_std": 0.20951306625933766,
+    "transition_weight_purity_mean": 0.9386662572570935,
+    "transition_weight_purity_std": 0.08673897045308335
+  },
+  {
+    "bad_frac": 0.95,
+    "prior": 0.1,
+    "posterior_mean": 0.10000000149011612,
+    "demo_weight_purity_mean": 0.48148149515525557,
+    "demo_weight_purity_std": 0.14581493479813454,
+    "transition_weight_purity_mean": 0.7417322084724555,
+    "transition_weight_purity_std": 0.12195641353833135
+  }
+]

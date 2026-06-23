@@ -1,0 +1,6 @@
+method,train_demos,selected_unlabeled,hidden_positive,hidden_bad,purity
+posonly_nn_top80,90,80,78,2,0.975
+posonly_nn_top160,170,160,126,34,0.7875
+posonly_nn_top240,250,240,143,97,0.5958333333333333
+posonly_nn_top320,330,320,164,156,0.5125
+bad_aware_pos_min,240,230,203,27,0.8826086956521739

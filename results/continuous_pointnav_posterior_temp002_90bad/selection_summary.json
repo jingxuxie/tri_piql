@@ -1,0 +1,11 @@
+[
+  {
+    "top_unlabeled_frac": 0.05,
+    "demo_purity_mean": 1.0,
+    "demo_purity_std": 0.0,
+    "transition_purity_mean": 1.0,
+    "transition_purity_std": 0.0,
+    "hidden_good_demo_mean": 9.0,
+    "hidden_bad_demo_mean": 0.0
+  }
+]

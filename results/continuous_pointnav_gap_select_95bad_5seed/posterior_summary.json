@@ -1,0 +1,20 @@
+[
+  {
+    "bad_frac": 0.95,
+    "prior": 0.05,
+    "posterior_mean": 0.04999999701976776,
+    "demo_weight_purity_mean": 0.911111077388289,
+    "demo_weight_purity_std": 0.1777777506833308,
+    "transition_weight_purity_mean": 0.9631997543228797,
+    "transition_weight_purity_std": 0.073600462733409
+  },
+  {
+    "bad_frac": 0.95,
+    "prior": 0.1,
+    "posterior_mean": 0.09999999552965164,
+    "demo_weight_purity_mean": 0.5555555892805042,
+    "demo_weight_purity_std": 0.14907119840652436,
+    "transition_weight_purity_mean": 0.7926108636628227,
+    "transition_weight_purity_std": 0.11445000595262649
+  }
+]

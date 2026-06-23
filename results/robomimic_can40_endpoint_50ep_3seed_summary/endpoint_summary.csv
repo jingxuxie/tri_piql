@@ -1,0 +1,7 @@
+method,seed,original_10ep_success,success_50ep,successes_50ep,episodes,avg_len,run_dir
+adaptive masscap,0,0.8,0.7,35,50,199.44,results/robomimic_can40_seed0_endpoint_50ep_masscap_eval
+weighted probability sampler,0,0.5,0.56,28,50,237.52,results/robomimic_can40_seed0_endpoint_50ep_weighted_eval
+adaptive masscap,1,0.6,0.62,31,50,229.6,results/robomimic_can40_seed1_endpoint_50ep_masscap_eval
+weighted probability sampler,1,0.6,0.5,25,50,257.46,results/robomimic_can40_seed1_endpoint_50ep_weighted_eval
+adaptive masscap,2,0.8,0.72,36,50,195.44,results/robomimic_can40_seed2_endpoint_50ep_masscap_eval
+weighted probability sampler,2,0.6,0.66,33,50,211.88,results/robomimic_can40_seed2_endpoint_50ep_weighted_eval

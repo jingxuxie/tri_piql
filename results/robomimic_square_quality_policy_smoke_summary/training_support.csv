@@ -1,0 +1,4 @@
+method,label,source,train_demo_count,selected_unlabeled_demos,selected_hidden_positive_demos,selected_hidden_bad_demos,selected_hidden_positive_purity
+better_only,better-only BC,all_train_positive,90,0,0,0,
+mixed_better_worse,mixed better+worse BC,all_train_demos,180,0,0,0,
+adaptive_masscap,adaptive-masscap support BC,positive_plus_classifier_adaptive_masscap_unlabeled_demos,69,59,42,17,0.711864406779661

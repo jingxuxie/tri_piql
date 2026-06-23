@@ -1,0 +1,31 @@
+{
+  "split_path": "results/robomimic_inspection/lift_mg_low_dim_sparse/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/lift/mg/low_dim_sparse_v15.hdf5",
+  "source": "labeled_positive",
+  "selection_key": "labeled_positive",
+  "mask_prefix": "tri_lift_mg",
+  "seed": 0,
+  "train_filter_key": "tri_lift_mg_labeled_positive_seed0_train",
+  "valid_filter_key": "tri_lift_mg_labeled_positive_seed0_valid_positive",
+  "train_demo_count": 10,
+  "train_demo_ids": [
+    "demo_949",
+    "demo_1344",
+    "demo_1199",
+    "demo_1252",
+    "demo_1251",
+    "demo_1308",
+    "demo_1084",
+    "demo_1312",
+    "demo_1047",
+    "demo_1377"
+  ],
+  "selected_unlabeled_transitions": 0,
+  "selected_unlabeled_demos": [],
+  "selected_hidden_positive_demos": 0,
+  "selection_diagnostics": {},
+  "classifier": null,
+  "config_path": "results/robomimic_lift_mg_official_bc_rnn_scarce_seed0_setup/config.json",
+  "train_output_dir": "/home/eston/tri-piql/results/robomimic_lift_mg_official_bc_rnn_scarce_seed0_train",
+  "train_command": "conda run -n tri-piql python -m robomimic.scripts.train --config results/robomimic_lift_mg_official_bc_rnn_scarce_seed0_setup/config.json"
+}

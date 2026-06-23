@@ -1,0 +1,4 @@
+method,success_rate,avg_return,avg_len
+gmm_mode_labeled_positive,0.5,0.5,257.9
+gmm_mean_labeled_positive,0.2,0.2,344.3
+gmm_sample_labeled_positive,0.6,0.6,221.8

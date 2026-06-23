@@ -1,0 +1,81 @@
+{
+  "split_path": "results/robomimic_inspection/can_paired_low_dim/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "source": "positive_plus_classifier_unlabeled",
+  "source_transition_count": 6369,
+  "selected_unlabeled_transitions": 5171,
+  "unlabeled_threshold": 0.99,
+  "unlabeled_weight_mode": "prob",
+  "classifier": {
+    "labeled_accuracy": 0.9809839564192625,
+    "pos_logit_mean": 12.395928382873535,
+    "neg_logit_mean": -15.080856323242188,
+    "unlabeled_prob_mean": 0.5261156558990479,
+    "selected_unlabeled_transitions": 5171,
+    "selected_unlabeled_prob_mean": 0.9993539452552795
+  },
+  "obs_keys": [
+    "object",
+    "robot0_eef_pos",
+    "robot0_eef_quat",
+    "robot0_eef_quat_site",
+    "robot0_gripper_qpos",
+    "robot0_gripper_qvel",
+    "robot0_joint_pos",
+    "robot0_joint_pos_cos",
+    "robot0_joint_pos_sin",
+    "robot0_joint_vel"
+  ],
+  "env_name": "PickPlaceCan",
+  "env_version": "1.5.1",
+  "eval_init_mode": "valid_positive_states",
+  "eval_initial_ids": [
+    "demo_5",
+    "demo_29",
+    "demo_39",
+    "demo_45",
+    "demo_53",
+    "demo_81",
+    "demo_89",
+    "demo_99",
+    "demo_105",
+    "demo_189"
+  ],
+  "eval_episodes": 5,
+  "eval_horizon": 400,
+  "steps": 1500,
+  "components": 5,
+  "policy_modes": [
+    "mode",
+    "mean",
+    "classifier_rerank"
+  ],
+  "candidate_count": 32,
+  "sample_temperature": 0.5,
+  "gmm_history": [
+    {
+      "step": 1,
+      "loss": 7.638833522796631
+    },
+    {
+      "step": 300,
+      "loss": -11.817425727844238
+    },
+    {
+      "step": 600,
+      "loss": -12.869782447814941
+    },
+    {
+      "step": 900,
+      "loss": -13.987317085266113
+    },
+    {
+      "step": 1200,
+      "loss": -14.781786918640137
+    },
+    {
+      "step": 1500,
+      "loss": -14.78591251373291
+    }
+  ]
+}

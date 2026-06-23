@@ -1,0 +1,20 @@
+[
+  {
+    "bad_frac": 0.95,
+    "prior": 0.05,
+    "posterior_mean": 0.05000000074505806,
+    "demo_weight_purity_mean": 0.5555555760216573,
+    "demo_weight_purity_std": 0.0,
+    "transition_weight_purity_mean": 0.8159988288560683,
+    "transition_weight_purity_std": 0.0
+  },
+  {
+    "bad_frac": 0.95,
+    "prior": 0.1,
+    "posterior_mean": 0.09999997913837433,
+    "demo_weight_purity_mean": 0.27777782118201566,
+    "demo_weight_purity_std": 0.0,
+    "transition_weight_purity_mean": 0.5700095158888137,
+    "transition_weight_purity_std": 0.0
+  }
+]

@@ -1,0 +1,76 @@
+{
+  "dataset_id": "D4RL/pointmaze/large-dense-v2",
+  "split_path": "results/minari_inspection/D4RL__pointmaze__large-dense-v2/split_indices.json",
+  "obs_keys": [
+    "observation",
+    "desired_goal"
+  ],
+  "seed": 0,
+  "bc_steps": 2,
+  "classifier_steps": 2,
+  "eval_episodes": 1,
+  "eval_horizon": 5,
+  "candidate_count": 8,
+  "noise_stds": [
+    0.1
+  ],
+  "action_penalties": [
+    0.1
+  ],
+  "transition_counts": {
+    "positive": 1000,
+    "negative": 1000,
+    "unlabeled": 1000
+  },
+  "state_action_classifier": {
+    "pos_prob_mean": 0.4915234446525574,
+    "neg_prob_mean": 0.49254393577575684,
+    "unlabeled_prob_mean": 0.4923090934753418,
+    "labeled_accuracy": 0.4855,
+    "pos_logit_mean": -0.03391702473163605,
+    "neg_logit_mean": -0.02983248606324196,
+    "unlabeled_logit_mean": -0.03077307529747486
+  },
+  "histories": {
+    "bc_positive": [
+      {
+        "step": 1,
+        "loss": 0.643652081489563
+      },
+      {
+        "step": 2,
+        "loss": 0.6329458951950073
+      }
+    ],
+    "weighted_bc_obs_classifier": [
+      {
+        "step": 1,
+        "loss": 0.6198144555091858
+      },
+      {
+        "step": 2,
+        "loss": 0.5855048894882202
+      }
+    ],
+    "obs_classifier": [
+      {
+        "step": 1,
+        "loss": 1.373307704925537
+      },
+      {
+        "step": 2,
+        "loss": 1.3857862949371338
+      }
+    ],
+    "state_action_classifier": [
+      {
+        "step": 1,
+        "loss": 1.3900679349899292
+      },
+      {
+        "step": 2,
+        "loss": 1.388511300086975
+      }
+    ]
+  }
+}

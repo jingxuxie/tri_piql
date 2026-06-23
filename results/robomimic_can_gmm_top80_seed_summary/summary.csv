@@ -1,0 +1,4 @@
+source,method,top_unlabeled_demos,feature_mode,eval_episodes,eval_horizon,n_runs,seeds,success_mean,success_values,return_mean,length_mean,selected_hidden_positive_mean,selected_unlabeled_transitions_mean
+positive_plus_classifier_top_unlabeled_demos,gmm_classifier_rerank_positive_plus_classifier_top_unlabeled_demos,80,obs,5,400,3,"0,1,2",0.0,"0.000,0.000,0.000",0.0,400.0,62.333333333333336,7921.0
+positive_plus_classifier_top_unlabeled_demos,gmm_mean_positive_plus_classifier_top_unlabeled_demos,80,obs,5,400,3,"0,1,2",0.06666666666666667,"0.200,0.000,0.000",0.06666666666666667,394.93333333333334,62.333333333333336,7921.0
+positive_plus_classifier_top_unlabeled_demos,gmm_mode_positive_plus_classifier_top_unlabeled_demos,80,obs,5,400,3,"0,1,2",0.13333333333333333,"0.000,0.000,0.400",0.13333333333333333,365.26666666666665,62.333333333333336,7921.0

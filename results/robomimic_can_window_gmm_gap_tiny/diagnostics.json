@@ -1,0 +1,106 @@
+{
+  "split_path": "results/robomimic_inspection/can_paired_low_dim/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "source": "positive_plus_classifier_gap_unlabeled_demos",
+  "seed": 0,
+  "source_transition_count": 1552,
+  "selected_unlabeled_transitions": 354,
+  "selected_unlabeled_demos": [
+    "demo_185",
+    "demo_143",
+    "demo_139",
+    "demo_183"
+  ],
+  "selected_hidden_positive_demos": 4,
+  "selection_diagnostics": {
+    "selection_rule": "score_gap",
+    "gap_select_max_unlabeled_demos": 20,
+    "gap_select_min_unlabeled_demos": 4,
+    "score_gap": 0.0005297064781188965,
+    "selected_score_mean": 0.5104244202375412,
+    "selected_score_min": 0.5093724131584167,
+    "selected_score_max": 0.5118085145950317,
+    "selected_demo_count": 4,
+    "selected_hidden_positive_demos": 4,
+    "selected_hidden_bad_demos": 0,
+    "selected_hidden_positive_purity": 1.0
+  },
+  "classifier": {
+    "labeled_accuracy": 0.609491749038356,
+    "pos_logit_mean": 0.00954647921025753,
+    "neg_logit_mean": -0.04183546081185341,
+    "unlabeled_prob_mean": 0.49748942255973816,
+    "selected_unlabeled_transitions": 354,
+    "selected_unlabeled_prob_mean": 0.5104615092277527,
+    "selected_unlabeled_demos": 4,
+    "selected_hidden_positive_demos": 4
+  },
+  "context_len": 4,
+  "include_time": false,
+  "window_feature_dim": 256,
+  "obs_keys": [
+    "object",
+    "robot0_eef_pos",
+    "robot0_eef_quat",
+    "robot0_eef_quat_site",
+    "robot0_gripper_qpos",
+    "robot0_gripper_qvel",
+    "robot0_joint_pos",
+    "robot0_joint_pos_cos",
+    "robot0_joint_pos_sin",
+    "robot0_joint_vel"
+  ],
+  "env_name": "PickPlaceCan",
+  "env_version": "1.5.1",
+  "eval_init_mode": "valid_positive_states",
+  "eval_initial_ids": [
+    "demo_5",
+    "demo_29",
+    "demo_39",
+    "demo_45",
+    "demo_53",
+    "demo_81",
+    "demo_89",
+    "demo_99",
+    "demo_105",
+    "demo_189"
+  ],
+  "eval_episodes": 1,
+  "eval_horizon": 1,
+  "steps": 10,
+  "eval_checkpoints": [
+    5,
+    10
+  ],
+  "components": 2,
+  "policy_modes": [
+    "mode"
+  ],
+  "sample_temperature": 0.5,
+  "gmm_history": [
+    {
+      "step": 1,
+      "loss": 7.419554710388184
+    },
+    {
+      "step": 2,
+      "loss": 7.360391139984131
+    },
+    {
+      "step": 4,
+      "loss": 7.152204513549805
+    },
+    {
+      "step": 6,
+      "loss": 7.048127174377441
+    },
+    {
+      "step": 8,
+      "loss": 6.867937088012695
+    },
+    {
+      "step": 10,
+      "loss": 6.680866241455078
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "bad_frac": 0.5,
+    "max_frac": 0.1,
+    "selected_frac_mean": 0.04777777777777777,
+    "selected_frac_std": 0.026897152082022677,
+    "score_gap_mean": 0.003598225116729736,
+    "score_gap_std": 0.0013177548387641558,
+    "demo_purity_mean": 1.0,
+    "demo_purity_std": 0.0,
+    "transition_purity_mean": 1.0,
+    "transition_purity_std": 0.0,
+    "hidden_good_demo_mean": 8.6,
+    "hidden_bad_demo_mean": 0.0
+  },
+  {
+    "bad_frac": 0.75,
+    "max_frac": 0.1,
+    "selected_frac_mean": 0.039999999999999994,
+    "selected_frac_std": 0.008888888888888889,
+    "score_gap_mean": 0.00268172025680542,
+    "score_gap_std": 0.0010373406358136878,
+    "demo_purity_mean": 1.0,
+    "demo_purity_std": 0.0,
+    "transition_purity_mean": 1.0,
+    "transition_purity_std": 0.0,
+    "hidden_good_demo_mean": 7.2,
+    "hidden_bad_demo_mean": 0.0
+  },
+  {
+    "bad_frac": 0.9,
+    "max_frac": 0.1,
+    "selected_frac_mean": 0.08888888888888888,
+    "selected_frac_std": 0.004969039949999533,
+    "score_gap_mean": 0.10559085607528687,
+    "score_gap_std": 0.19064277891670797,
+    "demo_purity_mean": 1.0,
+    "demo_purity_std": 0.0,
+    "transition_purity_mean": 1.0,
+    "transition_purity_std": 0.0,
+    "hidden_good_demo_mean": 16.0,
+    "hidden_bad_demo_mean": 0.0
+  }
+]

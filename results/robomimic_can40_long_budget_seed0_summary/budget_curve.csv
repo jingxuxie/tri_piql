@@ -1,0 +1,11 @@
+method,seed,checkpoint_epoch,optimizer_steps,success,avg_return,avg_len,eval_episodes
+adaptive_masscap,0,100,10000,0.3,0.3,318.6,10
+adaptive_masscap,0,200,20000,0.8,0.8,169.1,10
+adaptive_masscap,0,300,30000,0.8,0.8,170.0,10
+adaptive_masscap,0,400,40000,0.7,0.7,201.3,10
+adaptive_masscap,0,500,50000,0.6,0.6,225.4,10
+weighted_prob_sampler,0,100,10000,0.7,0.7,201.8,10
+weighted_prob_sampler,0,200,20000,0.5,0.5,262.5,10
+weighted_prob_sampler,0,300,30000,0.3,0.3,316.2,10
+weighted_prob_sampler,0,400,40000,0.5,0.5,256.2,10
+weighted_prob_sampler,0,500,50000,0.3,0.3,313.0,10

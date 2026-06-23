@@ -1,0 +1,4 @@
+method,success_rate,avg_return,avg_len
+gmm_mode_all_train_positive,0.2,0.2,339.6
+gmm_mean_all_train_positive,0.4,0.4,281.0
+gmm_sample_all_train_positive,0.4,0.4,292.2

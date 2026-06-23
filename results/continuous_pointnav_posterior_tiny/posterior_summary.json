@@ -1,0 +1,10 @@
+[
+  {
+    "prior": 0.05,
+    "posterior_mean": 0.04999998211860657,
+    "demo_weight_purity_mean": 0.11473847256349103,
+    "demo_weight_purity_std": 0.0,
+    "transition_weight_purity_mean": 0.3098099081534232,
+    "transition_weight_purity_std": 0.0
+  }
+]

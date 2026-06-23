@@ -1,0 +1,17 @@
+benchmark,bad_frac,method,runs,success_mean,success_std,trap_mean,trap_std,source
+continuous_pointnav,0.50,bc_all,5,0.460,0.124,0.540,0.124,results/continuous_pointnav_gap_select_contamination_5seed_merged/REPORT.md
+continuous_pointnav,0.50,bc_pos_unlabeled,5,0.453,0.122,0.547,0.122,results/continuous_pointnav_gap_select_contamination_5seed_merged/REPORT.md
+continuous_pointnav,0.50,weighted_bc_state_action,5,0.400,0.490,0.000,0.000,results/continuous_pointnav_gap_select_contamination_5seed_merged/REPORT.md
+continuous_pointnav,0.50,tri_signal_gap_demo_bc_max0p1,5,1.000,0.000,0.000,0.000,results/continuous_pointnav_gap_select_contamination_5seed_merged/REPORT.md
+continuous_pointnav,0.75,bc_all,5,0.367,0.060,0.633,0.060,results/continuous_pointnav_gap_select_contamination_5seed_merged/REPORT.md
+continuous_pointnav,0.75,bc_pos_unlabeled,5,0.300,0.079,0.700,0.079,results/continuous_pointnav_gap_select_contamination_5seed_merged/REPORT.md
+continuous_pointnav,0.75,weighted_bc_state_action,5,0.000,0.000,0.000,0.000,results/continuous_pointnav_gap_select_contamination_5seed_merged/REPORT.md
+continuous_pointnav,0.75,tri_signal_gap_demo_bc_max0p1,5,1.000,0.000,0.000,0.000,results/continuous_pointnav_gap_select_contamination_5seed_merged/REPORT.md
+continuous_pointnav,0.90,bc_all,5,0.233,0.128,0.767,0.128,results/continuous_pointnav_gap_select_contamination_5seed_merged/REPORT.md
+continuous_pointnav,0.90,bc_pos_unlabeled,5,0.247,0.105,0.753,0.105,results/continuous_pointnav_gap_select_contamination_5seed_merged/REPORT.md
+continuous_pointnav,0.90,weighted_bc_state_action,5,0.000,0.000,0.200,0.400,results/continuous_pointnav_gap_select_contamination_5seed_merged/REPORT.md
+continuous_pointnav,0.90,tri_signal_gap_demo_bc_max0p1,5,1.000,0.000,0.000,0.000,results/continuous_pointnav_gap_select_contamination_5seed_merged/REPORT.md
+continuous_pointnav,0.95,bc_all,5,0.153,0.054,0.847,0.054,results/continuous_pointnav_gap_select_contamination_5seed_merged/REPORT.md
+continuous_pointnav,0.95,bc_pos_unlabeled,5,0.060,0.053,0.853,0.034,results/continuous_pointnav_gap_select_contamination_5seed_merged/REPORT.md
+continuous_pointnav,0.95,weighted_bc_state_action,5,0.200,0.400,0.000,0.000,results/continuous_pointnav_gap_select_contamination_5seed_merged/REPORT.md
+continuous_pointnav,0.95,tri_signal_gap_demo_bc_max0p1,5,1.000,0.000,0.000,0.000,results/continuous_pointnav_gap_select_contamination_5seed_merged/REPORT.md

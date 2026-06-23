@@ -1,0 +1,12 @@
+unlabeled_positive_count,unlabeled_negative_count,unlabeled_bad_fraction,score_family,selector,seed_count,selected_demo_count_mean,selected_demo_count_std,selected_hidden_positive_demos_mean,selected_hidden_positive_demos_std,selected_hidden_bad_demos_mean,selected_hidden_bad_demos_std,selected_hidden_positive_purity_mean,selected_hidden_positive_purity_std,selected_hidden_positive_recall_mean,selected_hidden_positive_recall_std
+40,80,0.6666666666666666,bad_aware_pos_vs_neg,adaptive_masscap,1,40.0,0.0,40.0,0.0,0.0,0.0,1.0,0.0,1.0,0.0
+40,80,0.6666666666666666,bad_aware_pos_vs_neg,coverage_gap,1,40.0,0.0,40.0,0.0,0.0,0.0,1.0,0.0,1.0,0.0
+40,80,0.6666666666666666,bad_aware_pos_vs_neg,top20,1,20.0,0.0,20.0,0.0,0.0,0.0,1.0,0.0,0.5,0.0
+40,80,0.6666666666666666,bad_aware_pos_vs_neg,top40,1,40.0,0.0,40.0,0.0,0.0,0.0,1.0,0.0,1.0,0.0
+40,80,0.6666666666666666,bad_aware_pos_vs_neg,top80,1,80.0,0.0,40.0,0.0,40.0,0.0,0.5,0.0,1.0,0.0
+40,80,0.6666666666666666,positive_only_nn,top20,1,20.0,0.0,20.0,0.0,0.0,0.0,1.0,0.0,0.5,0.0
+40,80,0.6666666666666666,positive_only_nn,top40,1,40.0,0.0,31.0,0.0,9.0,0.0,0.775,0.0,0.775,0.0
+40,80,0.6666666666666666,positive_only_nn,top80,1,80.0,0.0,37.0,0.0,43.0,0.0,0.4625,0.0,0.925,0.0
+40,80,0.6666666666666666,positive_vs_unlabeled,top20,1,20.0,0.0,20.0,0.0,0.0,0.0,1.0,0.0,0.5,0.0
+40,80,0.6666666666666666,positive_vs_unlabeled,top40,1,40.0,0.0,31.0,0.0,9.0,0.0,0.775,0.0,0.775,0.0
+40,80,0.6666666666666666,positive_vs_unlabeled,top80,1,80.0,0.0,40.0,0.0,40.0,0.0,0.5,0.0,1.0,0.0

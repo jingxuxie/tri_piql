@@ -1,0 +1,29 @@
+{
+  "split_path": "results/robomimic_inspection/can_paired_low_dim/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "source": "labeled_positive",
+  "seed": 0,
+  "train_filter_key": "tri_labeled_positive_seed0_train",
+  "valid_filter_key": "tri_labeled_positive_seed0_valid_positive",
+  "train_demo_count": 10,
+  "train_demo_ids": [
+    "demo_1",
+    "demo_3",
+    "demo_7",
+    "demo_9",
+    "demo_11",
+    "demo_13",
+    "demo_15",
+    "demo_17",
+    "demo_19",
+    "demo_21"
+  ],
+  "selected_unlabeled_transitions": 0,
+  "selected_unlabeled_demos": [],
+  "selected_hidden_positive_demos": 0,
+  "selection_diagnostics": {},
+  "classifier": null,
+  "config_path": "results/robomimic_official_bc_rnn_scarce_seed0_mlphead_setup/config.json",
+  "train_output_dir": "/home/eston/tri-piql/results/robomimic_official_bc_rnn_scarce_seed0_mlphead_train",
+  "train_command": "conda run -n tri-piql python -m robomimic.scripts.train --config results/robomimic_official_bc_rnn_scarce_seed0_mlphead_setup/config.json"
+}

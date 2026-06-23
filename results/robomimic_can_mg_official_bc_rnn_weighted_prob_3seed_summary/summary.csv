@@ -1,0 +1,5 @@
+source,seed,train_demos,weighted_unlabeled,hidden_positive,hidden_bad,hidden_positive_mean_weight,hidden_bad_mean_weight,success_5k,success_10k,success_15k,success_20k,best
+classifier_probability_weighted_sampler,0,3850,3840,688,3152,0.885,0.432,0.000,0.300,0.200,0.400,0.400
+classifier_probability_weighted_sampler,1,3850,3840,688,3152,0.871,0.410,0.000,0.100,0.400,0.300,0.400
+classifier_probability_weighted_sampler,2,3850,3840,688,3152,0.878,0.416,0.000,0.000,0.000,0.300,0.300
+classifier_probability_weighted_sampler,mean,3850,3840,688,3152,0.878,0.419,0.000,0.133,0.200,0.333,0.367

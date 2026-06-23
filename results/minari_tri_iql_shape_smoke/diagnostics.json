@@ -1,0 +1,228 @@
+{
+  "dataset_id": "D4RL/pointmaze/large-dense-v2",
+  "split_path": "results/minari_inspection/D4RL__pointmaze__large-dense-v2/split_indices.json",
+  "episodes_csv": "/home/eston/tri-piql/results/minari_inspection/D4RL__pointmaze__large-dense-v2/episodes.csv",
+  "obs_keys": [
+    "observation",
+    "desired_goal"
+  ],
+  "seed": 0,
+  "steps": 2,
+  "actor_steps": 2,
+  "classifier_steps": 2,
+  "eval_episodes": 1,
+  "eval_horizon": 5,
+  "gamma": 0.99,
+  "expectile": 0.7,
+  "trajectory_reduction": "sum",
+  "transition_counts": {
+    "positive": 1000,
+    "negative": 1000,
+    "unlabeled": 1000
+  },
+  "trajectory_counts": {
+    "positive": 336,
+    "negative": 672,
+    "unlabeled": 2352,
+    "max_len": 797
+  },
+  "classifier": {
+    "pos_prob_mean": 0.49758851528167725,
+    "neg_prob_mean": 0.4973759651184082,
+    "unlabeled_prob_mean": 0.4973299503326416,
+    "labeled_accuracy": 0.515
+  },
+  "tri_iql": {
+    "q_pos_mean": 0.47082552313804626,
+    "q_neg_mean": 0.5731138586997986,
+    "q_unlabeled_mean": 0.48868855834007263,
+    "pos_neg_auc": 0.37501771541950113,
+    "rank_gap": -4.607067108154297,
+    "unlabeled_q_label_score_spearman": -0.13711103187663062,
+    "unlabeled_q_top_quartile_mean": 0.4455310106277466,
+    "unlabeled_q_bottom_quartile_mean": 0.5232529640197754,
+    "q_bias": 0.0005724544753320515,
+    "raw_adv_weights": {
+      "pos_adv_mean": 0.018972527235746384,
+      "neg_adv_mean": 0.020122196525335312,
+      "unlabeled_adv_mean": 0.026609230786561966,
+      "pos_q_mean": 0.00860531348735094,
+      "neg_q_mean": 0.009373310022056103,
+      "unlabeled_q_value_mean": 0.011312970891594887,
+      "adv_weight_mean": 0.0,
+      "adv_weight_std": 1.0,
+      "pos_actor_weight_mean": 1.019713044166565,
+      "unlabeled_actor_weight_mean": 0.48165836930274963,
+      "unlabeled_kept_frac": 1.0,
+      "unlabeled_q_threshold": null,
+      "drop_unlabeled": false,
+      "nonzero_weight_frac": 0.6666666666666666
+    },
+    "normalized_adv_weights": {
+      "pos_adv_mean": 0.018972527235746384,
+      "neg_adv_mean": 0.020122196525335312,
+      "unlabeled_adv_mean": 0.026609230786561966,
+      "pos_q_mean": 0.00860531348735094,
+      "neg_q_mean": 0.009373310022056103,
+      "unlabeled_q_value_mean": 0.011312970891594887,
+      "adv_weight_mean": 0.022790879011154175,
+      "adv_weight_std": 0.03326034173369408,
+      "pos_actor_weight_mean": 1.4160373210906982,
+      "unlabeled_actor_weight_mean": 0.7349991202354431,
+      "unlabeled_kept_frac": 1.0,
+      "unlabeled_q_threshold": null,
+      "drop_unlabeled": false,
+      "nonzero_weight_frac": 0.6666666666666666
+    },
+    "topq_normalized_adv_weights": {
+      "pos_adv_mean": 0.018972527235746384,
+      "neg_adv_mean": 0.020122196525335312,
+      "unlabeled_adv_mean": 0.026609230786561966,
+      "pos_q_mean": 0.00860531348735094,
+      "neg_q_mean": 0.009373310022056103,
+      "unlabeled_q_value_mean": 0.011312970891594887,
+      "adv_weight_mean": 0.022790879011154175,
+      "adv_weight_std": 0.03326034173369408,
+      "pos_actor_weight_mean": 1.4160373210906982,
+      "unlabeled_actor_weight_mean": 0.24337399005889893,
+      "unlabeled_kept_frac": 0.256,
+      "unlabeled_q_threshold": 0.6240434050559998,
+      "drop_unlabeled": false,
+      "nonzero_weight_frac": 0.4186666666666667
+    },
+    "positive_only_normalized_adv_weights": {
+      "pos_adv_mean": 0.018972527235746384,
+      "neg_adv_mean": 0.020122196525335312,
+      "unlabeled_adv_mean": 0.026609230786561966,
+      "pos_q_mean": 0.00860531348735094,
+      "neg_q_mean": 0.009373310022056103,
+      "unlabeled_q_value_mean": 0.011312970891594887,
+      "adv_weight_mean": 0.018972527235746384,
+      "adv_weight_std": 0.033041030168533325,
+      "pos_actor_weight_mean": 1.5619293451309204,
+      "unlabeled_actor_weight_mean": 0.0,
+      "unlabeled_kept_frac": 0.0,
+      "unlabeled_q_threshold": null,
+      "drop_unlabeled": true,
+      "nonzero_weight_frac": 0.3333333333333333
+    }
+  },
+  "histories": {
+    "classifier": [
+      {
+        "step": 1,
+        "loss": 1.386298418045044
+      },
+      {
+        "step": 2,
+        "loss": 1.3878662586212158
+      }
+    ],
+    "tri_iql": [
+      {
+        "step": 1,
+        "adv_loss": 1.811410903930664,
+        "conservative": 0.716880738735199,
+        "loss": 4.606027126312256,
+        "neg_adv": 0.01628795638680458,
+        "neg_return": -3.9324724674224854,
+        "neg_reward": -0.014852236956357956,
+        "pos_adv": 0.0011310213012620807,
+        "pos_return": -6.291750431060791,
+        "pos_reward": -0.021610746160149574,
+        "prior_loss": 0.0031790509819984436,
+        "q_label_loss": 1.6869032382965088,
+        "q_neg": 0.5448680520057678,
+        "q_pos": 0.38358479738235474,
+        "q_unl": 0.5563830733299255,
+        "rank_loss": 1.5441813468933105,
+        "td_loss": 0.0030292372684925795,
+        "unl_adv": 0.02646597847342491,
+        "unl_reward": -0.02183464542031288,
+        "value_loss": 0.0008468440501019359
+      },
+      {
+        "step": 2,
+        "adv_loss": 1.8145066499710083,
+        "conservative": 0.71805739402771,
+        "loss": 5.522757053375244,
+        "neg_adv": 0.02715425193309784,
+        "neg_return": 5.377689838409424,
+        "neg_reward": -0.007356535643339157,
+        "pos_adv": 0.006802334450185299,
+        "pos_return": -12.26121997833252,
+        "pos_reward": -0.01923278532922268,
+        "prior_loss": 0.00908616092056036,
+        "q_label_loss": 1.9839704036712646,
+        "q_neg": 0.6323002576828003,
+        "q_pos": 0.3058830499649048,
+        "q_unl": 0.5953213572502136,
+        "rank_loss": 2.2498364448547363,
+        "td_loss": 0.0028632027097046375,
+        "unl_adv": 0.025243554264307022,
+        "unl_reward": -0.01998204179108143,
+        "value_loss": 0.001079054782167077
+      }
+    ],
+    "bc_positive": [
+      {
+        "step": 1,
+        "loss": 0.5816473960876465
+      },
+      {
+        "step": 2,
+        "loss": 0.6315863132476807
+      }
+    ],
+    "weighted_bc_classifier": [
+      {
+        "step": 1,
+        "loss": 0.5725923776626587
+      },
+      {
+        "step": 2,
+        "loss": 0.6500195860862732
+      }
+    ],
+    "tri_iql_awbc_raw": [
+      {
+        "step": 1,
+        "loss": 0.6012673377990723
+      },
+      {
+        "step": 2,
+        "loss": 0.5921354293823242
+      }
+    ],
+    "tri_iql_awbc_norm": [
+      {
+        "step": 1,
+        "loss": 0.7767756581306458
+      },
+      {
+        "step": 2,
+        "loss": 0.7862429022789001
+      }
+    ],
+    "tri_iql_awbc_topq": [
+      {
+        "step": 1,
+        "loss": 0.5321635007858276
+      },
+      {
+        "step": 2,
+        "loss": 0.6461779475212097
+      }
+    ],
+    "tri_iql_awbc_pos_only": [
+      {
+        "step": 1,
+        "loss": 0.5637147426605225
+      },
+      {
+        "step": 2,
+        "loss": 0.7514023184776306
+      }
+    ]
+  }
+}

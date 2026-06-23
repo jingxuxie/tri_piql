@@ -1,0 +1,191 @@
+{
+  "split_path": "results/robomimic_inspection/can_paired_low_dim_budget80/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "obs_keys": [
+    "object",
+    "robot0_eef_pos",
+    "robot0_eef_quat",
+    "robot0_eef_quat_site",
+    "robot0_gripper_qpos",
+    "robot0_gripper_qvel",
+    "robot0_joint_pos",
+    "robot0_joint_pos_cos",
+    "robot0_joint_pos_sin",
+    "robot0_joint_vel"
+  ],
+  "env_name": "PickPlaceCan",
+  "env_version": "1.5.1",
+  "seed": 0,
+  "bc_steps": 5000,
+  "classifier_steps": 800,
+  "eval_episodes": 5,
+  "eval_horizon": 400,
+  "eval_init_mode": "valid_positive_states",
+  "eval_initial_ids": [
+    "demo_5",
+    "demo_29",
+    "demo_39",
+    "demo_45",
+    "demo_53",
+    "demo_81",
+    "demo_89",
+    "demo_99",
+    "demo_105",
+    "demo_189"
+  ],
+  "candidate_count": 32,
+  "noise_stds": [
+    0.05
+  ],
+  "action_penalties": [
+    0.01
+  ],
+  "transition_counts": {
+    "labeled_positive": 8809,
+    "labeled_negative": 7216,
+    "unlabeled": 1755,
+    "valid_positive": 1127,
+    "valid_negative": 888
+  },
+  "state_action_classifier": {
+    "train_labeled_accuracy": 0.9605976923671341,
+    "valid_labeled_accuracy": 0.8192147893234849,
+    "train_pos_logit_mean": 21.21865463256836,
+    "train_neg_logit_mean": -12.184723854064941,
+    "valid_pos_logit_mean": 18.80766487121582,
+    "valid_neg_logit_mean": -11.289395332336426,
+    "unlabeled_prob_mean": 0.5306591391563416
+  },
+  "histories": {
+    "state_action_classifier": [
+      {
+        "step": 1,
+        "loss": 1.3824729919433594
+      },
+      {
+        "step": 160,
+        "loss": 0.5762677788734436
+      },
+      {
+        "step": 320,
+        "loss": 0.4251941442489624
+      },
+      {
+        "step": 480,
+        "loss": 0.4063315689563751
+      },
+      {
+        "step": 640,
+        "loss": 0.293443500995636
+      },
+      {
+        "step": 800,
+        "loss": 0.1745697259902954
+      }
+    ],
+    "bc_labeled_positive": [
+      {
+        "step": 1,
+        "loss": 0.32030433416366577
+      },
+      {
+        "step": 1000,
+        "loss": 0.01181265152990818
+      },
+      {
+        "step": 2000,
+        "loss": 0.007680618669837713
+      },
+      {
+        "step": 3000,
+        "loss": 0.008532511070370674
+      },
+      {
+        "step": 4000,
+        "loss": 0.00782573688775301
+      },
+      {
+        "step": 5000,
+        "loss": 0.00530159380286932
+      }
+    ],
+    "bc_pos_unlabeled": [
+      {
+        "step": 1,
+        "loss": 0.29318854212760925
+      },
+      {
+        "step": 1000,
+        "loss": 0.012467565946280956
+      },
+      {
+        "step": 2000,
+        "loss": 0.009102907031774521
+      },
+      {
+        "step": 3000,
+        "loss": 0.008374849334359169
+      },
+      {
+        "step": 4000,
+        "loss": 0.00671420618891716
+      },
+      {
+        "step": 5000,
+        "loss": 0.005272248759865761
+      }
+    ],
+    "bc_all": [
+      {
+        "step": 1,
+        "loss": 0.28818851709365845
+      },
+      {
+        "step": 1000,
+        "loss": 0.017731253057718277
+      },
+      {
+        "step": 2000,
+        "loss": 0.01170796062797308
+      },
+      {
+        "step": 3000,
+        "loss": 0.010449828580021858
+      },
+      {
+        "step": 4000,
+        "loss": 0.011116325855255127
+      },
+      {
+        "step": 5000,
+        "loss": 0.008023019880056381
+      }
+    ],
+    "weighted_bc_state_action": [
+      {
+        "step": 1,
+        "loss": 0.30859634280204773
+      },
+      {
+        "step": 1000,
+        "loss": 0.011541060172021389
+      },
+      {
+        "step": 2000,
+        "loss": 0.009119273163378239
+      },
+      {
+        "step": 3000,
+        "loss": 0.008072363212704659
+      },
+      {
+        "step": 4000,
+        "loss": 0.009346937760710716
+      },
+      {
+        "step": 5000,
+        "loss": 0.007400053553283215
+      }
+    ]
+  }
+}

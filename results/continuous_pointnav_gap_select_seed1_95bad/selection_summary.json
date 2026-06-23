@@ -1,0 +1,22 @@
+[
+  {
+    "bad_frac": 0.95,
+    "top_unlabeled_frac": 0.05,
+    "demo_purity_mean": 0.5555555555555556,
+    "demo_purity_std": 0.0,
+    "transition_purity_mean": 0.8181818181818182,
+    "transition_purity_std": 0.0,
+    "hidden_good_demo_mean": 5.0,
+    "hidden_bad_demo_mean": 4.0
+  },
+  {
+    "bad_frac": 0.95,
+    "top_unlabeled_frac": 0.1,
+    "demo_purity_mean": 0.2777777777777778,
+    "demo_purity_std": 0.0,
+    "transition_purity_mean": 0.5722543352601156,
+    "transition_purity_std": 0.0,
+    "hidden_good_demo_mean": 5.0,
+    "hidden_bad_demo_mean": 13.0
+  }
+]

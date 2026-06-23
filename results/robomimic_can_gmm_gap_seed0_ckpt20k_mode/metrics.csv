@@ -1,0 +1,4 @@
+method,checkpoint_step,success_rate,avg_return,avg_len
+gmm_mode_positive_plus_classifier_gap_unlabeled_demos_step5000,5000,0.4,0.4,291.3
+gmm_mode_positive_plus_classifier_gap_unlabeled_demos_step10000,10000,0.2,0.2,337.7
+gmm_mode_positive_plus_classifier_gap_unlabeled_demos_step20000,20000,0.1,0.1,368.3

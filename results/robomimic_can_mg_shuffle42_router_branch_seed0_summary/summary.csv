@@ -1,0 +1,3 @@
+source,router_branch,train_demos,selected_unlabeled_demos,hidden_positive_demos,hidden_bad_demos,hidden_positive_purity,hidden_positive_mean_weight,hidden_bad_mean_weight,success_5k,success_10k,success_15k,success_20k,best_success
+hard_pos_min,hard_pos_min_threshold,659,649,414,235,0.638,,,0.000,0.000,0.200,0.100,0.200
+soft_weighted,soft_weighted_counterfactual,3850,3840,688,3152,0.179,0.861,0.318,0.000,0.100,0.100,0.100,0.100

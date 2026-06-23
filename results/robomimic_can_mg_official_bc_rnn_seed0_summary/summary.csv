@@ -1,0 +1,9 @@
+source,train_demos,selected_unlabeled,hidden_positive_selected,hidden_bad_selected,purity,success_5k,success_10k,success_15k,success_20k,best_success
+pos-min calibrated threshold,1049,1039,485,554,0.467,,,,,
+pos-p10 calibrated threshold,724,714,378,336,0.529,0.000,0.000,0.100,0.300,0.300
+classifier probability weighted sampler,3850,3840,688,3152,0.179,0.000,0.300,0.200,0.400,0.400
+adaptive masscap,16,6,3,3,0.500,,,,,
+coverage-gap posx4 max800,809,799,403,396,0.504,,,,,
+top160 selected support,170,160,113,47,0.706,0.000,0.100,0.100,0.000,0.100
+all train positives,698,0,0,0,,0.000,0.000,0.100,0.400,0.400
+all train demos,3860,0,0,0,,0.000,0.000,0.100,0.200,0.200

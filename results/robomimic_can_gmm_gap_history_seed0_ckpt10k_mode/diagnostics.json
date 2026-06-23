@@ -1,0 +1,135 @@
+{
+  "split_path": "results/robomimic_inspection/can_paired_low_dim/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "source": "positive_plus_classifier_gap_unlabeled_demos",
+  "seed": 0,
+  "source_transition_count": 3056,
+  "selected_unlabeled_transitions": 1858,
+  "selected_unlabeled_demos": [
+    "demo_159",
+    "demo_41",
+    "demo_91",
+    "demo_199",
+    "demo_183",
+    "demo_157",
+    "demo_85",
+    "demo_37",
+    "demo_27",
+    "demo_139",
+    "demo_161",
+    "demo_93",
+    "demo_119",
+    "demo_127",
+    "demo_33",
+    "demo_95",
+    "demo_173",
+    "demo_125",
+    "demo_171"
+  ],
+  "selected_hidden_positive_demos": 19,
+  "selection_diagnostics": {
+    "selection_rule": "score_gap",
+    "gap_select_max_unlabeled_demos": 80,
+    "gap_select_min_unlabeled_demos": 4,
+    "score_gap": 0.030059635639190674,
+    "selected_score_mean": 0.9000322693272641,
+    "selected_score_min": 0.8483670353889465,
+    "selected_score_max": 0.9626666903495789,
+    "selected_demo_count": 19,
+    "selected_hidden_positive_demos": 19,
+    "selected_hidden_bad_demos": 0,
+    "selected_hidden_positive_purity": 1.0
+  },
+  "gmm_validation": {
+    "enabled": false
+  },
+  "gmm_validation_checkpoint_rows": [],
+  "gmm_checkpoint_selection_metric": "support_val_nll",
+  "gmm_selected_checkpoint_step": null,
+  "gmm_retrain_selected_checkpoint": false,
+  "top_unlabeled_demos": 40,
+  "candidate_unlabeled_demos": 120,
+  "diversity_weight": 0.35,
+  "gap_select_max_unlabeled_demos": 80,
+  "gap_select_min_unlabeled_demos": 4,
+  "unlabeled_threshold": 0.9,
+  "unlabeled_weight_mode": "prob",
+  "classifier": {
+    "labeled_accuracy": 0.9833671785355638,
+    "pos_logit_mean": 12.92544174194336,
+    "neg_logit_mean": -18.032363891601562,
+    "unlabeled_prob_mean": 0.475271075963974,
+    "selected_unlabeled_transitions": 1858,
+    "selected_unlabeled_prob_mean": 0.899794340133667,
+    "selected_unlabeled_demos": 19,
+    "selected_hidden_positive_demos": 19
+  },
+  "obs_keys": [
+    "object",
+    "robot0_eef_pos",
+    "robot0_eef_quat",
+    "robot0_eef_quat_site",
+    "robot0_gripper_qpos",
+    "robot0_gripper_qvel",
+    "robot0_joint_pos",
+    "robot0_joint_pos_cos",
+    "robot0_joint_pos_sin",
+    "robot0_joint_vel"
+  ],
+  "env_name": "PickPlaceCan",
+  "env_version": "1.5.1",
+  "eval_init_mode": "valid_positive_states",
+  "eval_initial_ids": [
+    "demo_5",
+    "demo_29",
+    "demo_39",
+    "demo_45",
+    "demo_53",
+    "demo_81",
+    "demo_89",
+    "demo_99",
+    "demo_105",
+    "demo_189"
+  ],
+  "eval_episodes": 10,
+  "eval_horizon": 400,
+  "steps": 10000,
+  "eval_checkpoints": [
+    5000,
+    10000
+  ],
+  "components": 5,
+  "feature_mode": "obs_prev_action_time",
+  "policy_modes": [
+    "mode"
+  ],
+  "candidate_count": 32,
+  "sample_temperature": 0.5,
+  "gmm_history": [
+    {
+      "step": 1,
+      "loss": 7.494060039520264
+    },
+    {
+      "step": 2000,
+      "loss": -17.976953506469727
+    },
+    {
+      "step": 4000,
+      "loss": -18.780048370361328
+    },
+    {
+      "step": 6000,
+      "loss": -19.337793350219727
+    },
+    {
+      "step": 8000,
+      "loss": -19.236675262451172
+    },
+    {
+      "step": 10000,
+      "loss": -19.708572387695312
+    }
+  ],
+  "gmm_selected_full_history": null
+}

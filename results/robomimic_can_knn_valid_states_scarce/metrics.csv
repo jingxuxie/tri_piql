@@ -1,0 +1,4 @@
+method,success_rate,avg_return,avg_len
+knn_positive_k1_labeled_positive,0.0,0.0,400.0
+knn_positive_k3_labeled_positive,0.0,0.0,400.0
+knn_positive_k5_labeled_positive,0.0,0.0,400.0

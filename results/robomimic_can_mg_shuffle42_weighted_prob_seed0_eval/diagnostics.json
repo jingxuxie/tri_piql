@@ -1,0 +1,39 @@
+{
+  "split_path": "results/robomimic_inspection/can_mg_low_dim_sparse_shuffle42/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/can/mg/low_dim_sparse_v15.hdf5",
+  "env_name": "PickPlaceCan",
+  "env_version": "1.5.1",
+  "eval_init_mode": "valid_positive_states",
+  "eval_initial_ids": [
+    "demo_2425",
+    "demo_2732",
+    "demo_2916",
+    "demo_2963",
+    "demo_3056",
+    "demo_3119",
+    "demo_3149",
+    "demo_3162",
+    "demo_3324",
+    "demo_3365",
+    "demo_3417",
+    "demo_3432",
+    "demo_3492",
+    "demo_3507",
+    "demo_3516",
+    "demo_3518",
+    "demo_3522",
+    "demo_3750",
+    "demo_3824",
+    "demo_3865"
+  ],
+  "eval_episodes": 10,
+  "eval_horizon": 400,
+  "seed": 0,
+  "device": "cuda",
+  "checkpoints": [
+    "/home/eston/tri-piql/results/robomimic_can_mg_shuffle42_weighted_prob_seed0_train/can_mg_shuffle42_weighted_prob_official_bc_rnn_seed0/20260622152107/models/model_epoch_50.pth",
+    "/home/eston/tri-piql/results/robomimic_can_mg_shuffle42_weighted_prob_seed0_train/can_mg_shuffle42_weighted_prob_official_bc_rnn_seed0/20260622152107/models/model_epoch_100.pth",
+    "/home/eston/tri-piql/results/robomimic_can_mg_shuffle42_weighted_prob_seed0_train/can_mg_shuffle42_weighted_prob_official_bc_rnn_seed0/20260622152107/models/model_epoch_150.pth",
+    "/home/eston/tri-piql/results/robomimic_can_mg_shuffle42_weighted_prob_seed0_train/can_mg_shuffle42_weighted_prob_official_bc_rnn_seed0/20260622152107/models/model_epoch_200.pth"
+  ]
+}

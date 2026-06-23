@@ -1,0 +1,3 @@
+checkpoint,episode,initial_demo_id,success,return,length
+/home/eston/tri-piql/external/robomimic/robomimic/results/robomimic_official_bc_rnn_gap_seed0_tiny_train/can_positive_plus_classifier_gap_unlabeled_demos_official_bc_rnn_seed0/20260622023649/models/model_epoch_2.pth,0,demo_5,0.0,0.0,50.0
+/home/eston/tri-piql/external/robomimic/robomimic/results/robomimic_official_bc_rnn_gap_seed0_tiny_train/can_positive_plus_classifier_gap_unlabeled_demos_official_bc_rnn_seed0/20260622023649/models/model_epoch_2.pth,1,demo_29,0.0,0.0,50.0

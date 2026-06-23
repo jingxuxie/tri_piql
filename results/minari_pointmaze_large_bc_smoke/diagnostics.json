@@ -1,0 +1,156 @@
+{
+  "dataset_id": "D4RL/pointmaze/large-v2",
+  "split_path": "results/minari_inspection/D4RL__pointmaze__large-v2/split_indices.json",
+  "obs_keys": [
+    "observation",
+    "desired_goal"
+  ],
+  "seed": 0,
+  "steps": 600,
+  "classifier_steps": 300,
+  "eval_episodes": 10,
+  "eval_horizon": 800,
+  "transition_counts": {
+    "positive": 14702,
+    "negative": 150000,
+    "unlabeled": 150000
+  },
+  "classifier": {
+    "pos_prob_mean": 0.821062445640564,
+    "neg_prob_mean": 0.16642814874649048,
+    "unlabeled_prob_mean": 0.40452462434768677,
+    "labeled_accuracy": 0.9117401079218247
+  },
+  "histories": {
+    "classifier": [
+      {
+        "step": 1,
+        "loss": 1.384533166885376
+      },
+      {
+        "step": 60,
+        "loss": 1.0833885669708252
+      },
+      {
+        "step": 120,
+        "loss": 0.8175898194313049
+      },
+      {
+        "step": 180,
+        "loss": 0.61664879322052
+      },
+      {
+        "step": 240,
+        "loss": 0.5689624547958374
+      },
+      {
+        "step": 300,
+        "loss": 0.427944153547287
+      }
+    ],
+    "bc_positive": [
+      {
+        "step": 1,
+        "loss": 0.6822366118431091
+      },
+      {
+        "step": 120,
+        "loss": 0.50670325756073
+      },
+      {
+        "step": 240,
+        "loss": 0.4581586718559265
+      },
+      {
+        "step": 360,
+        "loss": 0.42913639545440674
+      },
+      {
+        "step": 480,
+        "loss": 0.4180695712566376
+      },
+      {
+        "step": 600,
+        "loss": 0.39996087551116943
+      }
+    ],
+    "bc_pos_unlabeled": [
+      {
+        "step": 1,
+        "loss": 0.6378437876701355
+      },
+      {
+        "step": 120,
+        "loss": 0.6106232404708862
+      },
+      {
+        "step": 240,
+        "loss": 0.5828189849853516
+      },
+      {
+        "step": 360,
+        "loss": 0.5760909914970398
+      },
+      {
+        "step": 480,
+        "loss": 0.5682222843170166
+      },
+      {
+        "step": 600,
+        "loss": 0.5636829733848572
+      }
+    ],
+    "bc_all": [
+      {
+        "step": 1,
+        "loss": 0.6682571172714233
+      },
+      {
+        "step": 120,
+        "loss": 0.5935265421867371
+      },
+      {
+        "step": 240,
+        "loss": 0.5776830911636353
+      },
+      {
+        "step": 360,
+        "loss": 0.5973081588745117
+      },
+      {
+        "step": 480,
+        "loss": 0.5740182995796204
+      },
+      {
+        "step": 600,
+        "loss": 0.5652824640274048
+      }
+    ],
+    "weighted_bc_classifier": [
+      {
+        "step": 1,
+        "loss": 0.6566399931907654
+      },
+      {
+        "step": 120,
+        "loss": 0.5610671639442444
+      },
+      {
+        "step": 240,
+        "loss": 0.5753215551376343
+      },
+      {
+        "step": 360,
+        "loss": 0.5922483205795288
+      },
+      {
+        "step": 480,
+        "loss": 0.6195241212844849
+      },
+      {
+        "step": 600,
+        "loss": 0.5217809081077576
+      }
+    ]
+  }
+}

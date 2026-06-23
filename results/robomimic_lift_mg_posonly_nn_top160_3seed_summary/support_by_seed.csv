@@ -1,0 +1,7 @@
+method,seed,train_demos,selected_unlabeled,hidden_positive,hidden_bad,purity
+posonly_nn_top160,0,170,160,126,34,0.7875
+posonly_nn_top160,1,170,160,126,34,0.7875
+posonly_nn_top160,2,170,160,126,34,0.7875
+bad_aware_pos_min,0,240,230,203,27,0.8826086956521739
+bad_aware_pos_min,1,254,244,206,38,0.8442622950819673
+bad_aware_pos_min,2,248,238,206,32,0.865546218487395

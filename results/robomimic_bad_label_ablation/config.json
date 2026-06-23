@@ -1,0 +1,31 @@
+{
+  "split_path": "results/robomimic_inspection/can_paired_low_dim/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "positive_counts": [
+    5,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80
+  ],
+  "negative_count": 80,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "classifier_steps": 800,
+  "top_k": [
+    20,
+    40,
+    80
+  ],
+  "gap_select_max_unlabeled_demos": 80,
+  "gap_select_min_unlabeled_demos": 4,
+  "gap_select_min_labeled_positive_multiplier": 4.0,
+  "adaptive_mass_cap_ratio": 1.25
+}

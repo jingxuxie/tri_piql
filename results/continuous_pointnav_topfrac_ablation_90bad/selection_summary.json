@@ -1,0 +1,47 @@
+[
+  {
+    "top_unlabeled_frac": 0.05,
+    "demo_purity_mean": 1.0,
+    "demo_purity_std": 0.0,
+    "transition_purity_mean": 1.0,
+    "transition_purity_std": 0.0,
+    "hidden_good_demo_mean": 9.0,
+    "hidden_bad_demo_mean": 0.0
+  },
+  {
+    "top_unlabeled_frac": 0.1,
+    "demo_purity_mean": 0.9666666666666668,
+    "demo_purity_std": 0.06666666666666665,
+    "transition_purity_mean": 0.9886792452830189,
+    "transition_purity_std": 0.02264150943396226,
+    "hidden_good_demo_mean": 17.4,
+    "hidden_bad_demo_mean": 0.6
+  },
+  {
+    "top_unlabeled_frac": 0.15,
+    "demo_purity_mean": 0.6814814814814814,
+    "demo_purity_std": 0.07257747386024231,
+    "transition_purity_mean": 0.8775284399719989,
+    "transition_purity_std": 0.037371572079496596,
+    "hidden_good_demo_mean": 18.4,
+    "hidden_bad_demo_mean": 8.6
+  },
+  {
+    "top_unlabeled_frac": 0.25,
+    "demo_purity_mean": 0.40888888888888886,
+    "demo_purity_std": 0.0435464843161454,
+    "transition_purity_mean": 0.700760328830224,
+    "transition_purity_std": 0.03971666772487182,
+    "hidden_good_demo_mean": 18.4,
+    "hidden_bad_demo_mean": 26.6
+  },
+  {
+    "top_unlabeled_frac": 0.35,
+    "demo_purity_mean": 0.292063492063492,
+    "demo_purity_std": 0.03110463165438956,
+    "transition_purity_mean": 0.5838147938747994,
+    "transition_purity_std": 0.03628355711276764,
+    "hidden_good_demo_mean": 18.4,
+    "hidden_bad_demo_mean": 44.6
+  }
+]

@@ -1,0 +1,6 @@
+method,checkpoint_step,success_rate,avg_return,avg_len
+gmm_mode_positive_plus_classifier_gap_unlabeled_demos_supportval_train_step2500,2500,0.0,0.0,400.0
+gmm_mode_positive_plus_classifier_gap_unlabeled_demos_supportval_train_step5000,5000,0.1,0.1,370.2
+gmm_mode_positive_plus_classifier_gap_unlabeled_demos_supportval_train_step10000,10000,0.3,0.3,310.4
+gmm_mode_positive_plus_classifier_gap_unlabeled_demos_supportval_train_step20000,20000,0.0,0.0,400.0
+gmm_mode_positive_plus_classifier_gap_unlabeled_demos_support_val_mode_mse_selected_full_step2500,2500,0.0,0.0,400.0

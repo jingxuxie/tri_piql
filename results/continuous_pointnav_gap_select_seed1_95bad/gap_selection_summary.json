@@ -1,0 +1,16 @@
+[
+  {
+    "bad_frac": 0.95,
+    "max_frac": 0.1,
+    "selected_frac_mean": 0.027777777777777776,
+    "selected_frac_std": 0.0,
+    "score_gap_mean": 0.3688049018383026,
+    "score_gap_std": 0.0,
+    "demo_purity_mean": 1.0,
+    "demo_purity_std": 0.0,
+    "transition_purity_mean": 1.0,
+    "transition_purity_std": 0.0,
+    "hidden_good_demo_mean": 5.0,
+    "hidden_bad_demo_mean": 0.0
+  }
+]

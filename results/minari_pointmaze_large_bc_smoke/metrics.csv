@@ -1,0 +1,5 @@
+method,success_rate,avg_return,avg_len
+bc_positive,0.4,0.4,511.8
+bc_pos_unlabeled,0.3,0.3,631.7
+bc_all,0.2,0.2,725.1
+weighted_bc_classifier,0.4,0.4,564.0

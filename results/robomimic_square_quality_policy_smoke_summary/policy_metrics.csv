@@ -1,0 +1,7 @@
+method,label,epoch,success_rate,avg_return,avg_len,eval_episodes,checkpoint
+better_only,better-only BC,50,0.0,0.0,500.0,10,results/robomimic_square_quality_better_seed0_train/square_quality_better_official_bc_rnn_seed0/20260622160354/models/model_epoch_50.pth
+better_only,better-only BC,100,0.0,0.0,500.0,10,results/robomimic_square_quality_better_seed0_train/square_quality_better_official_bc_rnn_seed0/20260622160354/models/model_epoch_100.pth
+mixed_better_worse,mixed better+worse BC,50,0.0,0.0,500.0,10,results/robomimic_square_quality_mixed_seed0_train/square_quality_mixed_official_bc_rnn_seed0/20260622160736/models/model_epoch_50.pth
+mixed_better_worse,mixed better+worse BC,100,0.0,0.0,500.0,10,results/robomimic_square_quality_mixed_seed0_train/square_quality_mixed_official_bc_rnn_seed0/20260622160736/models/model_epoch_100.pth
+adaptive_masscap,adaptive-masscap support BC,50,0.0,0.0,500.0,10,results/robomimic_square_quality_adaptive_seed0_train/square_quality_adaptive_official_bc_rnn_seed0/20260622160925/models/model_epoch_50.pth
+adaptive_masscap,adaptive-masscap support BC,100,0.0,0.0,500.0,10,results/robomimic_square_quality_adaptive_seed0_train/square_quality_adaptive_official_bc_rnn_seed0/20260622160925/models/model_epoch_100.pth

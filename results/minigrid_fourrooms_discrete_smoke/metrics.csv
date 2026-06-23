@@ -1,0 +1,8 @@
+method,success_rate,avg_return,avg_len
+bc_positive,0.05,0.04846999999999999,95.17
+bc_pos_unlabeled,0.05,0.04846999999999999,95.17
+bc_all,0.05,0.04846999999999999,95.17
+weighted_bc_state_action,0.05,0.04846999999999999,95.17
+bc_positive_sa_rerank_alpha0.5,0.05,0.04829,95.19
+bc_positive_sa_rerank_alpha1,0.05,0.04829,95.19
+bc_positive_sa_rerank_alpha2,0.01,0.00946,99.06

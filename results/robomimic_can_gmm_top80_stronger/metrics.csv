@@ -1,0 +1,5 @@
+method,success_rate,avg_return,avg_len
+gmm_mode_positive_plus_classifier_top_unlabeled_demos,0.3,0.3,312.3
+gmm_mean_positive_plus_classifier_top_unlabeled_demos,0.2,0.2,341.8
+gmm_sample_positive_plus_classifier_top_unlabeled_demos,0.1,0.1,371.1
+gmm_classifier_rerank_positive_plus_classifier_top_unlabeled_demos,0.1,0.1,382.1

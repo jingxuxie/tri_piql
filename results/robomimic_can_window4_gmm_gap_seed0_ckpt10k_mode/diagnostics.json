@@ -1,0 +1,126 @@
+{
+  "split_path": "results/robomimic_inspection/can_paired_low_dim/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "source": "positive_plus_classifier_gap_unlabeled_demos",
+  "seed": 0,
+  "source_transition_count": 3470,
+  "selected_unlabeled_transitions": 2272,
+  "selected_unlabeled_demos": [
+    "demo_41",
+    "demo_199",
+    "demo_37",
+    "demo_27",
+    "demo_171",
+    "demo_159",
+    "demo_157",
+    "demo_119",
+    "demo_183",
+    "demo_85",
+    "demo_139",
+    "demo_173",
+    "demo_91",
+    "demo_93",
+    "demo_127",
+    "demo_125",
+    "demo_79",
+    "demo_161",
+    "demo_23",
+    "demo_35",
+    "demo_77",
+    "demo_95",
+    "demo_33"
+  ],
+  "selected_hidden_positive_demos": 23,
+  "selection_diagnostics": {
+    "selection_rule": "score_gap",
+    "gap_select_max_unlabeled_demos": 80,
+    "gap_select_min_unlabeled_demos": 4,
+    "score_gap": 0.0378037691116333,
+    "selected_score_mean": 0.9071355306583903,
+    "selected_score_min": 0.8311644792556763,
+    "selected_score_max": 0.9692974090576172,
+    "selected_demo_count": 23,
+    "selected_hidden_positive_demos": 23,
+    "selected_hidden_bad_demos": 0,
+    "selected_hidden_positive_purity": 1.0
+  },
+  "classifier": {
+    "labeled_accuracy": 0.9809839564192625,
+    "pos_logit_mean": 12.395928382873535,
+    "neg_logit_mean": -15.080856323242188,
+    "unlabeled_prob_mean": 0.5261156558990479,
+    "selected_unlabeled_transitions": 2272,
+    "selected_unlabeled_prob_mean": 0.9070462584495544,
+    "selected_unlabeled_demos": 23,
+    "selected_hidden_positive_demos": 23
+  },
+  "context_len": 4,
+  "include_time": false,
+  "window_feature_dim": 256,
+  "obs_keys": [
+    "object",
+    "robot0_eef_pos",
+    "robot0_eef_quat",
+    "robot0_eef_quat_site",
+    "robot0_gripper_qpos",
+    "robot0_gripper_qvel",
+    "robot0_joint_pos",
+    "robot0_joint_pos_cos",
+    "robot0_joint_pos_sin",
+    "robot0_joint_vel"
+  ],
+  "env_name": "PickPlaceCan",
+  "env_version": "1.5.1",
+  "eval_init_mode": "valid_positive_states",
+  "eval_initial_ids": [
+    "demo_5",
+    "demo_29",
+    "demo_39",
+    "demo_45",
+    "demo_53",
+    "demo_81",
+    "demo_89",
+    "demo_99",
+    "demo_105",
+    "demo_189"
+  ],
+  "eval_episodes": 10,
+  "eval_horizon": 400,
+  "steps": 10000,
+  "eval_checkpoints": [
+    2500,
+    5000,
+    10000
+  ],
+  "components": 5,
+  "policy_modes": [
+    "mode"
+  ],
+  "sample_temperature": 0.5,
+  "gmm_history": [
+    {
+      "step": 1,
+      "loss": 7.389713764190674
+    },
+    {
+      "step": 2000,
+      "loss": -17.702978134155273
+    },
+    {
+      "step": 4000,
+      "loss": -18.96170997619629
+    },
+    {
+      "step": 6000,
+      "loss": -19.67426109313965
+    },
+    {
+      "step": 8000,
+      "loss": -19.957414627075195
+    },
+    {
+      "step": 10000,
+      "loss": -20.589168548583984
+    }
+  ]
+}

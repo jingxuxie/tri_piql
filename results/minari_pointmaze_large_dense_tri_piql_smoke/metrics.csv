@@ -1,0 +1,5 @@
+method,success_rate,avg_return,avg_len
+bc_positive,0.5,42.860712606588535,580.7
+weighted_bc_classifier,0.3,48.19383823506849,684.6
+tri_piql_q_bc,0.1,51.388664002646124,727.1
+tri_piql_score_awbc,0.1,43.64786196388023,732.2

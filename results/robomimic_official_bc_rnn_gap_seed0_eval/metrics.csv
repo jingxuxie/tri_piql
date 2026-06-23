@@ -1,0 +1,6 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/robomimic_official_bc_rnn_gap_seed0_train/can_positive_plus_classifier_gap_unlabeled_demos_official_bc_rnn_seed0/20260622024043/models/model_epoch_10.pth,model_epoch_10,0.0,0.0,400.0,10
+/home/eston/tri-piql/results/robomimic_official_bc_rnn_gap_seed0_train/can_positive_plus_classifier_gap_unlabeled_demos_official_bc_rnn_seed0/20260622024043/models/model_epoch_20.pth,model_epoch_20,0.0,0.0,400.0,10
+/home/eston/tri-piql/results/robomimic_official_bc_rnn_gap_seed0_train/can_positive_plus_classifier_gap_unlabeled_demos_official_bc_rnn_seed0/20260622024043/models/model_epoch_30.pth,model_epoch_30,0.0,0.0,400.0,10
+/home/eston/tri-piql/results/robomimic_official_bc_rnn_gap_seed0_train/can_positive_plus_classifier_gap_unlabeled_demos_official_bc_rnn_seed0/20260622024043/models/model_epoch_40.pth,model_epoch_40,0.0,0.0,400.0,10
+/home/eston/tri-piql/results/robomimic_official_bc_rnn_gap_seed0_train/can_positive_plus_classifier_gap_unlabeled_demos_official_bc_rnn_seed0/20260622024043/models/model_epoch_50.pth,model_epoch_50,0.0,0.0,400.0,10

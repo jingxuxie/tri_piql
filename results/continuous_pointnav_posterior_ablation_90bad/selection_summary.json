@@ -1,0 +1,20 @@
+[
+  {
+    "top_unlabeled_frac": 0.05,
+    "demo_purity_mean": 1.0,
+    "demo_purity_std": 0.0,
+    "transition_purity_mean": 1.0,
+    "transition_purity_std": 0.0,
+    "hidden_good_demo_mean": 9.0,
+    "hidden_bad_demo_mean": 0.0
+  },
+  {
+    "top_unlabeled_frac": 0.1,
+    "demo_purity_mean": 0.9666666666666668,
+    "demo_purity_std": 0.06666666666666665,
+    "transition_purity_mean": 0.9886792452830189,
+    "transition_purity_std": 0.02264150943396226,
+    "hidden_good_demo_mean": 17.4,
+    "hidden_bad_demo_mean": 0.6
+  }
+]

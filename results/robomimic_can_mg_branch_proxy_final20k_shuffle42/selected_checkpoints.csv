@@ -1,0 +1,9 @@
+run,filter,selected_epoch,selected_log_likelihood,selected_loss,selected_rollout_success,rollout_best_epoch,rollout_best_success
+hard_posmin_seed0,labeled_positive,200,-22915293.0,22915293.0,0.1,200,0.1
+hard_posmin_seed0,labeled_negative,200,-193200925.86666667,193200925.86666667,0.1,200,0.1
+hard_posmin_seed0,valid_positive,200,-42532609.666666664,42532609.666666664,0.1,200,0.1
+hard_posmin_seed0,valid_negative,200,-141598784.4,141598784.4,0.1,200,0.1
+soft_weighted_seed0,labeled_positive,200,-27205224.466666665,27205224.466666665,0.1,200,0.1
+soft_weighted_seed0,labeled_negative,200,-92123728.26666667,92123728.26666667,0.1,200,0.1
+soft_weighted_seed0,valid_positive,200,-38082416.6,38082416.6,0.1,200,0.1
+soft_weighted_seed0,valid_negative,200,-73233349.2,73233349.2,0.1,200,0.1

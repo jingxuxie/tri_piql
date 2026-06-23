@@ -1,0 +1,153 @@
+{
+  "dataset_id": "D4RL/minigrid/fourrooms-v0",
+  "split_path": "results/minari_inspection/D4RL__minigrid__fourrooms-v0/split_indices.json",
+  "seed": 0,
+  "steps": 1000,
+  "classifier_steps": 700,
+  "eval_episodes": 100,
+  "eval_horizon": 100,
+  "num_actions": 7,
+  "transition_counts": {
+    "positive": 263,
+    "negative": 3256,
+    "unlabeled": 6491
+  },
+  "state_action_classifier": {
+    "pos_prob_mean": 0.6567984819412231,
+    "neg_prob_mean": 0.3537444770336151,
+    "unlabeled_prob_mean": 0.41803449392318726,
+    "labeled_accuracy": 0.7912914210442727
+  },
+  "histories": {
+    "state_action_classifier": [
+      {
+        "step": 1,
+        "loss": 1.3853633403778076
+      },
+      {
+        "step": 140,
+        "loss": 1.370545506477356
+      },
+      {
+        "step": 280,
+        "loss": 1.2999584674835205
+      },
+      {
+        "step": 420,
+        "loss": 1.2117480039596558
+      },
+      {
+        "step": 560,
+        "loss": 1.1377277374267578
+      },
+      {
+        "step": 700,
+        "loss": 1.0846667289733887
+      }
+    ],
+    "bc_positive": [
+      {
+        "step": 1,
+        "loss": 1.9453442096710205
+      },
+      {
+        "step": 200,
+        "loss": 0.7610625624656677
+      },
+      {
+        "step": 400,
+        "loss": 0.7248855233192444
+      },
+      {
+        "step": 600,
+        "loss": 0.7504289746284485
+      },
+      {
+        "step": 800,
+        "loss": 0.778052568435669
+      },
+      {
+        "step": 1000,
+        "loss": 0.6237708330154419
+      }
+    ],
+    "bc_pos_unlabeled": [
+      {
+        "step": 1,
+        "loss": 1.9445559978485107
+      },
+      {
+        "step": 200,
+        "loss": 0.6418436765670776
+      },
+      {
+        "step": 400,
+        "loss": 0.6566515564918518
+      },
+      {
+        "step": 600,
+        "loss": 0.5209524631500244
+      },
+      {
+        "step": 800,
+        "loss": 0.6433818936347961
+      },
+      {
+        "step": 1000,
+        "loss": 0.6182034015655518
+      }
+    ],
+    "bc_all": [
+      {
+        "step": 1,
+        "loss": 1.946855068206787
+      },
+      {
+        "step": 200,
+        "loss": 0.7130018472671509
+      },
+      {
+        "step": 400,
+        "loss": 0.6455039978027344
+      },
+      {
+        "step": 600,
+        "loss": 0.6076933145523071
+      },
+      {
+        "step": 800,
+        "loss": 0.5751535296440125
+      },
+      {
+        "step": 1000,
+        "loss": 0.5994459986686707
+      }
+    ],
+    "weighted_bc_state_action": [
+      {
+        "step": 1,
+        "loss": 1.941617727279663
+      },
+      {
+        "step": 200,
+        "loss": 0.8144781589508057
+      },
+      {
+        "step": 400,
+        "loss": 0.8147706389427185
+      },
+      {
+        "step": 600,
+        "loss": 0.6277943253517151
+      },
+      {
+        "step": 800,
+        "loss": 0.8432301878929138
+      },
+      {
+        "step": 1000,
+        "loss": 0.6974642276763916
+      }
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+method,success_rate,avg_return,avg_len
+bc_positive,0.0,0.0008235929655175603,5.0
+weighted_bc_obs_classifier,0.0,0.0008213470279451636,5.0
+bc_sa_rerank_noise0.1_penalty0.1,0.0,0.2487732767172361,5.0

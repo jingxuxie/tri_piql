@@ -1,0 +1,75 @@
+{
+  "dataset_id": "D4RL/kitchen/mixed-v2",
+  "split_path": "results/minari_inspection/D4RL__kitchen__mixed-v2/split_indices.json",
+  "obs_keys": [
+    "observation"
+  ],
+  "seed": 0,
+  "steps": 2,
+  "classifier_steps": 2,
+  "eval_episodes": 1,
+  "eval_horizon": 5,
+  "transition_counts": {
+    "positive": 1000,
+    "negative": 1000,
+    "unlabeled": 1000
+  },
+  "classifier": {
+    "pos_prob_mean": 0.49974143505096436,
+    "neg_prob_mean": 0.4935484826564789,
+    "unlabeled_prob_mean": 0.4976220428943634,
+    "labeled_accuracy": 0.634
+  },
+  "histories": {
+    "classifier": [
+      {
+        "step": 1,
+        "loss": 1.3687814474105835
+      },
+      {
+        "step": 2,
+        "loss": 1.3746726512908936
+      }
+    ],
+    "bc_positive": [
+      {
+        "step": 1,
+        "loss": 0.09259521961212158
+      },
+      {
+        "step": 2,
+        "loss": 0.1299179494380951
+      }
+    ],
+    "bc_pos_unlabeled": [
+      {
+        "step": 1,
+        "loss": 0.0992041528224945
+      },
+      {
+        "step": 2,
+        "loss": 0.09939953684806824
+      }
+    ],
+    "bc_all": [
+      {
+        "step": 1,
+        "loss": 0.10869601368904114
+      },
+      {
+        "step": 2,
+        "loss": 0.11546621471643448
+      }
+    ],
+    "weighted_bc_classifier": [
+      {
+        "step": 1,
+        "loss": 0.07223223149776459
+      },
+      {
+        "step": 2,
+        "loss": 0.14061462879180908
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+source,seed,train_demos,unlabeled_in_policy,hidden_positive_unlabeled,hidden_bad_unlabeled,support_purity,hidden_positive_mean_weight,hidden_bad_mean_weight,success_5k,success_10k,success_15k,success_20k,best
+classifier_probability_weighted_sampler,0,3850,3840,688,3152,0.179,0.885,0.432,0.000,0.300,0.200,0.400,0.400
+classifier_probability_weighted_sampler,1,3850,3840,688,3152,0.179,0.871,0.410,0.000,0.100,0.400,0.300,0.400
+classifier_probability_weighted_sampler,2,3850,3840,688,3152,0.179,0.878,0.416,0.000,0.000,0.000,0.300,0.300
+classifier_probability_weighted_sampler,mean,3850,3840,688,3152,0.179,0.878,0.419,0.000,0.133,0.200,0.333,0.367
+all_train_positives,0,698,688,688,0,1.000,,,0.000,0.000,0.100,0.400,0.400
+all_train_positives,1,698,688,688,0,1.000,,,0.000,0.100,0.100,0.000,0.100
+all_train_positives,2,698,688,688,0,1.000,,,0.000,0.000,0.200,0.200,0.200
+all_train_positives,mean,698,688,688,0,1.000,,,0.000,0.033,0.133,0.200,0.233
+all_train_demos,0,3860,3840,688,3152,0.179,,,0.000,0.000,0.100,0.200,0.200
+all_train_demos,1,3860,3840,688,3152,0.179,,,0.000,0.000,0.300,0.100,0.300
+all_train_demos,2,3860,3840,688,3152,0.179,,,0.000,0.000,0.200,0.000,0.200
+all_train_demos,mean,3860,3840,688,3152,0.179,,,0.000,0.000,0.200,0.100,0.233
+pos_p10_calibrated_threshold,0,724,714,378,336,0.529,,,0.000,0.000,0.100,0.300,0.300
+pos_p10_calibrated_threshold,1,789,779,424,355,0.544,,,0.000,0.000,0.100,0.100,0.100
+pos_p10_calibrated_threshold,2,836,826,446,380,0.540,,,0.000,0.000,0.100,0.100,0.100
+pos_p10_calibrated_threshold,mean,783,773,416,357,0.538,,,0.000,0.000,0.100,0.167,0.167

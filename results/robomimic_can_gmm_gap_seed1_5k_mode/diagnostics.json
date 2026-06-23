@@ -1,0 +1,130 @@
+{
+  "split_path": "results/robomimic_inspection/can_paired_low_dim/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "source": "positive_plus_classifier_gap_unlabeled_demos",
+  "seed": 1,
+  "source_transition_count": 3512,
+  "selected_unlabeled_transitions": 2314,
+  "selected_unlabeled_demos": [
+    "demo_125",
+    "demo_93",
+    "demo_183",
+    "demo_41",
+    "demo_37",
+    "demo_157",
+    "demo_199",
+    "demo_27",
+    "demo_159",
+    "demo_171",
+    "demo_127",
+    "demo_173",
+    "demo_119",
+    "demo_33",
+    "demo_151",
+    "demo_95",
+    "demo_139",
+    "demo_35",
+    "demo_187",
+    "demo_107",
+    "demo_161",
+    "demo_123",
+    "demo_85"
+  ],
+  "selected_hidden_positive_demos": 23,
+  "selection_diagnostics": {
+    "selection_rule": "score_gap",
+    "gap_select_max_unlabeled_demos": 80,
+    "gap_select_min_unlabeled_demos": 4,
+    "score_gap": 0.022979557514190674,
+    "selected_score_mean": 0.9372869004373965,
+    "selected_score_min": 0.8776872754096985,
+    "selected_score_max": 0.9853120446205139,
+    "selected_demo_count": 23,
+    "selected_hidden_positive_demos": 23,
+    "selected_hidden_bad_demos": 0,
+    "selected_hidden_positive_purity": 1.0
+  },
+  "top_unlabeled_demos": 40,
+  "candidate_unlabeled_demos": 120,
+  "diversity_weight": 0.35,
+  "gap_select_max_unlabeled_demos": 80,
+  "gap_select_min_unlabeled_demos": 4,
+  "unlabeled_threshold": 0.9,
+  "unlabeled_weight_mode": "prob",
+  "classifier": {
+    "labeled_accuracy": 0.98211986612578,
+    "pos_logit_mean": 11.887001991271973,
+    "neg_logit_mean": -14.59598445892334,
+    "unlabeled_prob_mean": 0.5392673015594482,
+    "selected_unlabeled_transitions": 2314,
+    "selected_unlabeled_prob_mean": 0.9356998801231384,
+    "selected_unlabeled_demos": 23,
+    "selected_hidden_positive_demos": 23
+  },
+  "obs_keys": [
+    "object",
+    "robot0_eef_pos",
+    "robot0_eef_quat",
+    "robot0_eef_quat_site",
+    "robot0_gripper_qpos",
+    "robot0_gripper_qvel",
+    "robot0_joint_pos",
+    "robot0_joint_pos_cos",
+    "robot0_joint_pos_sin",
+    "robot0_joint_vel"
+  ],
+  "env_name": "PickPlaceCan",
+  "env_version": "1.5.1",
+  "eval_init_mode": "valid_positive_states",
+  "eval_initial_ids": [
+    "demo_5",
+    "demo_29",
+    "demo_39",
+    "demo_45",
+    "demo_53",
+    "demo_81",
+    "demo_89",
+    "demo_99",
+    "demo_105",
+    "demo_189"
+  ],
+  "eval_episodes": 10,
+  "eval_horizon": 400,
+  "steps": 5000,
+  "eval_checkpoints": [
+    5000
+  ],
+  "components": 5,
+  "feature_mode": "obs",
+  "policy_modes": [
+    "mode"
+  ],
+  "candidate_count": 32,
+  "sample_temperature": 0.5,
+  "gmm_history": [
+    {
+      "step": 1,
+      "loss": 7.563096046447754
+    },
+    {
+      "step": 1000,
+      "loss": -15.631865501403809
+    },
+    {
+      "step": 2000,
+      "loss": -16.86382484436035
+    },
+    {
+      "step": 3000,
+      "loss": -17.57157325744629
+    },
+    {
+      "step": 4000,
+      "loss": -17.996562957763672
+    },
+    {
+      "step": 5000,
+      "loss": -18.600276947021484
+    }
+  ]
+}

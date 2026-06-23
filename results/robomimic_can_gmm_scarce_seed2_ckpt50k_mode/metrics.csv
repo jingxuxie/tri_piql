@@ -1,0 +1,3 @@
+method,checkpoint_step,success_rate,avg_return,avg_len
+gmm_mode_labeled_positive_step20000,20000,0.1,0.1,369.5
+gmm_mode_labeled_positive_step50000,50000,0.1,0.1,369.4

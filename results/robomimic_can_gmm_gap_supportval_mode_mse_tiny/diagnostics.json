@@ -1,0 +1,175 @@
+{
+  "split_path": "results/robomimic_inspection/can_paired_low_dim/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "source": "positive_plus_classifier_gap_unlabeled_demos",
+  "seed": 0,
+  "source_transition_count": 1552,
+  "selected_unlabeled_transitions": 354,
+  "selected_unlabeled_demos": [
+    "demo_185",
+    "demo_143",
+    "demo_139",
+    "demo_183"
+  ],
+  "selected_hidden_positive_demos": 4,
+  "selection_diagnostics": {
+    "selection_rule": "score_gap",
+    "gap_select_max_unlabeled_demos": 20,
+    "gap_select_min_unlabeled_demos": 4,
+    "score_gap": 0.0005297064781188965,
+    "selected_score_mean": 0.5104244202375412,
+    "selected_score_min": 0.5093724131584167,
+    "selected_score_max": 0.5118085145950317,
+    "selected_demo_count": 4,
+    "selected_hidden_positive_demos": 4,
+    "selected_hidden_bad_demos": 0,
+    "selected_hidden_positive_purity": 1.0
+  },
+  "gmm_validation": {
+    "enabled": true,
+    "unit": "demo",
+    "requested_frac": 0.2,
+    "train_transitions": 1256,
+    "validation_transitions": 296,
+    "train_demos": 11,
+    "validation_demos": 3,
+    "validation_demo_ids": [
+      "demo_15",
+      "demo_139",
+      "demo_143"
+    ]
+  },
+  "gmm_validation_checkpoint_rows": [
+    {
+      "checkpoint_step": 5,
+      "support_train_nll": 7.094900131225586,
+      "support_val_nll": 7.095902442932129,
+      "support_train_mode_mse": 0.23800013959407806,
+      "support_val_mode_mse": 0.24210003018379211,
+      "support_train_mean_mse": 0.24259167909622192,
+      "support_val_mean_mse": 0.24697411060333252
+    },
+    {
+      "checkpoint_step": 10,
+      "support_train_nll": 6.78287935256958,
+      "support_val_nll": 6.763914585113525,
+      "support_train_mode_mse": 0.23120981454849243,
+      "support_val_mode_mse": 0.2325979769229889,
+      "support_train_mean_mse": 0.23070992529392242,
+      "support_val_mean_mse": 0.23521627485752106
+    }
+  ],
+  "gmm_checkpoint_selection_metric": "support_val_mode_mse",
+  "gmm_selected_checkpoint_step": 10,
+  "gmm_retrain_selected_checkpoint": true,
+  "top_unlabeled_demos": 40,
+  "candidate_unlabeled_demos": 120,
+  "diversity_weight": 0.35,
+  "gap_select_max_unlabeled_demos": 20,
+  "gap_select_min_unlabeled_demos": 4,
+  "unlabeled_threshold": 0.9,
+  "unlabeled_weight_mode": "prob",
+  "classifier": {
+    "labeled_accuracy": 0.609491749038356,
+    "pos_logit_mean": 0.00954647921025753,
+    "neg_logit_mean": -0.04183546081185341,
+    "unlabeled_prob_mean": 0.49748942255973816,
+    "selected_unlabeled_transitions": 354,
+    "selected_unlabeled_prob_mean": 0.5104615092277527,
+    "selected_unlabeled_demos": 4,
+    "selected_hidden_positive_demos": 4
+  },
+  "obs_keys": [
+    "object",
+    "robot0_eef_pos",
+    "robot0_eef_quat",
+    "robot0_eef_quat_site",
+    "robot0_gripper_qpos",
+    "robot0_gripper_qvel",
+    "robot0_joint_pos",
+    "robot0_joint_pos_cos",
+    "robot0_joint_pos_sin",
+    "robot0_joint_vel"
+  ],
+  "env_name": "PickPlaceCan",
+  "env_version": "1.5.1",
+  "eval_init_mode": "valid_positive_states",
+  "eval_initial_ids": [
+    "demo_5",
+    "demo_29",
+    "demo_39",
+    "demo_45",
+    "demo_53",
+    "demo_81",
+    "demo_89",
+    "demo_99",
+    "demo_105",
+    "demo_189"
+  ],
+  "eval_episodes": 1,
+  "eval_horizon": 1,
+  "steps": 10,
+  "eval_checkpoints": [
+    5,
+    10
+  ],
+  "components": 5,
+  "feature_mode": "obs",
+  "policy_modes": [
+    "mode"
+  ],
+  "candidate_count": 32,
+  "sample_temperature": 0.5,
+  "gmm_history": [
+    {
+      "step": 1,
+      "loss": 7.408776760101318
+    },
+    {
+      "step": 2,
+      "loss": 7.324558258056641
+    },
+    {
+      "step": 4,
+      "loss": 7.26890230178833
+    },
+    {
+      "step": 6,
+      "loss": 7.108003616333008
+    },
+    {
+      "step": 8,
+      "loss": 7.0249199867248535
+    },
+    {
+      "step": 10,
+      "loss": 6.850379943847656
+    }
+  ],
+  "gmm_selected_full_history": [
+    {
+      "step": 1,
+      "loss": 7.2608184814453125
+    },
+    {
+      "step": 2,
+      "loss": 7.232914924621582
+    },
+    {
+      "step": 4,
+      "loss": 7.145347595214844
+    },
+    {
+      "step": 6,
+      "loss": 6.99351167678833
+    },
+    {
+      "step": 8,
+      "loss": 6.877202987670898
+    },
+    {
+      "step": 10,
+      "loss": 6.727160453796387
+    }
+  ]
+}

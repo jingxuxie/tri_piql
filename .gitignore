@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+data/
+results/**/*.tmp
+external/robomimic/
+results/**/*_train/
+results/**/models/
+results/**/logs/
+results/**/videos/
+*.hdf5
+*.h5
+*.pt
+*.pth
+*.ckpt

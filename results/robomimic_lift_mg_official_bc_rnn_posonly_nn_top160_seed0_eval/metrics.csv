@@ -1,0 +1,5 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/robomimic_lift_mg_official_bc_rnn_posonly_nn_top160_seed0_train/lift_posonly_nn_top160_official_bc_rnn_seed0/20260622163840/models/model_epoch_50.pth,model_epoch_50,0.5,0.5,93.8,10
+/home/eston/tri-piql/results/robomimic_lift_mg_official_bc_rnn_posonly_nn_top160_seed0_train/lift_posonly_nn_top160_official_bc_rnn_seed0/20260622163840/models/model_epoch_100.pth,model_epoch_100,0.2,0.2,124.6,10
+/home/eston/tri-piql/results/robomimic_lift_mg_official_bc_rnn_posonly_nn_top160_seed0_train/lift_posonly_nn_top160_official_bc_rnn_seed0/20260622163840/models/model_epoch_150.pth,model_epoch_150,0.2,0.2,125.8,10
+/home/eston/tri-piql/results/robomimic_lift_mg_official_bc_rnn_posonly_nn_top160_seed0_train/lift_posonly_nn_top160_official_bc_rnn_seed0/20260622163840/models/model_epoch_200.pth,model_epoch_200,0.5,0.5,91.1,10

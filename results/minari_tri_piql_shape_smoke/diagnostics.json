@@ -1,0 +1,141 @@
+{
+  "dataset_id": "D4RL/pointmaze/large-v2",
+  "split_path": "results/minari_inspection/D4RL__pointmaze__large-v2/split_indices.json",
+  "episodes_csv": "/home/eston/tri-piql/results/minari_inspection/D4RL__pointmaze__large-v2/episodes.csv",
+  "obs_keys": [
+    "observation",
+    "desired_goal"
+  ],
+  "seed": 0,
+  "steps": 2,
+  "actor_steps": 2,
+  "classifier_steps": 2,
+  "eval_episodes": 1,
+  "eval_horizon": 5,
+  "transition_counts": {
+    "positive": 1000,
+    "negative": 1000,
+    "unlabeled": 1000
+  },
+  "trajectory_counts": {
+    "positive": 336,
+    "negative": 672,
+    "unlabeled": 2352,
+    "max_len": 797
+  },
+  "classifier": {
+    "pos_prob_mean": 0.4968656003475189,
+    "neg_prob_mean": 0.4966335594654083,
+    "unlabeled_prob_mean": 0.49719861149787903,
+    "labeled_accuracy": 0.48750000000000004
+  },
+  "tri_piql_score": {
+    "q_pos_mean": 0.4528365433216095,
+    "q_neg_mean": 0.5565614104270935,
+    "q_unlabeled_mean": 0.4865390360355377,
+    "pos_neg_auc": 0.34215561224489793,
+    "rank_gap": -0.0957338809967041,
+    "unlabeled_q_label_score_spearman": -0.021586429789944926,
+    "unlabeled_q_top_quartile_mean": 0.48199161887168884,
+    "unlabeled_q_bottom_quartile_mean": 0.48800456523895264,
+    "q_bias": -0.0002338567574042827,
+    "pos_transition_score_mean": 0.004561567213386297,
+    "neg_transition_score_mean": 0.0060993158258497715,
+    "unl_transition_score_mean": 0.005322462413460016,
+    "pos_actor_weight_mean": 1.5987462997436523,
+    "unl_actor_weight_mean": 0.930628776550293,
+    "nonzero_weight_frac": 0.6666666666666666
+  },
+  "histories": {
+    "classifier": [
+      {
+        "step": 1,
+        "loss": 1.3853709697723389
+      },
+      {
+        "step": 2,
+        "loss": 1.3836328983306885
+      }
+    ],
+    "tri_piql_score": [
+      {
+        "step": 1,
+        "conservative": 0.7183435559272766,
+        "loss": 6.6701226234436035,
+        "neg_return": 0.4841056764125824,
+        "neg_score": 0.009641392156481743,
+        "neg_signed": 0.7762016654014587,
+        "pos_return": -0.0925527811050415,
+        "pos_score": 0.004524325020611286,
+        "pos_signed": 0.7686208486557007,
+        "prior_loss": 0.016175489872694016,
+        "q_label_loss": 2.2322545051574707,
+        "q_neg": 0.7892963886260986,
+        "q_pos": 0.31319913268089294,
+        "q_unl": 0.37281709909439087,
+        "rank_loss": 2.6949143409729004,
+        "unl_score": 0.013554558157920837,
+        "unl_signed": 0.7429063320159912
+      },
+      {
+        "step": 2,
+        "conservative": 0.7184101939201355,
+        "loss": 4.059675693511963,
+        "neg_return": 0.01690169796347618,
+        "neg_score": 0.011389540508389473,
+        "neg_signed": 0.7771590948104858,
+        "pos_return": 0.04747030511498451,
+        "pos_score": 0.0038184213917702436,
+        "pos_signed": 0.7689779996871948,
+        "prior_loss": 0.0039034229703247547,
+        "q_label_loss": 1.4054276943206787,
+        "q_neg": 0.5012717247009277,
+        "q_pos": 0.5517889857292175,
+        "q_unl": 0.43752261996269226,
+        "rank_loss": 1.002324104309082,
+        "unl_score": 0.011468029581010342,
+        "unl_signed": 0.7429422736167908
+      }
+    ],
+    "bc_positive": [
+      {
+        "step": 1,
+        "loss": 0.7129861116409302
+      },
+      {
+        "step": 2,
+        "loss": 0.6728224754333496
+      }
+    ],
+    "weighted_bc_classifier": [
+      {
+        "step": 1,
+        "loss": 0.7373794913291931
+      },
+      {
+        "step": 2,
+        "loss": 0.6565230488777161
+      }
+    ],
+    "tri_piql_q_bc": [
+      {
+        "step": 1,
+        "loss": 0.6451526284217834
+      },
+      {
+        "step": 2,
+        "loss": 0.7433964610099792
+      }
+    ],
+    "tri_piql_score_awbc": [
+      {
+        "step": 1,
+        "loss": 0.7212380766868591
+      },
+      {
+        "step": 2,
+        "loss": 0.7563258409500122
+      }
+    ]
+  }
+}

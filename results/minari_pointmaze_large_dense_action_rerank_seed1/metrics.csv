@@ -1,0 +1,7 @@
+method,success_rate,avg_return,avg_len
+bc_positive,0.4,48.787880902139456,623.4
+weighted_bc_obs_classifier,0.3,50.30043171505538,622.9
+bc_sa_rerank_noise0.1_penalty0.05,0.1,60.33521375650433,745.0
+bc_sa_rerank_noise0.1_penalty0.2,0.1,67.69674296272991,776.3
+bc_sa_rerank_noise0.25_penalty0.05,0.3,58.51843448711783,710.4
+bc_sa_rerank_noise0.25_penalty0.2,0.1,60.701759720376046,741.8

@@ -1,0 +1,4 @@
+method,success_rate,avg_return,avg_len
+knn_positive_k1_all_train_positive,0.2,0.2,343.6
+knn_positive_k3_all_train_positive,0.4,0.4,286.2
+knn_positive_k5_all_train_positive,0.2,0.2,346.2

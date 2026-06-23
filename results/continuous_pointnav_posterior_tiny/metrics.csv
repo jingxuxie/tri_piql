@@ -1,0 +1,9 @@
+seed,bad_frac,method,success_rate,trap_rate,avg_return,avg_len
+0,0.9,bc_positive_prefix,0.0,0.0,-0.7000000000000004,70.0
+0,0.9,bc_pos_unlabeled,0.0,0.0,-0.7000000000000004,70.0
+0,0.9,bc_all,0.0,0.0,-0.7000000000000004,70.0
+0,0.9,weighted_bc_state_action,0.0,0.0,-0.7000000000000004,70.0
+0,0.9,oracle_good_bc,0.0,0.0,-0.7000000000000004,70.0
+0,0.9,tri_signal_top_demo_bc_frac0p05,0.0,0.0,-0.7000000000000004,70.0
+0,0.9,tri_signal_posterior_bc_prior0p05,0.0,0.0,-0.7000000000000004,70.0
+0,0.9,tri_signal_rerank,0.0,0.0,-0.7000000000000004,70.0

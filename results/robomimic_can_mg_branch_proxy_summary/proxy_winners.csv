@@ -1,0 +1,13 @@
+split,proxy,proxy_winner,proxy_winner_rollout_20k,rollout_best_method,rollout_best_20k,proxy_matches_rollout_best_method,proxy_matches_best_success
+can_mg_original,valid_positive_ll,allpositive,0.200,weighted,0.333,false,false
+can_mg_original,labeled_positive_ll,allpositive,0.200,weighted,0.333,false,false
+can_mg_original,valid_contrastive_gap,allpositive,0.200,weighted,0.333,false,false
+can_mg_original,labeled_contrastive_gap,allpositive,0.200,weighted,0.333,false,false
+can_mg_original,valid_negative_rejection,allpositive,0.200,weighted,0.333,false,false
+can_mg_original,labeled_negative_rejection,allpositive,0.200,weighted,0.333,false,false
+can_mg_shuffle42,valid_positive_ll,soft_weighted,0.100,hard_posmin,0.100,false,true
+can_mg_shuffle42,labeled_positive_ll,hard_posmin,0.100,hard_posmin,0.100,true,true
+can_mg_shuffle42,valid_contrastive_gap,hard_posmin,0.100,hard_posmin,0.100,true,true
+can_mg_shuffle42,labeled_contrastive_gap,hard_posmin,0.100,hard_posmin,0.100,true,true
+can_mg_shuffle42,valid_negative_rejection,hard_posmin,0.100,hard_posmin,0.100,true,true
+can_mg_shuffle42,labeled_negative_rejection,hard_posmin,0.100,hard_posmin,0.100,true,true
