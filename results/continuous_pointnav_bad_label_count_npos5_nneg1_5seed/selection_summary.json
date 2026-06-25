@@ -1,0 +1,82 @@
+[
+  {
+    "bad_frac": 0.5,
+    "top_unlabeled_frac": 0.05,
+    "demo_purity_mean": 1.0,
+    "demo_purity_std": 0.0,
+    "transition_purity_mean": 1.0,
+    "transition_purity_std": 0.0,
+    "hidden_good_demo_mean": 9.0,
+    "hidden_bad_demo_mean": 0.0
+  },
+  {
+    "bad_frac": 0.5,
+    "top_unlabeled_frac": 0.1,
+    "demo_purity_mean": 1.0,
+    "demo_purity_std": 0.0,
+    "transition_purity_mean": 1.0,
+    "transition_purity_std": 0.0,
+    "hidden_good_demo_mean": 18.0,
+    "hidden_bad_demo_mean": 0.0
+  },
+  {
+    "bad_frac": 0.75,
+    "top_unlabeled_frac": 0.05,
+    "demo_purity_mean": 1.0,
+    "demo_purity_std": 0.0,
+    "transition_purity_mean": 1.0,
+    "transition_purity_std": 0.0,
+    "hidden_good_demo_mean": 9.0,
+    "hidden_bad_demo_mean": 0.0
+  },
+  {
+    "bad_frac": 0.75,
+    "top_unlabeled_frac": 0.1,
+    "demo_purity_mean": 1.0,
+    "demo_purity_std": 0.0,
+    "transition_purity_mean": 1.0,
+    "transition_purity_std": 0.0,
+    "hidden_good_demo_mean": 18.0,
+    "hidden_bad_demo_mean": 0.0
+  },
+  {
+    "bad_frac": 0.9,
+    "top_unlabeled_frac": 0.05,
+    "demo_purity_mean": 1.0,
+    "demo_purity_std": 0.0,
+    "transition_purity_mean": 1.0,
+    "transition_purity_std": 0.0,
+    "hidden_good_demo_mean": 9.0,
+    "hidden_bad_demo_mean": 0.0
+  },
+  {
+    "bad_frac": 0.9,
+    "top_unlabeled_frac": 0.1,
+    "demo_purity_mean": 0.9555555555555555,
+    "demo_purity_std": 0.06478835438717,
+    "transition_purity_mean": 0.9851807030089665,
+    "transition_purity_std": 0.02196326168214676,
+    "hidden_good_demo_mean": 17.2,
+    "hidden_bad_demo_mean": 0.8
+  },
+  {
+    "bad_frac": 0.95,
+    "top_unlabeled_frac": 0.05,
+    "demo_purity_mean": 0.9777777777777779,
+    "demo_purity_std": 0.04444444444444447,
+    "transition_purity_mean": 0.9926605504587156,
+    "transition_purity_std": 0.01467889908256881,
+    "hidden_good_demo_mean": 8.8,
+    "hidden_bad_demo_mean": 0.2
+  },
+  {
+    "bad_frac": 0.95,
+    "top_unlabeled_frac": 0.1,
+    "demo_purity_mean": 0.5666666666666667,
+    "demo_purity_std": 0.08888888888888888,
+    "transition_purity_mean": 0.8118397811421115,
+    "transition_purity_std": 0.054394233665601886,
+    "hidden_good_demo_mean": 10.2,
+    "hidden_bad_demo_mean": 7.8
+  }
+]

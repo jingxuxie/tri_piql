@@ -3183,3 +3183,2126 @@ Interpretation update:
 - The mean gap shrinks from 0.167 in the original 10-episode table to 0.107 in the 50-episode table.
 - Approximate pooled binomial intervals still overlap, so this is a robustness/caveat check rather than a standalone statistical proof.
 - Paper language should say the masscap endpoint edge persists under less noisy evaluation, but is modest.
+
+## 2026-06-24: TRIAGE-BC v0.1 method freeze
+
+Created the forward-looking method contract requested by the paper completion plan. This separates existing development/validation evidence from future fresh final-split claims.
+
+Artifacts:
+
+- Method freeze: `METHOD_FREEZE.md`
+- Method config: `configs/final_method.yaml`
+- Evaluation config: `configs/final_eval.yaml`
+- Final artifact staging README: `results/final_paper/README.md`
+
+Frozen method summary:
+
+- Paper-facing method name: TRIAGE-BC v0.1.
+- Score model: state-action binary classifier trained on labeled positives versus labeled negatives, with unlabeled demos excluded from score-model training.
+- Trajectory score: mean sigmoid classifier probability over transitions.
+- Positive mass: calibrated by labeled-positive and labeled-negative mean demo scores.
+- Router v2:
+  - abstain if estimated positive mass >= 800 and count above positive minimum >= 400;
+  - otherwise use hard `pos_min` if labeled-positive p10 >= 0.85 and count above positive minimum >= 80;
+  - otherwise use hard adaptive masscap.
+- Policy backbone: official Robomimic BC-RNN-GMM, sequence length 10, actor MLP 1024/1024, LSTM hidden 400 x 2 layers, 5 GMM modes.
+- Training budget: 200 epochs x 100 steps = 20k optimizer steps, checkpoints at 5k/10k/15k/20k.
+- Primary final split seeds: 11, 22, 33.
+- Primary policy seed per final split: 0.
+- Final evaluation: 50 held-out validation-positive rollouts, fixed-budget reporting, no best-checkpoint main claims.
+
+Interpretation update:
+
+- Existing results outside `results/final_paper/` remain development, validation, ablation, or diagnostic evidence unless rerun under the freeze.
+- Any future change to score model, router thresholds, policy config, checkpoint schedule, or final evaluation protocol should be logged as a new variant or ablation.
+- The next compute-bearing step should start from the freeze, preferably a bounded Lift 50-episode endpoint check or the first fresh Can 40p/80b final split.
+
+## 2026-06-24: Lift MG core endpoint 50-episode check
+
+Ran the missing higher-episode Lift endpoint diagnostic for the core fixed-20k comparison: bad-aware `pos_min`, classifier-probability weighted BC, and positive-only NN top160.
+
+Artifacts:
+
+- Summary: `results/robomimic_lift_mg_endpoint_50ep_summary/REPORT.md`
+- Regenerator: `scripts/summarize_robomimic_lift_endpoint_50ep.py`
+- Pos-min evals: `results/robomimic_lift_mg_seed{0,1,2}_endpoint_50ep_posmin_eval/REPORT.md`
+- Weighted evals: `results/robomimic_lift_mg_seed{0,1,2}_endpoint_50ep_weighted_eval/REPORT.md`
+- Positive-only top160 evals: `results/robomimic_lift_mg_seed{0,1,2}_endpoint_50ep_posonly_top160_eval/REPORT.md`
+
+Protocol:
+
+- Original Lift MG sparse split.
+- Original fixed-20k checkpoints from the three-seed table.
+- 50 evaluation episodes per seed and method.
+- Horizon 150.
+- The split has 30 validation-positive initial states; 50 episodes cycle through the ordered start list.
+
+Endpoint results:
+
+| method | 10 ep mean | 50 ep seed mean | pooled 50 ep |
+|---|---:|---:|---:|
+| bad-aware pos-min | 0.667 | 0.600 +/- 0.065 | 90/150 |
+| weighted probability sampler | 0.533 | 0.533 +/- 0.025 | 80/150 |
+| positive-only NN top160 | 0.567 | 0.560 +/- 0.049 | 84/150 |
+
+Interpretation update:
+
+- Bad-aware `pos_min` still leads weighted BC at the fixed 20k endpoint under a less noisy evaluation budget.
+- The gap over positive-only NN top160 is small: 0.600 versus 0.560.
+- This weakens any strong bad-label-necessity wording. The paper should say bad labels improve calibration and can improve fixed-budget coverage-quality tradeoffs, while positive-only retrieval remains a strong baseline.
+- Approximate pooled intervals overlap, so this is robustness evidence and a paper caveat, not a standalone statistical proof.
+
+## 2026-06-24: First frozen final Can 40p/80b split endpoint
+
+Ran the first fresh final-split comparison under `METHOD_FREEZE.md`: Can Paired 40 hidden-positive / 80 hidden-bad unlabeled, split seed 11, policy seed 0.
+
+Artifacts:
+
+- Runner: `scripts/run_final_matrix.py`
+- Summary CSV: `results/final_paper/tables/can_paired_pos40_bad80_split11_endpoint.csv`
+- Summary report: `results/final_paper/tables/can_paired_pos40_bad80_split11_endpoint_REPORT.md`
+- TRIAGE run: `results/final_paper/per_seed/can_paired_pos40_bad80_split11_triage_bc_policy0/REPORT.md`
+- Weighted run: `results/final_paper/per_seed/can_paired_pos40_bad80_split11_weighted_bc_policy0/REPORT.md`
+
+Protocol:
+
+- Frozen router-v2 selected `hard_adaptive_masscap` for TRIAGE-BC.
+- Official Robomimic BC-RNN-GMM, fixed 20k endpoint.
+- Endpoint-only evaluation for this fast pass: 50 validation-positive rollouts, horizon 400, rollout seed 0.
+- The all-checkpoint 50-episode curve was intentionally stopped after training because it was too slow for fast iteration; endpoint evaluation is the primary frozen metric.
+
+Endpoint results:
+
+| method | selected unlabeled | hidden-positive | hidden-bad | purity | 20k success |
+|---|---:|---:|---:|---:|---:|
+| TRIAGE-BC hard adaptive masscap | 70 | 40 | 30 | 0.571 | 0.760 |
+| weighted BC sampler | 120 | 40 | 80 | 0.333 | 0.720 |
+
+Interpretation update:
+
+- The first fresh final split preserves the desired direction: TRIAGE-BC beats weighted BC at the fixed 20k endpoint.
+- The gap is small: 0.040 over 50 episodes, so this should be treated as one encouraging final-split datapoint, not a standalone claim.
+- The support audit is informative: TRIAGE-BC recovered all 40 hidden positives while filtering 50/80 hidden bad demos, despite lower purity than the original development split.
+- Next final evidence should repeat the same endpoint comparison on split seeds 22 and 33, and then broaden to the required baselines.
+
+## 2026-06-24: Second frozen final Can 40p/80b split endpoint
+
+Ran the same frozen endpoint comparison on split seed 22.
+
+Artifacts:
+
+- Split-22 summary CSV: `results/final_paper/tables/can_paired_pos40_bad80_split22_endpoint.csv`
+- Split-22 summary report: `results/final_paper/tables/can_paired_pos40_bad80_split22_endpoint_REPORT.md`
+- Two-split aggregate CSV: `results/final_paper/tables/can_paired_pos40_bad80_final_endpoint_summary.csv`
+- Two-split aggregate report: `results/final_paper/tables/can_paired_pos40_bad80_final_endpoint_summary_REPORT.md`
+- TRIAGE run: `results/final_paper/per_seed/can_paired_pos40_bad80_split22_triage_bc_policy0/REPORT.md`
+- Weighted run: `results/final_paper/per_seed/can_paired_pos40_bad80_split22_weighted_bc_policy0/REPORT.md`
+
+Protocol:
+
+- Same `METHOD_FREEZE.md` contract as split 11.
+- Frozen router-v2 selected `hard_adaptive_masscap` for TRIAGE-BC.
+- Official Robomimic BC-RNN-GMM, fixed 20k endpoint.
+- Endpoint evaluation: 50 validation-positive rollouts, horizon 400, rollout seed 0.
+
+Endpoint results:
+
+| method | selected unlabeled | hidden-positive | hidden-bad | purity | 20k success |
+|---|---:|---:|---:|---:|---:|
+| TRIAGE-BC hard adaptive masscap | 73 | 36 | 37 | 0.493 | 0.520 |
+| weighted BC sampler | 120 | 40 | 80 | 0.333 | 0.440 |
+
+Two-split aggregate so far:
+
+| method | endpoint successes | success rate |
+|---|---:|---:|
+| TRIAGE-BC hard adaptive masscap | 64/100 | 0.640 |
+| weighted BC sampler | 58/100 | 0.580 |
+
+Interpretation update:
+
+- The second fresh final split also favors TRIAGE-BC, with a 0.080 endpoint gap.
+- Split 22 is clearly harder than split 11: both methods drop, and TRIAGE support purity falls from 0.571 to 0.493.
+- The aggregate direction is now 2/2 frozen splits favoring TRIAGE-BC, but the mean gap is modest at 0.060.
+- Paper language should say the final-split evidence is encouraging and directionally consistent so far, not complete. Split seed 33 and broader frozen baselines remain required.
+
+## 2026-06-24: Third frozen final Can 40p/80b split endpoint
+
+Ran the final primary split-seed comparison for Can Paired 40 hidden-positive / 80 hidden-bad unlabeled under `METHOD_FREEZE.md`: split seed 33, policy seed 0.
+
+Artifacts:
+
+- Split-33 summary CSV: `results/final_paper/tables/can_paired_pos40_bad80_split33_endpoint.csv`
+- Split-33 summary report: `results/final_paper/tables/can_paired_pos40_bad80_split33_endpoint_REPORT.md`
+- Updated three-split aggregate CSV: `results/final_paper/tables/can_paired_pos40_bad80_final_endpoint_summary.csv`
+- Updated three-split aggregate report: `results/final_paper/tables/can_paired_pos40_bad80_final_endpoint_summary_REPORT.md`
+- TRIAGE run: `results/final_paper/per_seed/can_paired_pos40_bad80_split33_triage_bc_policy0/REPORT.md`
+- Weighted run: `results/final_paper/per_seed/can_paired_pos40_bad80_split33_weighted_bc_policy0/REPORT.md`
+
+Protocol:
+
+- Same `METHOD_FREEZE.md` contract as split seeds 11 and 22.
+- Frozen router-v2 selected `hard_adaptive_masscap` for TRIAGE-BC.
+- Official Robomimic BC-RNN-GMM, fixed 20k endpoint.
+- Endpoint evaluation: 50 validation-positive rollouts, horizon 400, rollout seed 0.
+
+Endpoint results:
+
+| method | selected unlabeled | hidden-positive | hidden-bad | purity | 20k success |
+|---|---:|---:|---:|---:|---:|
+| TRIAGE-BC hard adaptive masscap | 47 | 34 | 13 | 0.723 | 0.700 |
+| weighted BC sampler | 120 | 40 | 80 | 0.333 | 0.640 |
+
+Completed primary final split aggregate:
+
+| method | endpoint successes | success rate |
+|---|---:|---:|
+| TRIAGE-BC hard adaptive masscap | 99/150 | 0.660 |
+| weighted BC sampler | 90/150 | 0.600 |
+
+Interpretation update:
+
+- All three primary frozen split seeds favor TRIAGE-BC over weighted BC at the fixed 20k endpoint.
+- The pooled gap is modest: 0.060 over 150 endpoint rollouts.
+- Split 33 has cleaner TRIAGE support than split 22, with 0.723 purity, but lower hidden-positive coverage than split 11: 34/40 hidden positives selected.
+- This completes the primary Can 40p/80b hard-vs-weighted final split matrix. The paper can now state this result as a completed Can final-split finding, while still caveating that broader frozen baselines remain required for a complete benchmark claim.
+
+## 2026-06-24: Frozen Can 40p/80b positive-only NN control
+
+Ran the strongest no-bad-label control on the same primary frozen Can Paired 40 hidden-positive / 80 hidden-bad splits: positive-only nearest-neighbor top40 support plus official BC-RNN-GMM.
+
+Artifacts:
+
+- Updated aggregate CSV: `results/final_paper/tables/can_paired_pos40_bad80_final_endpoint_summary.csv`
+- Updated aggregate report: `results/final_paper/tables/can_paired_pos40_bad80_final_endpoint_summary_REPORT.md`
+- Split-11 positive-only run: `results/final_paper/per_seed/can_paired_pos40_bad80_split11_positive_only_nn_policy0/REPORT.md`
+- Split-22 positive-only run: `results/final_paper/per_seed/can_paired_pos40_bad80_split22_positive_only_nn_policy0/REPORT.md`
+- Split-33 positive-only run: `results/final_paper/per_seed/can_paired_pos40_bad80_split33_positive_only_nn_policy0/REPORT.md`
+
+Protocol:
+
+- Same frozen split seeds, policy seed, official BC-RNN-GMM training budget, and 50-episode endpoint evaluation as TRIAGE-BC and weighted BC.
+- Positive-only NN selects the 40 unlabeled demos nearest to labeled positives, without using bad labels or hidden labels.
+
+Endpoint results:
+
+| split seed | TRIAGE-BC | weighted BC | positive-only NN top40 |
+|---:|---:|---:|---:|
+| 11 | 0.760 | 0.720 | 0.840 |
+| 22 | 0.520 | 0.440 | 0.760 |
+| 33 | 0.700 | 0.640 | 0.560 |
+| pooled | 0.660 | 0.600 | 0.720 |
+
+Positive-only support audit:
+
+| split seed | selected unlabeled | hidden-positive | hidden-bad | purity |
+|---:|---:|---:|---:|---:|
+| 11 | 40 | 36 | 4 | 0.900 |
+| 22 | 40 | 37 | 3 | 0.925 |
+| 33 | 40 | 33 | 7 | 0.825 |
+| pooled | 120 | 106 | 14 | 0.883 |
+
+Interpretation update:
+
+- This is the most important caveat added so far: on the frozen Can matrix, positive-only NN top40 beats TRIAGE-BC pooled (`0.720` versus `0.660`) and wins on two of three splits.
+- The bad-label-aware TRIAGE support still beats the soft weighted sampler, but it is not the best Can final method once the strong no-bad-label baseline is included.
+- Paper language should not claim a bad-label benefit on Can 40p/80b. The Can result supports hard selected support over soft weighted sampling and establishes positive-only retrieval as a required baseline.
+- The best current bad-label benefit evidence remains more plausible on Lift MG, where bad-aware `pos_min` stays ahead of weighted BC and slightly ahead of positive-only NN top160 under the 50-episode endpoint check.
+
+## 2026-06-24: Frozen Can 40p/80b all-demo mixed cloning control
+
+Ran the all-demo mixed BC control on the same primary frozen Can Paired 40 hidden-positive / 80 hidden-bad splits under `METHOD_FREEZE.md`.
+
+Artifacts:
+
+- Updated aggregate CSV: `results/final_paper/tables/can_paired_pos40_bad80_final_endpoint_summary.csv`
+- Updated aggregate report: `results/final_paper/tables/can_paired_pos40_bad80_final_endpoint_summary_REPORT.md`
+- Split-11 all-demo run: `results/final_paper/per_seed/can_paired_pos40_bad80_split11_bc_all_mixed_policy0/REPORT.md`
+- Split-22 all-demo run: `results/final_paper/per_seed/can_paired_pos40_bad80_split22_bc_all_mixed_policy0/REPORT.md`
+- Split-33 all-demo run: `results/final_paper/per_seed/can_paired_pos40_bad80_split33_bc_all_mixed_policy0/REPORT.md`
+
+Protocol:
+
+- Same frozen split seeds, policy seed, official BC-RNN-GMM training budget, and 50-episode endpoint evaluation as TRIAGE-BC, weighted BC, and positive-only NN.
+- All-demo BC trains on all 180 train demos in each split; it does not select an unlabeled support subset, so support purity is undefined.
+- Split 11 evaluation used the standard CUDA evaluator. Split 22 CUDA approval timed out twice in Codex, so split 22 and 33 all-demo evaluations used the CPU device fallback with the same checkpoint, seed, init-state mode, episodes, and horizon.
+
+Endpoint results:
+
+| split seed | TRIAGE-BC | weighted BC | positive-only NN top40 | all-demo BC |
+|---:|---:|---:|---:|---:|
+| 11 | 0.760 | 0.720 | 0.840 | 0.500 |
+| 22 | 0.520 | 0.440 | 0.760 | 0.560 |
+| 33 | 0.700 | 0.640 | 0.560 | 0.560 |
+| pooled | 0.660 | 0.600 | 0.720 | 0.540 |
+
+Interpretation update:
+
+- All-demo mixed cloning is now complete for the frozen Can matrix and is the weakest pooled row: 81/150 successes versus 99/150 for TRIAGE-BC, 90/150 for weighted BC, and 108/150 for positive-only NN.
+- Split 22 is an exception where all-demo BC exceeds TRIAGE-BC, so the honest claim is pooled and caveated rather than "mixed BC always fails."
+- The Can final story is now stable but narrow: positive-only retrieval is strongest; TRIAGE-BC beats weighted BC and pooled all-demo cloning; the result still does not support a bad-label benefit claim on Can 40p/80b.
+
+## 2026-06-24: Frozen Can 40p/80b all-positive oracle diagnostic
+
+Ran the all-train-positive oracle diagnostic on the same primary frozen Can Paired 40 hidden-positive / 80 hidden-bad splits under `METHOD_FREEZE.md`.
+
+Artifacts:
+
+- Updated aggregate CSV: `results/final_paper/tables/can_paired_pos40_bad80_final_endpoint_summary.csv`
+- Updated aggregate report: `results/final_paper/tables/can_paired_pos40_bad80_final_endpoint_summary_REPORT.md`
+- Split-11 oracle run: `results/final_paper/per_seed/can_paired_pos40_bad80_split11_all_train_positive_oracle_policy0/REPORT.md`
+- Split-22 oracle run: `results/final_paper/per_seed/can_paired_pos40_bad80_split22_all_train_positive_oracle_policy0/REPORT.md`
+- Split-33 oracle run: `results/final_paper/per_seed/can_paired_pos40_bad80_split33_all_train_positive_oracle_policy0/REPORT.md`
+
+Protocol:
+
+- Same frozen split seeds, policy seed, official BC-RNN-GMM training budget, and 50-episode endpoint evaluation as the non-oracle rows.
+- Oracle source is `all_train_positive`, which trains on all true-positive train demos. This is 90 demos per split, not a deployable method.
+- Endpoint evaluations used CPU device fallback with the same checkpoint, seed, init-state mode, episodes, and horizon.
+
+Endpoint results:
+
+| split seed | TRIAGE-BC | weighted BC | positive-only NN top40 | all-demo BC | all-positive oracle |
+|---:|---:|---:|---:|---:|---:|
+| 11 | 0.760 | 0.720 | 0.840 | 0.500 | 0.980 |
+| 22 | 0.520 | 0.440 | 0.760 | 0.560 | 0.980 |
+| 33 | 0.700 | 0.640 | 0.560 | 0.560 | 0.980 |
+| pooled | 0.660 | 0.600 | 0.720 | 0.540 | 0.980 |
+
+Interpretation update:
+
+- The all-positive oracle is near-saturated: 147/150 successes across the frozen Can endpoint matrix.
+- This is useful because it proves the final eval starts and BC-RNN-GMM backbone can solve the task when given broad true-positive support.
+- The remaining Can gap is therefore support conversion, not task solvability. It does not rescue a bad-label benefit claim, because positive-only NN remains the strongest non-oracle row.
+
+## 2026-06-24: Frozen Lift MG sparse split-11 final row
+
+Ran the first fresh frozen final-paper Lift MG sparse split row under `METHOD_FREEZE.md`.
+
+Artifacts:
+
+- Summary CSV: `results/final_paper/tables/lift_mg_mg_sparse_split11_endpoint_summary.csv`
+- Summary report: `results/final_paper/tables/lift_mg_mg_sparse_split11_endpoint_summary_REPORT.md`
+- TRIAGE-BC run: `results/final_paper/per_seed/lift_mg_mg_sparse_split11_triage_bc_policy0/REPORT.md`
+- Weighted BC run: `results/final_paper/per_seed/lift_mg_mg_sparse_split11_weighted_bc_policy0/REPORT.md`
+- Positive-only NN top160 run: `results/final_paper/per_seed/lift_mg_mg_sparse_split11_positive_only_nn_policy0/REPORT.md`
+- All-demo BC run: `results/final_paper/per_seed/lift_mg_mg_sparse_split11_bc_all_mixed_policy0/REPORT.md`
+- All-positive oracle run: `results/final_paper/per_seed/lift_mg_mg_sparse_split11_all_train_positive_oracle_policy0/REPORT.md`
+
+Protocol:
+
+- Task/split: Robomimic Lift MG sparse low-dimensional data.
+- Split seed: 11, with shuffled label pools.
+- Policy/classifier seed: 0.
+- Backbone: official Robomimic BC-RNN-GMM, 200 epochs, 100 steps per epoch.
+- Endpoint evaluation: 50 validation-positive initial-state rollouts, horizon 150, fixed `model_epoch_200.pth`.
+- Evaluations used CPU fallback with the same checkpoint, seed, init-state mode, episodes, and horizon across methods.
+
+Endpoint results:
+
+| method | success | successes | train demos | selected unlabeled | support purity |
+|---|---:|---:|---:|---:|---:|
+| all-positive oracle | 0.660 | 33/50 | 286 | 0 | n/a |
+| TRIAGE-BC / pos-min | 0.540 | 27/50 | 188 | 178 | 0.949 |
+| weighted BC | 0.480 | 24/50 | 1430 | 1420 weighted | 0.194 |
+| positive-only NN top160 | 0.460 | 23/50 | 170 | 160 | 0.531 |
+| all-demo BC | 0.260 | 13/50 | 1440 | all train demos | 0.194 |
+
+Interpretation update:
+
+- This fresh split preserves the useful Lift ordering: bad-aware hard support beats weighted BC, positive-only NN, and all-demo cloning at the fixed endpoint.
+- The bad-label calibration story is clearer than on frozen Can: positive-only NN top160 support collapses to 0.531 hidden-positive purity on this split, while TRIAGE / pos-min reaches 0.949 purity.
+- The endpoint edge over weighted BC is still small, only 3 successes out of 50. This should be used as one split row supporting the existing Lift pattern, not as a standalone decisive result.
+- The oracle reaches 0.660, so this split is learnable but harder than the original Lift 50-episode endpoint check and much less saturated than the frozen Can oracle diagnostic.
+- All-demo mixed cloning remains weak at 0.260, reinforcing that contaminated Lift logs hurt naive BC under the official sequence BC backbone.
+
+## 2026-06-24: Frozen Lift MG sparse split-22 final row
+
+Ran the second fresh frozen final-paper Lift MG sparse split row under `METHOD_FREEZE.md`.
+
+Artifacts:
+
+- Summary CSV: `results/final_paper/tables/lift_mg_mg_sparse_split22_endpoint_summary.csv`
+- Summary report: `results/final_paper/tables/lift_mg_mg_sparse_split22_endpoint_summary_REPORT.md`
+- Two-split aggregate CSV: `results/final_paper/tables/lift_mg_mg_sparse_final_endpoint_summary.csv`
+- Two-split aggregate report: `results/final_paper/tables/lift_mg_mg_sparse_final_endpoint_summary_REPORT.md`
+- TRIAGE-BC run: `results/final_paper/per_seed/lift_mg_mg_sparse_split22_triage_bc_policy0/REPORT.md`
+- Weighted BC run: `results/final_paper/per_seed/lift_mg_mg_sparse_split22_weighted_bc_policy0/REPORT.md`
+- Positive-only NN top160 run: `results/final_paper/per_seed/lift_mg_mg_sparse_split22_positive_only_nn_policy0/REPORT.md`
+- All-demo BC run: `results/final_paper/per_seed/lift_mg_mg_sparse_split22_bc_all_mixed_policy0/REPORT.md`
+- All-positive oracle run: `results/final_paper/per_seed/lift_mg_mg_sparse_split22_all_train_positive_oracle_policy0/REPORT.md`
+
+Protocol:
+
+- Task/split: Robomimic Lift MG sparse low-dimensional data.
+- Split seed: 22, with shuffled label pools.
+- Policy/classifier seed: 0.
+- Backbone: official Robomimic BC-RNN-GMM, 200 epochs, 100 steps per epoch.
+- Endpoint evaluation: 50 validation-positive initial-state rollouts, horizon 150, fixed `model_epoch_200.pth`.
+- Evaluations used CPU fallback with the same checkpoint, seed, init-state mode, episodes, and horizon across methods.
+
+Endpoint results:
+
+| method | success | successes | train demos | selected unlabeled | support purity |
+|---|---:|---:|---:|---:|---:|
+| positive-only NN top160 | 0.680 | 34/50 | 170 | 160 | 0.700 |
+| all-positive oracle | 0.680 | 34/50 | 286 | 0 | n/a |
+| weighted BC | 0.660 | 33/50 | 1430 | 1420 weighted | 0.194 |
+| TRIAGE-BC / pos-min | 0.500 | 25/50 | 171 | 161 | 0.932 |
+| all-demo BC | 0.200 | 10/50 | 1440 | all train demos | 0.194 |
+
+Two-split frozen Lift aggregate:
+
+| method | split 11 | split 22 | pooled |
+|---|---:|---:|---:|
+| all-positive oracle | 0.660 | 0.680 | 67/100 |
+| weighted BC | 0.480 | 0.660 | 57/100 |
+| positive-only NN top160 | 0.460 | 0.680 | 57/100 |
+| TRIAGE-BC / pos-min | 0.540 | 0.500 | 52/100 |
+| all-demo BC | 0.260 | 0.200 | 23/100 |
+
+Interpretation update:
+
+- Split 22 reverses the split-11 ordering: positive-only NN and weighted BC beat TRIAGE-BC at the fixed endpoint.
+- Bad labels still improve support purity on split 22: TRIAGE-BC selects 150 hidden-positive and 11 hidden-bad demos, while positive-only NN selects 112 hidden-positive and 48 hidden-bad demos.
+- The two-split frozen Lift aggregate no longer supports a clean TRIAGE-over-weighted claim. Weighted BC and positive-only NN both reach 57/100, while TRIAGE-BC reaches 52/100.
+- All-demo mixed cloning remains consistently weak at 23/100 pooled, so contaminated-log robustness remains supported.
+- Paper language should now treat Lift as split-sensitive evidence for score-to-support conversion and strong baselines, not as a decisive bad-label benefit result.
+
+## 2026-06-24: Frozen Lift MG sparse split-33 core row
+
+Ran the third fresh frozen Lift MG sparse row for the core non-oracle comparison under `METHOD_FREEZE.md`.
+
+Artifacts:
+
+- Split-33 core CSV: `results/final_paper/tables/lift_mg_mg_sparse_split33_core_endpoint_summary.csv`
+- Split-33 core report: `results/final_paper/tables/lift_mg_mg_sparse_split33_core_endpoint_summary_REPORT.md`
+- Three-split core CSV: `results/final_paper/tables/lift_mg_mg_sparse_core3_endpoint_summary.csv`
+- Three-split core report: `results/final_paper/tables/lift_mg_mg_sparse_core3_endpoint_summary_REPORT.md`
+- TRIAGE-BC run: `results/final_paper/per_seed/lift_mg_mg_sparse_split33_triage_bc_policy0/REPORT.md`
+- Weighted BC run: `results/final_paper/per_seed/lift_mg_mg_sparse_split33_weighted_bc_policy0/REPORT.md`
+- Positive-only NN top160 run: `results/final_paper/per_seed/lift_mg_mg_sparse_split33_positive_only_nn_policy0/REPORT.md`
+
+Protocol:
+
+- Task/split: Robomimic Lift MG sparse low-dimensional data.
+- Split seed: 33, with shuffled label pools.
+- Policy/classifier seed: 0.
+- Backbone: official Robomimic BC-RNN-GMM, 200 epochs, 100 steps per epoch.
+- Endpoint evaluation: 50 validation-positive initial-state rollouts, horizon 150, fixed `model_epoch_200.pth`.
+- Evaluations used CPU fallback with the same checkpoint, seed, init-state mode, episodes, and horizon across methods.
+- This bounded pass ran only the core non-oracle methods. Split-33 all-demo BC and all-positive oracle remain unrun.
+
+Endpoint results:
+
+| method | success | successes | train demos | selected unlabeled | support purity |
+|---|---:|---:|---:|---:|---:|
+| weighted BC | 0.720 | 36/50 | 1430 | 1420 weighted | 0.194 |
+| positive-only NN top160 | 0.500 | 25/50 | 170 | 160 | 0.906 |
+| TRIAGE-BC / pos-min | 0.440 | 22/50 | 112 | 102 | 1.000 |
+
+Three-split frozen Lift core aggregate:
+
+| method | split 11 | split 22 | split 33 | pooled |
+|---|---:|---:|---:|---:|
+| weighted BC | 0.480 | 0.660 | 0.720 | 93/150 |
+| positive-only NN top160 | 0.460 | 0.680 | 0.500 | 82/150 |
+| TRIAGE-BC / pos-min | 0.540 | 0.500 | 0.440 | 74/150 |
+
+Interpretation update:
+
+- Split 33 strengthens the coverage caveat: TRIAGE-BC reaches perfect selected-support purity, but only selects 102 hidden positives and reaches 0.440 endpoint success.
+- Weighted BC is the clear winner on split 33 at 0.720, and now leads the three-split frozen Lift core aggregate with 93/150 successes.
+- Positive-only NN top160 also beats TRIAGE-BC on the three-split core aggregate, 82/150 versus 74/150.
+- Bad labels improve support purity on all fresh Lift splits, but the policy result does not support a bad-label benefit claim on Lift.
+- Paper language should frame Lift as evidence that precision/coverage conversion is the real bottleneck, not as evidence that hard bad-aware filtering is the best policy converter.
+
+## 2026-06-24: Frozen Lift MG sparse split-33 controls and full five-method aggregate
+
+Completed the split-33 all-demo BC and all-positive oracle controls under the same frozen endpoint protocol, then promoted the Lift MG sparse table from a core-only three-split comparison to a full three-split five-method matrix.
+
+Artifacts:
+
+- Split-33 full CSV: `results/final_paper/tables/lift_mg_mg_sparse_split33_endpoint_summary.csv`
+- Split-33 full report: `results/final_paper/tables/lift_mg_mg_sparse_split33_endpoint_summary_REPORT.md`
+- Full three-split aggregate CSV: `results/final_paper/tables/lift_mg_mg_sparse_final_endpoint_summary.csv`
+- Full three-split aggregate report: `results/final_paper/tables/lift_mg_mg_sparse_final_endpoint_summary_REPORT.md`
+- Split-33 all-demo run: `results/final_paper/per_seed/lift_mg_mg_sparse_split33_bc_all_mixed_policy0/REPORT.md`
+- Split-33 all-positive oracle run: `results/final_paper/per_seed/lift_mg_mg_sparse_split33_all_train_positive_oracle_policy0/REPORT.md`
+
+Protocol:
+
+- Same Lift MG sparse split seed 33, policy seed 0, official BC-RNN-GMM, 200 epochs, and fixed `model_epoch_200.pth` endpoint.
+- Endpoint evaluation used 50 validation-positive initial-state rollouts, horizon 150, CPU fallback, same seed/init-state mode as the existing core rows.
+- All-demo BC trains on all 1440 train demos; all-positive oracle trains on all 286 true-positive train demos and is diagnostic only.
+
+Split-33 endpoint results:
+
+| method | success | successes | train demos | selected unlabeled | support purity |
+|---|---:|---:|---:|---:|---:|
+| all-positive oracle | 0.760 | 38/50 | 286 | 0 | n/a |
+| weighted BC | 0.720 | 36/50 | 1430 | 1420 weighted | 0.194 |
+| positive-only NN top160 | 0.500 | 25/50 | 170 | 160 | 0.906 |
+| TRIAGE-BC / pos-min | 0.440 | 22/50 | 112 | 102 | 1.000 |
+| all-demo BC | 0.160 | 8/50 | 1440 | all train demos | 0.194 |
+
+Full three-split frozen Lift aggregate:
+
+| method | split 11 | split 22 | split 33 | pooled |
+|---|---:|---:|---:|---:|
+| all-positive oracle | 0.660 | 0.680 | 0.760 | 105/150 |
+| weighted BC | 0.480 | 0.660 | 0.720 | 93/150 |
+| positive-only NN top160 | 0.460 | 0.680 | 0.500 | 82/150 |
+| TRIAGE-BC / pos-min | 0.540 | 0.500 | 0.440 | 74/150 |
+| all-demo BC | 0.260 | 0.200 | 0.160 | 31/150 |
+
+Interpretation update:
+
+- Weighted BC is the strongest non-oracle method on the completed frozen Lift matrix, reaching 93/150 successes.
+- TRIAGE-BC improves selected-support purity on all splits, but the policy result is coverage-limited: split 33 has perfect TRIAGE support purity and still trails weighted BC by 14 successes.
+- All-demo mixed cloning is weak on every Lift split and now reaches only 31/150 pooled, so contaminated-log negative-control evidence is stronger.
+- The all-positive oracle reaches 105/150 pooled, showing Lift is learnable with broad true-positive support but not saturated.
+- The paper should not use Lift as a bad-label policy-benefit result. It should use Lift to argue that score-to-support conversion and precision/coverage balance are the remaining bottleneck.
+
+## 2026-06-24: Frozen Lift MG classifier-score top160 ablation
+
+Tested a broader hard-support converter on the frozen Lift MG sparse splits: labeled positives plus the top 160 unlabeled demos by classifier trajectory score.
+
+Artifacts:
+
+- Ablation CSV: `results/final_paper/ablations/lift_mg_classifier_top160_endpoint_summary.csv`
+- Ablation report: `results/final_paper/ablations/lift_mg_classifier_top160_endpoint_summary_REPORT.md`
+- Split-11 run: `results/final_paper/per_seed/lift_mg_mg_sparse_split11_classifier_topk_policy0/REPORT.md`
+- Split-22 run: `results/final_paper/per_seed/lift_mg_mg_sparse_split22_classifier_topk_policy0/REPORT.md`
+- Split-33 run: `results/final_paper/per_seed/lift_mg_mg_sparse_split33_classifier_topk_policy0/REPORT.md`
+
+Protocol:
+
+- Same frozen Lift MG sparse split seeds 11/22/33, policy seed 0, official BC-RNN-GMM, 200 epochs, and fixed `model_epoch_200.pth` endpoint.
+- Endpoint evaluation used 50 validation-positive initial-state rollouts per split, horizon 150, CPU fallback.
+- This is an ablation, not part of the frozen main five-method table.
+
+Support audit:
+
+| split seed | selected unlabeled | hidden-positive | hidden-bad | purity |
+|---:|---:|---:|---:|---:|
+| 11 | 160 | 154 | 6 | 0.963 |
+| 22 | 160 | 150 | 10 | 0.938 |
+| 33 | 160 | 158 | 2 | 0.988 |
+
+Endpoint results:
+
+| method | split 11 | split 22 | split 33 | pooled |
+|---|---:|---:|---:|---:|
+| classifier-score top160 | 0.320 | 0.380 | 0.660 | 68/150 |
+| TRIAGE-BC / pos-min | 0.540 | 0.500 | 0.440 | 74/150 |
+| positive-only NN top160 | 0.460 | 0.680 | 0.500 | 82/150 |
+| weighted BC | 0.480 | 0.660 | 0.720 | 93/150 |
+
+Interpretation update:
+
+- Classifier-score top160 fixes the split-33 coverage failure directionally, reaching 33/50 versus 22/50 for TRIAGE-BC / pos-min.
+- It fails as a general Lift rule: split 11 and split 22 drop to 16/50 and 19/50 despite high support purity.
+- Pooled success is 68/150, below TRIAGE-BC, positive-only NN, and weighted BC.
+- This rules out a simple fixed classifier top-k rescue. The next Lift method idea needs a policy-quality proxy, task-aware coverage criterion, or variance/checkpoint analysis rather than just broader pure support.
+
+## 2026-06-24: Frozen Can 20p/80b split-11 endpoint diagnostic
+
+Ran a bounded frozen-runner diagnostic on Can Paired with 20 labeled positives and 80 labeled bad demos, split seed 11, policy seed 0.
+
+Artifacts:
+
+- Diagnostic CSV: `results/final_paper/ablations/can_paired_pos20_bad80_split11_endpoint_diagnostic.csv`
+- Diagnostic report: `results/final_paper/ablations/can_paired_pos20_bad80_split11_endpoint_diagnostic_REPORT.md`
+- Positive-only NN run: `results/final_paper/per_seed/can_paired_pos20_bad80_split11_positive_only_nn_policy0/REPORT.md`
+- TRIAGE-BC run: `results/final_paper/per_seed/can_paired_pos20_bad80_split11_triage_bc_policy0/REPORT.md`
+- Weighted BC run: `results/final_paper/per_seed/can_paired_pos20_bad80_split11_weighted_bc_policy0/REPORT.md`
+- Classifier-score top20 setup audit: `results/final_paper/per_seed/can_paired_pos20_bad80_split11_classifier_topk_policy0/REPORT.md`
+
+Protocol:
+
+- Robomimic Can Paired low-dimensional data, frozen split seed 11, policy/classifier seed 0.
+- Official Robomimic BC-RNN-GMM, 200 epochs, fixed `model_epoch_200.pth` endpoint.
+- Endpoint evaluation used 50 validation-positive initial-state rollouts, horizon 400, CPU fallback.
+- This is a diagnostic single split, not a main Can 20p/80b table.
+
+Support audit:
+
+| method/setup | selected unlabeled | hidden-positive | hidden-bad | purity |
+|---|---:|---:|---:|---:|
+| positive-only NN top20 | 20 | 17 | 3 | 0.850 |
+| TRIAGE-BC / adaptive masscap | 50 | 20 | 30 | 0.400 |
+| weighted BC sampler | 100 | 20 | 80 | 0.200 |
+| classifier-score top20 setup only | 20 | 11 | 9 | 0.550 |
+
+Endpoint results:
+
+| method | success | successes |
+|---|---:|---:|
+| positive-only NN top20 | 0.680 | 34/50 |
+| TRIAGE-BC / adaptive masscap | 0.660 | 33/50 |
+| weighted BC sampler | 0.360 | 18/50 |
+
+Interpretation update:
+
+- The split does not rescue a bad-label policy-benefit claim: positive-only NN top20 edges TRIAGE-BC by one success.
+- TRIAGE-BC recovers all hidden-positive unlabeled demos but also admits 30 hidden-bad demos; on this split the additional coverage does not beat cleaner no-bad-label retrieval.
+- Weighted BC is clearly weak under this heavy contamination setting, reaching only 18/50 successes from the full 100-demo contaminated pool.
+- The result is useful as a support-conversion diagnostic and should be framed as evidence that soft weighting can fail badly under action-conflicting contamination, not as evidence that bad labels are strictly necessary.
+
+## 2026-06-24: Frozen Can 80p/80b support audit and split-33 endpoint diagnostic
+
+Prepared fresh frozen Can Paired balanced 80 hidden-positive / 80 hidden-bad split seeds 11/22/33 for TRIAGE-BC, positive-only NN top80, and classifier-score top80. Then trained/evaluated the most informative endpoint comparison on split seed 33, where TRIAGE-BC had the best support-purity chance.
+
+Artifacts:
+
+- Diagnostic CSV: `results/final_paper/ablations/can_paired_balanced_80p80b_support_and_split33_endpoint.csv`
+- Diagnostic report: `results/final_paper/ablations/can_paired_balanced_80p80b_support_and_split33_endpoint_REPORT.md`
+- Split-33 TRIAGE-BC run: `results/final_paper/per_seed/can_paired_balanced_80p80b_split33_triage_bc_policy0/REPORT.md`
+- Split-33 positive-only NN run: `results/final_paper/per_seed/can_paired_balanced_80p80b_split33_positive_only_nn_policy0/REPORT.md`
+
+Support audit:
+
+| split seed | method/setup | selected unlabeled | hidden-positive | hidden-bad | purity |
+|---:|---|---:|---:|---:|---:|
+| 11 | TRIAGE-BC / adaptive masscap | 50 | 43 | 7 | 0.860 |
+| 11 | positive-only NN top80 | 80 | 72 | 8 | 0.900 |
+| 11 | classifier-score top80 | 80 | 63 | 17 | 0.787 |
+| 22 | TRIAGE-BC / adaptive masscap | 75 | 55 | 20 | 0.733 |
+| 22 | positive-only NN top80 | 80 | 76 | 4 | 0.950 |
+| 22 | classifier-score top80 | 80 | 57 | 23 | 0.713 |
+| 33 | TRIAGE-BC / adaptive masscap | 40 | 39 | 1 | 0.975 |
+| 33 | positive-only NN top80 | 80 | 72 | 8 | 0.900 |
+| 33 | classifier-score top80 | 80 | 70 | 10 | 0.875 |
+
+Split-33 endpoint results:
+
+| method | success | successes |
+|---|---:|---:|
+| positive-only NN top80 | 0.980 | 49/50 |
+| TRIAGE-BC / adaptive masscap | 0.860 | 43/50 |
+
+Interpretation update:
+
+- Fresh balanced Can does not rescue the bad-label policy-benefit claim. Positive-only NN has better hidden-positive coverage on all three support audits and wins the split-33 endpoint comparison by 6/50 successes.
+- Split 33 is especially informative because TRIAGE-BC had much higher support purity (`0.975` versus `0.900`), yet lower coverage (`39` versus `72` hidden positives) and lower policy success.
+- Classifier-score top80 is not a rescue branch; it is lower-purity than positive-only NN on every fresh support audit.
+- The older balanced-Can development result remains useful as score-to-support evidence, but the fresh frozen diagnostic says the main paper should not use balanced Can as evidence that explicit bad labels beat strong no-bad-label retrieval.
+
+## 2026-06-24: Continuous PointNav equal label-budget-5 sweep
+
+Ran the controlled PointNav mechanism benchmark with a smaller equal label budget: 5 positive route-prefix demonstrations and 5 bad shortcut trajectories. This directly addresses the plan's label-budget ablation for the clean synthetic/continuous setting where positive-only BC cannot solve the task by construction.
+
+Artifacts:
+
+- Raw report: `results/continuous_pointnav_gap_select_label_budget5_5seed/REPORT.md`
+- Raw metrics: `results/continuous_pointnav_gap_select_label_budget5_5seed/metrics.csv`
+- Paper-facing summary: `results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md`
+- Paper-facing CSV: `results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection.csv`
+
+Protocol:
+
+- 5 seeds, bad fractions 0.50/0.75/0.90/0.95.
+- 180 unlabeled trajectories per seed/fraction.
+- Positive labels are 16-step safe-route prefixes only.
+- BC steps 6000, classifier steps 2500, 30 closed-loop evaluation rollouts per row.
+- TRIAGE row uses trajectory score-gap demo selection with max fraction 0.10 and min fraction 0.02.
+
+Main success results:
+
+| bad frac | BC-all | pos+unlabeled BC | local weighted BC | TRIAGE gap-demo BC | oracle good BC |
+|---:|---:|---:|---:|---:|---:|
+| 0.50 | 0.400 | 0.467 | 0.200 | 1.000 | 1.000 |
+| 0.75 | 0.340 | 0.293 | 0.200 | 1.000 | 1.000 |
+| 0.90 | 0.240 | 0.147 | 0.000 | 1.000 | 1.000 |
+| 0.95 | 0.100 | 0.113 | 0.140 | 1.000 | 1.000 |
+
+Gap-selection diagnostics:
+
+| bad frac | selected frac | demo purity | transition purity | hidden-good demos | hidden-bad demos |
+|---:|---:|---:|---:|---:|---:|
+| 0.50 | 0.034 | 1.000 | 1.000 | 6.2 | 0.0 |
+| 0.75 | 0.062 | 1.000 | 1.000 | 11.2 | 0.0 |
+| 0.90 | 0.089 | 1.000 | 1.000 | 16.0 | 0.0 |
+| 0.95 | 0.057 | 1.000 | 1.000 | 10.2 | 0.0 |
+
+Interpretation update:
+
+- The controlled mechanism result survives smaller equal scarce labels. With only 5 positives and 5 negatives, score-gap demo selection matches the hidden-good oracle across all tested contamination levels.
+- This is stronger paper evidence than another Robomimic sweep for the specific mechanism claim: explicit bad labels calibrate trajectory-level support recovery when positives are only prefixes.
+- Local state-action weighting remains the wrong mechanism in this environment. It cannot recover the full safe route despite using the same good/bad classifier signal.
+- Budget 5 gives a clean label-efficiency result for the main controlled benchmark; the budget-2 stress follow-up is recorded below.
+
+## 2026-06-24: Continuous PointNav equal label-budget-2 stress sweep
+
+Ran the controlled PointNav mechanism benchmark with only 2 positive route-prefix demonstrations and 2 bad shortcut trajectories. This is the stress version of the label-budget ablation.
+
+Artifacts:
+
+- Raw report: `results/continuous_pointnav_gap_select_label_budget2_5seed/REPORT.md`
+- Raw metrics: `results/continuous_pointnav_gap_select_label_budget2_5seed/metrics.csv`
+- Paper-facing summary: `results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md`
+- Paper-facing CSV: `results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection.csv`
+
+Protocol:
+
+- 5 seeds, bad fractions 0.50/0.75/0.90/0.95.
+- 180 unlabeled trajectories per seed/fraction.
+- Positive labels are 16-step safe-route prefixes only.
+- BC steps 6000, classifier steps 2500, 30 closed-loop evaluation rollouts per row.
+- TRIAGE row uses trajectory score-gap demo selection with max fraction 0.10 and min fraction 0.02.
+
+Main success results:
+
+| bad frac | BC-all | pos+unlabeled BC | local weighted BC | TRIAGE gap-demo BC | TRIAGE gap-posterior BC | oracle good BC |
+|---:|---:|---:|---:|---:|---:|---:|
+| 0.50 | 0.460 | 0.440 | 0.147 | 1.000 | 1.000 | 1.000 |
+| 0.75 | 0.360 | 0.320 | 0.000 | 1.000 | 1.000 | 1.000 |
+| 0.90 | 0.180 | 0.133 | 0.173 | 1.000 | 1.000 | 1.000 |
+| 0.95 | 0.140 | 0.120 | 0.000 | 1.000 | 1.000 | 1.000 |
+
+Gap-selection diagnostics:
+
+| bad frac | selected frac | demo purity | transition purity | hidden-good demos | hidden-bad demos |
+|---:|---:|---:|---:|---:|---:|
+| 0.50 | 0.032 | 1.000 | 1.000 | 5.8 | 0.0 |
+| 0.75 | 0.032 | 1.000 | 1.000 | 5.8 | 0.0 |
+| 0.90 | 0.079 | 1.000 | 1.000 | 14.2 | 0.0 |
+| 0.95 | 0.051 | 1.000 | 1.000 | 9.2 | 0.0 |
+
+Boundary checks:
+
+- Fixed top-5% demo BC is strong through 90% bad contamination but drops to 0.867 at 95%.
+- Fixed top-10% demo BC drops to 0.787 at 90% and 0.613 at 95%.
+- Fixed-prior posterior BC becomes brittle at the boundary: prior 0.05 reaches 0.633 at 95%, and prior 0.10 reaches 0.607.
+- Score-gap demo BC and score-gap posterior BC avoid this boundary failure by selecting smaller pure support.
+
+Interpretation update:
+
+- The controlled mechanism result survives extreme equal scarce labels. With only 2 positives and 2 negatives, score-gap demo selection and gap-posterior BC match the hidden-good oracle across all tested contamination levels.
+- This is now the strongest label-efficiency evidence for the controlled benchmark.
+- The key positive result is not just that the classifier can score hidden-good trajectories. The important part is adaptive score-to-support conversion: fixed-fraction and fixed-prior converters fail at the 95% boundary even though the gap selector keeps pure support.
+- Local state-action weighting again remains the wrong converter in this environment, reaching 0.000 success at 75% and 95% bad contamination.
+
+## 2026-06-24: Continuous PointNav bad-label-count sweep
+
+Ran the controlled PointNav bad-label-count ablation with the positive budget fixed at 5 route-prefix demonstrations and the bad-demo count set to 1, 2, or 5.
+
+Artifacts:
+
+- `n_neg=1` raw report: `results/continuous_pointnav_bad_label_count_npos5_nneg1_5seed/REPORT.md`
+- `n_neg=2` raw report: `results/continuous_pointnav_bad_label_count_npos5_nneg2_5seed/REPORT.md`
+- `n_neg=5` raw report: `results/continuous_pointnav_gap_select_label_budget5_5seed/REPORT.md`
+- Paper-facing summary: `results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md`
+- Paper-facing CSV: `results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5.csv`
+
+Protocol:
+
+- 5 seeds, bad fractions 0.50/0.75/0.90/0.95.
+- 180 unlabeled trajectories per seed/fraction.
+- Positive labels are 16-step safe-route prefixes only.
+- Bad labels are full shortcut trajectories through the trap.
+- BC steps 6000, classifier steps 2500, 30 closed-loop evaluation rollouts per row.
+- TRIAGE row uses trajectory score-gap demo selection with max fraction 0.10 and min fraction 0.02.
+
+Main success results:
+
+| n_neg | bad frac | BC-all | local weighted BC | TRIAGE gap-demo BC | TRIAGE gap-posterior BC |
+|---:|---:|---:|---:|---:|---:|
+| 1 | 0.50 | 0.460 | 0.187 | 1.000 | 1.000 |
+| 1 | 0.75 | 0.360 | 0.180 | 1.000 | 1.000 |
+| 1 | 0.90 | 0.240 | 0.000 | 1.000 | 1.000 |
+| 1 | 0.95 | 0.153 | 0.320 | 1.000 | 1.000 |
+| 2 | 0.50 | 0.487 | 0.200 | 1.000 | 1.000 |
+| 2 | 0.75 | 0.353 | 0.147 | 1.000 | 1.000 |
+| 2 | 0.90 | 0.220 | 0.000 | 0.973 | 1.000 |
+| 2 | 0.95 | 0.147 | 0.000 | 0.993 | 0.600 |
+| 5 | 0.50 | 0.400 | 0.200 | 1.000 | 1.000 |
+| 5 | 0.75 | 0.340 | 0.200 | 1.000 | 1.000 |
+| 5 | 0.90 | 0.240 | 0.000 | 1.000 | 1.000 |
+| 5 | 0.95 | 0.100 | 0.140 | 1.000 | 0.573 |
+
+Support diagnostics:
+
+- Gap selection has 1.000 demo purity and 1.000 transition purity in all 12 rows.
+- It admits 0 hidden-bad demos on average in every row.
+- At 95% bad unlabeled data, the selected support averages 10.2 hidden-good demos and 0 hidden-bad demos for every bad-label count.
+
+Interpretation update:
+
+- The controlled mechanism is highly label-efficient in its use of explicit bad demonstrations. With 5 positive prefixes, even 1 bad shortcut demo is enough for score-gap demo BC to reach 1.000 success at every tested contamination level.
+- The result is not monotonic in the bad-demo count because policy training and posterior conversion have stochastic boundary failures. With 2 bad demos, gap-demo dips slightly at 90% and 95%; with 5 bad demos, gap-demo is perfect but gap-posterior remains brittle at 95%.
+- The support-side story is clean and stronger than the policy-side stochasticity: score-gap selection recovers pure hidden-good support across all tested counts and contamination levels.
+- This supports a controlled label-efficiency claim for explicit bad labels, but it does not establish a zero-bad-label comparison because the tri-signal classifier requires negative examples.
+
+## 2026-06-24: Frozen Can 40p/80b score-support tradeoff
+
+Aggregated existing frozen Can Paired 40 hidden-positive / 80 hidden-bad score diagnostics across split seeds 11/22/33 into a precision/coverage support sweep.
+
+Artifacts:
+
+- Summary script: `scripts/summarize_can40_score_support_tradeoff.py`
+- Figure script: `scripts/plot_can40_precision_coverage.py`
+- Aggregate CSV: `results/final_paper/ablations/can40_score_support_tradeoff.csv`
+- Per-split CSV: `results/final_paper/ablations/can40_score_support_tradeoff_per_split.csv`
+- Paper-facing report: `results/final_paper/ablations/can40_score_support_tradeoff_REPORT.md`
+- Paper Figure 2 candidate: `results/final_paper/figures/can40_precision_coverage.png`
+- Paper Figure 2 candidate PDF: `results/final_paper/figures/can40_precision_coverage.pdf`
+
+Aggregate support sweep:
+
+| support rule | selected/split | purity | hidden-positive recall | hidden-bad admission | endpoint success |
+|---|---:|---:|---:|---:|---:|
+| classifier top10 | 10.0 | 0.867 | 0.217 | 0.017 | n/a |
+| classifier top20 | 20.0 | 0.850 | 0.425 | 0.037 | n/a |
+| classifier top40 | 40.0 | 0.708 | 0.708 | 0.146 | n/a |
+| classifier top60 | 60.0 | 0.600 | 0.900 | 0.300 | n/a |
+| classifier top80 | 80.0 | 0.483 | 0.967 | 0.517 | n/a |
+| TRIAGE adaptive masscap | 63.3 | 0.579 | 0.917 | 0.333 | 0.660 |
+| weighted full pool | 120.0 | 0.333 | 1.000 | 1.000 | 0.600 |
+| positive-only NN top40 | 40.0 | 0.883 | 0.883 | 0.058 | 0.720 |
+
+Interpretation update:
+
+- The classifier-score top-k sweep directly shows the precision/coverage tradeoff requested by the plan: small supports are cleaner but miss many hidden positives; broad supports recover positives while admitting many hidden bad demos.
+- TRIAGE-BC adaptive masscap gets high hidden-positive recall (`110/120`) and beats weighted BC at the endpoint (`99/150` versus `90/150`) by reducing bad admission.
+- Positive-only NN top40 is a better Can 40p/80b support point: it recovers slightly fewer hidden positives (`106/120`) but admits far fewer hidden bad demos (`14/240`) and reaches the best non-oracle endpoint success (`108/150`).
+- This reinforces the main Can interpretation: score-to-support conversion matters, but the current bad-aware converter is not on the best precision/coverage frontier compared with strong no-bad retrieval.
+
+## 2026-06-24: Can MG branch-proxy staged as abstention diagnostic
+
+Refreshed the existing Can MG branch-proxy analysis and staged it under final-paper ablations.
+
+Artifacts:
+
+- Summary script: `scripts/summarize_robomimic_can_mg_branch_proxy.py`
+- Paper-facing report: `results/final_paper/ablations/can_mg_branch_proxy_summary/REPORT.md`
+- Method proxy CSV: `results/final_paper/ablations/can_mg_branch_proxy_summary/method_proxy_scores.csv`
+- Proxy-winner CSV: `results/final_paper/ablations/can_mg_branch_proxy_summary/proxy_winners.csv`
+
+Main result:
+
+| split | rollout-best | best 20k | failed proxy behavior |
+|---|---|---:|---|
+| Can MG original | weighted BC | 0.333 | all tested likelihood proxies choose all-positive support, which reaches 0.200 |
+| Can MG shuffle42 | hard/soft tie | 0.100 | likelihood can choose a branch but cannot detect that both branches are weak |
+
+Interpretation update:
+
+- Simple positive imitation, positive-minus-negative likelihood gap, and negative rejection are not valid replacements for router-v2 abstention on Can MG.
+- The failure mode is coverage: the all-positive branch fits positives and rejects negatives, but loses the broad support that weighted sampling uses.
+- Can MG should remain a stress/limitation result unless a new coverage-sensitive policy-quality proxy is proposed and predeclared before further policy training.
+
+## 2026-06-24: Current Robomimic endpoint matrix figure
+
+Generated a consolidated current Robomimic endpoint matrix from staged final-paper artifacts.
+
+Artifacts:
+
+- Summary script: `scripts/summarize_final_endpoint_matrix.py`
+- CSV: `results/final_paper/tables/robotics_current_endpoint_matrix.csv`
+- Report: `results/final_paper/tables/robotics_current_endpoint_matrix_REPORT.md`
+- Figure PNG: `results/final_paper/figures/robotics_current_endpoint_matrix.png`
+- Figure PDF: `results/final_paper/figures/robotics_current_endpoint_matrix.pdf`
+
+Rows included:
+
+- Can 40p/80b: primary frozen three-split aggregate over split seeds 11/22/33.
+- Lift MG: primary frozen three-split aggregate over split seeds 11/22/33.
+- Can 20p/80b: diagnostic split-11 endpoint only.
+- Can 80p/80b: diagnostic split-33 endpoint only, with split 11/22 support-only audits.
+
+Interpretation update:
+
+- The figure is suitable as a current Figure 3 candidate only because diagnostic single-split tasks are visibly shaded and labeled.
+- It makes the current robotics story compact: Can 40p/80b supports TRIAGE over weighted/all-demo but not over positive-only NN; Lift MG supports contaminated-log harm and score-calibration but favors weighted BC at the endpoint; the Can 20/80 and 80/80 diagnostics both reinforce the positive-only caveat.
+- Completing three-split endpoint tables for Can 20p/80b and Can 80p/80b remains the main compute-heavy upgrade if those tasks are to become primary table rows.
+
+## 2026-06-24: Controlled PointNav mechanism figure
+
+Generated a consolidated controlled PointNav mechanism table and two-panel figure from the staged final-paper ablations.
+
+Artifacts:
+
+- Summary script: `scripts/summarize_pointnav_controlled_mechanism.py`
+- CSV: `results/final_paper/tables/pointnav_controlled_mechanism.csv`
+- Report: `results/final_paper/tables/pointnav_controlled_mechanism_REPORT.md`
+- Figure PNG: `results/final_paper/figures/pointnav_controlled_mechanism.png`
+- Figure PDF: `results/final_paper/figures/pointnav_controlled_mechanism.pdf`
+
+Figure content:
+
+- Left panel: equal scarce labels with only 2 positive route prefixes and 2 bad shortcut trajectories. TRIAGE gap support reaches 1.000 success at 50/75/90/95% bad unlabeled data, matching the hidden-good oracle while BC-all, positive+unlabeled BC, and local weighted BC degrade.
+- Right panel: fixed 5 positive prefixes with 1/2/5 bad shortcut demos. Gap support remains perfect for 1 and 5 bad demos and near-perfect for 2 bad demos at the high-contamination boundary.
+
+Interpretation update:
+
+- This is now the cleanest main controlled mechanism artifact for the paper.
+- It supports the label-efficiency claim for explicit bad labels without spending more Robomimic compute.
+- It should be used as the main controlled PointNav Table 1 / mechanism figure source, while the raw ablation reports remain appendices.
+
+## 2026-06-24: Score-shape diagnostics figure
+
+Generated the current Figure 4 score-shape diagnostic from existing score-ranking artifacts.
+
+Artifacts:
+
+- Summary script: `scripts/plot_score_shape_diagnostics.py`
+- CSV: `results/final_paper/tables/score_shape_diagnostics.csv`
+- Report: `results/final_paper/tables/score_shape_diagnostics_REPORT.md`
+- Figure PNG: `results/final_paper/figures/score_shape_diagnostics.png`
+- Figure PDF: `results/final_paper/figures/score_shape_diagnostics.pdf`
+
+Source scope:
+
+- Can 40p/80b: frozen split seeds 11/22/33.
+- Lift MG: frozen split seeds 11/22/33.
+- Can MG: original stress diagnostic; not a final endpoint row.
+
+Key score-shape summaries:
+
+| analysis | positive mean | bad mean | pos >= .95 | bad >= .95 | plotted threshold |
+|---|---:|---:|---:|---:|---:|
+| Can 40p/80b | 0.713 | 0.368 | 0.117 | 0.017 | 0.479 |
+| Lift MG | 0.790 | 0.152 | 0.399 | 0.002 | 0.903 |
+| Can MG | 0.886 | 0.423 | 0.518 | 0.094 | 0.873 |
+
+Interpretation update:
+
+- Can 40p/80b has meaningful positive/bad overlap, which supports the precision/coverage conversion framing.
+- Lift MG has strong score separation, but the frozen endpoint matrix still favors weighted BC; this visualizes why support purity alone is not enough.
+- Can MG has a large high-score plateau containing both positives and bad demos, which supports router-v2 abstention and the failed likelihood-proxy interpretation.
+
+## 2026-06-24: Frozen Can 20p/80b three-split support audit
+
+Prepared the missing frozen Can Paired 20 hidden-positive / 80 hidden-bad split-seed 22 and 33 support/setup rows for TRIAGE-BC, positive-only NN top20, and weighted BC. Then trained/evaluated a bounded split-22 endpoint extension for TRIAGE-BC and positive-only NN top20, and aggregated split seeds 11/22/33 into a support diagnostic.
+
+Artifacts:
+
+- Summary script: `scripts/summarize_can20_support_audit.py`
+- Aggregate CSV: `results/final_paper/ablations/can_paired_pos20_bad80_support_audit_3split.csv`
+- Per-split CSV: `results/final_paper/ablations/can_paired_pos20_bad80_support_audit_3split_per_split.csv`
+- Paper-facing report: `results/final_paper/ablations/can_paired_pos20_bad80_support_audit_3split_REPORT.md`
+- New split-22 setup runs: `results/final_paper/per_seed/can_paired_pos20_bad80_split22_*_policy0/`
+- New split-33 setup runs: `results/final_paper/per_seed/can_paired_pos20_bad80_split33_*_policy0/`
+- Split-22 positive-only endpoint report: `results/final_paper/per_seed/can_paired_pos20_bad80_split22_positive_only_nn_policy0/eval_endpoint_200/REPORT.md`
+- Split-22 TRIAGE endpoint report: `results/final_paper/per_seed/can_paired_pos20_bad80_split22_triage_bc_policy0/eval_endpoint_200/REPORT.md`
+
+Aggregate support audit:
+
+| support rule | selected/split | purity | hidden-positive recall | hidden-bad admission | completed endpoint |
+|---|---:|---:|---:|---:|---:|
+| classifier top20 | 20.0 | 0.683 | 0.683 | 0.079 | n/a |
+| TRIAGE adaptive masscap | 41.0 | 0.439 | 0.900 | 0.287 | 46/100 |
+| positive-only NN top20 | 20.0 | 0.817 | 0.817 | 0.046 | 54/100 |
+| weighted full pool | 100.0 | 0.200 | 1.000 | 1.000 | 18/50 |
+
+Interpretation update:
+
+- TRIAGE-BC recovers more hidden-positive unlabeled demos than positive-only NN top20 across the three splits (`54/60` versus `49/60`) but admits far more hidden-bad demos (`69/240` versus `11/240`).
+- The router behavior is split-sensitive: broad contaminated support on split 11 and 22, but a cleaner top20-style support on split 33.
+- The completed split-11 and split-22 endpoint results both favor positive-only NN over TRIAGE-BC: 34/50 versus 33/50 on split 11, and 20/50 versus 13/50 on split 22.
+- Weighted BC remains clearly weak under heavy contamination on the split-11 endpoint, but split-22 weighted endpoint training was not run.
+- This strengthens the precision/coverage framing and the positive-only baseline caveat; it still does not support a bad-label policy-benefit claim on Can 20p/80b.
+
+## 2026-06-24: Paper outline and method diagram
+
+Started the writing phase by turning the current claim package into a paper-facing outline and adding a reproducible Figure 1 candidate.
+
+Artifacts:
+
+- Paper outline: `PAPER_DRAFT_OUTLINE.md`
+- Method-diagram script: `scripts/plot_triage_bc_method_diagram.py`
+- Figure PNG: `results/final_paper/figures/triage_bc_method_diagram.png`
+- Figure PDF: `results/final_paper/figures/triage_bc_method_diagram.pdf`
+- Manuscript draft: `paper/triage_bc_draft.md`
+- Paper README: `paper/README.md`
+- Artifact-reference validator: `scripts/validate_paper_artifact_refs.py`
+
+Outline status:
+
+- Uses the current safe thesis: tri-signal labels can calibrate desirability scores, but score-to-support conversion is the bottleneck.
+- Maps every main figure/table slot to staged artifacts under `results/final_paper/`.
+- Keeps positive-only NN, weighted BC, Lift coverage, and Can MG abstention as explicit limitations.
+- Leaves the LaTeX target undecided; this is a claim-safe scaffold for the manuscript, not a submission template.
+- The draft artifact references currently validate with `python scripts/validate_paper_artifact_refs.py`.
+
+## 2026-06-24: Standalone LaTeX manuscript scaffold
+
+Converted the claim-safe Markdown draft into a compileable standalone LaTeX
+paper scaffold, while preserving the narrower score-to-support conversion
+framing and explicit limitations.
+
+Artifacts:
+
+- LaTeX source: `paper/triage_bc_paper.tex`
+- Bibliography: `paper/references.bib`
+- Build helper: `paper/Makefile`
+- Compiled PDF: `paper/triage_bc_paper.pdf`
+- Updated paper README: `paper/README.md`
+- Updated artifact-reference validator: `scripts/validate_paper_artifact_refs.py`
+
+Draft content:
+
+- Adds a compact related-work section with initial anchors for imitation
+  learning, DAgger, adversarial imitation, offline RL, advantage-weighted
+  policy extraction, Robomimic, and positive-unlabeled learning.
+- Converts TRIAGE-BC v0.1 from `METHOD_FREEZE.md` into a method section with
+  score learning, trajectory calibration, positive-mass estimation,
+  support-conversion rules, router-v2 pseudocode, and policy-training details.
+- Includes the staged paper figures from `results/final_paper/figures/` and a
+  conservative endpoint-result table.
+- Keeps the main caveats explicit: positive-only NN is strongest on Can,
+  weighted BC is strongest on Lift, Can MG is abstained/stress evidence, and
+  the robotics method is not a validated inverse-Q actor-extraction method.
+
+Validation:
+
+```bash
+python -m py_compile scripts/validate_paper_artifact_refs.py
+python scripts/validate_paper_artifact_refs.py
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/triage_bc_paper.tex
+git diff --check
+```
+
+The validator now checks TeX figure includes and bibliography references in
+addition to Markdown artifact paths. Current result: `checked 36 unique artifact
+references`, and the LaTeX build produces a 10-page PDF with citations and
+figures resolved.
+
+## 2026-06-24: Primary-only Robomimic Figure 3
+
+Split the Robomimic endpoint visualization into a main-paper primary matrix and
+a broader diagnostic matrix.
+
+Artifacts:
+
+- Updated summary script: `scripts/summarize_final_endpoint_matrix.py`
+- Primary CSV: `results/final_paper/tables/robotics_primary_endpoint_matrix.csv`
+- Primary report: `results/final_paper/tables/robotics_primary_endpoint_matrix_REPORT.md`
+- Primary figure PNG: `results/final_paper/figures/robotics_primary_endpoint_matrix.png`
+- Primary figure PDF: `results/final_paper/figures/robotics_primary_endpoint_matrix.pdf`
+- Diagnostic matrix retained: `results/final_paper/tables/robotics_current_endpoint_matrix_REPORT.md`
+
+Rationale:
+
+- The old Figure 3 candidate showed Can 20p/80b and Can 80p/80b as shaded
+  diagnostic rows. That was accurate but visually risky for a main paper figure.
+- The new primary figure contains only completed frozen three-split aggregates:
+  Can 40p/80b and Lift MG.
+- The diagnostic Can 20p/80b and Can 80p/80b rows remain staged for appendix
+  discussion and claim-package caveats.
+
+Interpretation:
+
+- Can 40p/80b remains the main positive robotics result for hard support over
+  weighted BC and all-demo cloning, with positive-only NN still stronger.
+- Lift MG remains the main coverage counterexample, where weighted BC is the
+  best non-oracle row.
+
+## 2026-06-24: Primary endpoint uncertainty summary
+
+Added descriptive uncertainty summaries for the primary frozen Robomimic endpoint
+matrix.
+
+Artifacts:
+
+- Summary script: `scripts/summarize_primary_endpoint_uncertainty.py`
+- Endpoint uncertainty CSV: `results/final_paper/tables/primary_endpoint_uncertainty.csv`
+- Pairwise delta CSV: `results/final_paper/tables/primary_endpoint_pairwise_deltas.csv`
+- Report: `results/final_paper/tables/primary_endpoint_uncertainty_REPORT.md`
+
+Content:
+
+- Reports pooled rollout-level Wilson intervals for each primary Can 40p/80b
+  and Lift MG method row.
+- Reports split-level mean/std across split seeds 11/22/33.
+- Reports paired split deltas for the main paper comparisons.
+
+Interpretation:
+
+- Can 40p/80b favors TRIAGE-BC over weighted BC on every split, but the pooled
+  gap is modest (`+0.060`) and descriptive Wilson intervals overlap.
+- Can 40p/80b does not support TRIAGE-BC over positive-only NN; positive-only is
+  higher pooled and the paired split deltas change sign.
+- Lift MG favors weighted BC over TRIAGE-BC pooled, but the split deltas are not
+  direction-consistent because TRIAGE-BC wins split 11.
+- These intervals are descriptive rather than formal independent-test claims
+  because endpoint rollouts reuse validation-positive start pools within each
+  split.
+
+## 2026-06-24: Algorithm and precision/coverage manuscript pass
+
+Tightened the manuscript method and analysis text without adding new compute.
+
+Updated artifacts:
+
+- LaTeX source: `paper/triage_bc_paper.tex`
+- Markdown draft: `paper/triage_bc_draft.md`
+- Outline: `PAPER_DRAFT_OUTLINE.md`
+
+Changes:
+
+- Added a frozen TRIAGE-BC v0.1 algorithmic summary: data split, classifier
+  training, trajectory scoring, positive-mass estimation, score-shape routing,
+  fixed-budget policy training, and audit-only hidden-label use.
+- Added a precision/coverage analysis section. It defines hidden-positive recall
+  and hidden-bad admission for audit, explains why hard support helps under
+  action-conflicting contamination, and explains why hard support fails when it
+  under-covers useful state-action regions.
+- Cleared the draft TODO about refining method pseudocode; remaining writing
+  tasks are related-work tightening, template conversion, optional appendix
+  diagnostics, and any venue-specific statistical additions.
+
+## 2026-06-24: Paper reproducibility checklist
+
+Added and tested a concise reproduction checklist for the current paper package.
+
+Artifacts:
+
+- Reproduction checklist: `paper/REPRODUCE_PAPER.md`
+- Updated paper README: `paper/README.md`
+- Updated artifact-reference validator: `scripts/validate_paper_artifact_refs.py`
+
+Checklist scope:
+
+- Separates cheap artifact regeneration from expensive frozen Robomimic
+  train/eval reruns.
+- Gives the exact cheap commands for regenerating the method diagram, PointNav
+  mechanism figure, Can 40 precision/coverage table and figure, primary
+  endpoint matrix, uncertainty table, score-shape diagnostics, and Can 20
+  support audit.
+- Gives the frozen `scripts/run_final_matrix.py` command template for expensive
+  primary Robomimic reruns.
+- Lists validation gates for Python syntax, artifact-reference checking, LaTeX
+  compile, and diff whitespace hygiene.
+
+Validation:
+
+```bash
+python scripts/plot_triage_bc_method_diagram.py
+python scripts/summarize_pointnav_controlled_mechanism.py
+python scripts/summarize_can40_score_support_tradeoff.py
+python scripts/plot_can40_precision_coverage.py
+python scripts/summarize_final_endpoint_matrix.py
+python scripts/summarize_primary_endpoint_uncertainty.py
+python scripts/plot_score_shape_diagnostics.py
+python scripts/summarize_can20_support_audit.py
+python -m py_compile scripts/summarize_final_endpoint_matrix.py scripts/summarize_primary_endpoint_uncertainty.py scripts/validate_paper_artifact_refs.py
+python scripts/validate_paper_artifact_refs.py
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/triage_bc_paper.tex
+git diff --check
+```
+
+The artifact validator now includes `paper/REPRODUCE_PAPER.md` and checks `50`
+unique artifact references.
+
+## 2026-06-24: Related-work manuscript tightening
+
+Tightened the paper's related-work framing without changing experiments or
+claims.
+
+Updated artifacts:
+
+- LaTeX source and PDF: `paper/triage_bc_paper.tex`,
+  `paper/triage_bc_paper.pdf`
+- Markdown draft: `paper/triage_bc_draft.md`
+- Bibliography: `paper/references.bib`
+- Outline: `PAPER_DRAFT_OUTLINE.md`
+
+Changes:
+
+- Added related-work anchors for classical IRL, apprenticeship learning,
+  maximum-entropy IRL, GAIL, CQL, data-quality work in imitation learning, and
+  Robomimic sequence imitation.
+- Clarified that the robotics contribution is score-to-support conversion
+  before official BC-RNN-GMM, not a validated inverse-Q robotics method or a new
+  Robomimic policy architecture.
+- Mirrored the related-work argument in the Markdown draft and removed the
+  related-work TODO from the remaining draft tasks.
+
+Validation:
+
+```bash
+python -m py_compile scripts/summarize_final_endpoint_matrix.py scripts/summarize_primary_endpoint_uncertainty.py scripts/validate_paper_artifact_refs.py
+python scripts/validate_paper_artifact_refs.py
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/triage_bc_paper.tex
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull" paper/triage_bc_paper.log
+pdfinfo paper/triage_bc_paper.pdf
+pdftotext paper/triage_bc_paper.pdf /tmp/triage_bc_paper.txt
+git diff --check
+```
+
+Results:
+
+- Artifact-reference validator still checks `50` unique artifact references.
+- The compiled PDF is 12 pages on letter paper.
+- The LaTeX log scan produced no warning or overfull matches.
+- The extracted PDF text contains the new related-work anchors.
+- `git diff --check` is clean.
+
+## 2026-06-24: Manuscript checklist and validation wiring
+
+Promoted the figure/table map into a dedicated manuscript handoff checklist for
+venue-template conversion.
+
+Updated artifacts:
+
+- Manuscript checklist: `paper/MANUSCRIPT_CHECKLIST.md`
+- Paper README: `paper/README.md`
+- Artifact-reference validator: `scripts/validate_paper_artifact_refs.py`
+- Outline: `PAPER_DRAFT_OUTLINE.md`
+- Completion plan status: `tri_piql_paper_completion_plan.md`
+
+Checklist content:
+
+- Main-paper claim map with evidence reports.
+- Claims to avoid, keeping the current score-to-support framing conservative.
+- Figure/table slot map for the standalone draft.
+- Appendix-only diagnostic map for Can 20p/80b, Can 80p/80b, Can MG, and Lift
+  classifier top160.
+- Submission validation commands and expected current gates.
+- Open decisions for venue/template conversion.
+
+Policy decisions recorded:
+
+- Square and Transport remain repository-only diagnostics for now.
+- They should enter a venue appendix only if a later draft needs support-side
+  relative-quality examples.
+
+Validation:
+
+```bash
+python -m py_compile scripts/summarize_final_endpoint_matrix.py scripts/summarize_primary_endpoint_uncertainty.py scripts/validate_paper_artifact_refs.py
+python scripts/validate_paper_artifact_refs.py
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/triage_bc_paper.tex
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+pdfinfo paper/triage_bc_paper.pdf
+git diff --check
+```
+
+Results:
+
+- Artifact-reference validator now checks `54` unique artifact references.
+- The compiled PDF is 14 pages on letter paper.
+- The LaTeX log scan produced no warning, underfull, or overfull matches.
+- `git diff --check` is clean.
+
+## 2026-06-24: Precision/coverage theory pass
+
+Added the small analysis component requested by the completion plan, without
+adding new experiments or strengthening claims beyond the evidence.
+
+Updated artifacts:
+
+- LaTeX source and PDF: `paper/triage_bc_paper.tex`,
+  `paper/triage_bc_paper.pdf`
+- Markdown draft: `paper/triage_bc_draft.md`
+- Outline: `PAPER_DRAFT_OUTLINE.md`
+- Completion plan status: `tri_piql_paper_completion_plan.md`
+
+Changes:
+
+- Added a simple mixture view of the unlabeled log as useful hidden support plus
+  harmful/action-conflicting support.
+- Added a schematic BC risk decomposition with a coverage/estimation term and a
+  bad-action contamination term.
+- Added the weighted-BC analogue using effective sample size and weighted bad
+  mass.
+- Connected the analysis back to the frozen method: mass-capping estimates when
+  marginal coverage is no longer worth marginal contamination, pos-min broadens
+  support when score shapes are favorable, and abstention is appropriate when
+  the score shape cannot identify the tradeoff.
+- Kept the section explicitly non-theorem-level because the current robotics
+  policies are nonlinear sequence BC learners.
+
+Validation:
+
+```bash
+python -m py_compile scripts/summarize_final_endpoint_matrix.py scripts/summarize_primary_endpoint_uncertainty.py scripts/validate_paper_artifact_refs.py
+python scripts/validate_paper_artifact_refs.py
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/triage_bc_paper.tex
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull" paper/triage_bc_paper.log
+pdfinfo paper/triage_bc_paper.pdf
+pdftotext paper/triage_bc_paper.pdf /tmp/triage_bc_paper.txt
+git diff --check
+```
+
+Results:
+
+- Artifact-reference validator still checks `50` unique artifact references.
+- The compiled PDF is 13 pages on letter paper.
+- The LaTeX log scan produced no warning or overfull matches.
+- The extracted PDF text contains `A Simple Precision/Coverage Analysis` and
+  the mixture/risk-decomposition language.
+- `git diff --check` is clean.
+
+## 2026-06-24: Diagnostic appendix pass
+
+Promoted the existing diagnostic evidence into an explicit appendix section
+without changing the main result claims.
+
+Updated artifacts:
+
+- LaTeX source and PDF: `paper/triage_bc_paper.tex`,
+  `paper/triage_bc_paper.pdf`
+- Markdown draft: `paper/triage_bc_draft.md`
+- Outline: `PAPER_DRAFT_OUTLINE.md`
+- Completion plan status: `tri_piql_paper_completion_plan.md`
+
+Changes:
+
+- Added the broader Robomimic diagnostic endpoint matrix as an appendix figure.
+- Added a compact appendix diagnostic table for Can 20p/80b, Can 80p/80b, Can
+  MG, and the Lift MG classifier-top160 ablation.
+- Kept Can 20p/80b and Can 80p/80b labeled as diagnostics rather than main
+  claims because they are not complete three-split endpoint tables.
+- Resolved the draft TODO about whether diagnostic Can rows should appear in
+  appendix figures: yes, appendix only.
+
+Validation:
+
+```bash
+python -m py_compile scripts/summarize_final_endpoint_matrix.py scripts/summarize_primary_endpoint_uncertainty.py scripts/validate_paper_artifact_refs.py
+python scripts/validate_paper_artifact_refs.py
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/triage_bc_paper.tex
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+pdfinfo paper/triage_bc_paper.pdf
+pdftotext paper/triage_bc_paper.pdf /tmp/triage_bc_paper.txt
+git diff --check
+```
+
+Results:
+
+- Artifact-reference validator now checks `53` unique artifact references.
+- The compiled PDF is 14 pages on letter paper.
+- The LaTeX log scan produced no warning, underfull, or overfull matches after
+  replacing the appendix table with an itemized diagnostic list.
+- The extracted PDF text contains `Diagnostic Endpoint and Support Evidence`
+  and the Can 20p/80b, Can 80p/80b, Can MG, and Lift top160 diagnostics.
+- `git diff --check` is clean.
+
+## 2026-06-24: Paper claim-number validator
+
+Added a cheap guardrail that checks quoted manuscript numbers against the
+staged final-paper CSVs.
+
+Updated artifacts:
+
+- Claim-number validator: `scripts/validate_paper_claim_numbers.py`
+- Manuscript checklist: `paper/MANUSCRIPT_CHECKLIST.md`
+- Paper README: `paper/README.md`
+- Reproduction checklist: `paper/REPRODUCE_PAPER.md`
+- Outline: `PAPER_DRAFT_OUTLINE.md`
+- Completion plan status: `tri_piql_paper_completion_plan.md`
+
+Changes:
+
+- Validates the primary Can 40p/80b and Lift MG endpoint counts against
+  `results/final_paper/tables/robotics_primary_endpoint_matrix.csv`.
+- Validates PointNav label-budget success, Can 40 support-side
+  precision/coverage counts, Can 20/80 diagnostics, Can MG branch-proxy
+  diagnostics, and Lift classifier-top160 diagnostics.
+- Checks the manuscript checklist retains the key claim-avoidance guardrails:
+  no uniform TRIAGE-BC-over-weighted claim, no uniform TRIAGE-BC-over-positive
+  claim, no bad-label-necessity claim on Can, and no validated inverse-Q
+  robotics claim.
+- Adds the validator to the paper README, reproduction checklist, and
+  submission checklist.
+
+Validation:
+
+```bash
+python -m py_compile scripts/validate_paper_claim_numbers.py scripts/validate_paper_artifact_refs.py scripts/summarize_final_endpoint_matrix.py scripts/summarize_primary_endpoint_uncertainty.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_artifact_refs.py
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/triage_bc_paper.tex
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+pdfinfo paper/triage_bc_paper.pdf
+git diff --check
+```
+
+Results:
+
+- Claim-number validator passes: `validated paper claim numbers against staged
+  CSVs and manuscript text`.
+- Artifact-reference validator now checks `55` unique artifact references.
+- The compiled PDF is 14 pages on letter paper.
+- The final LaTeX log scan produced no warning, underfull, or overfull matches.
+- `git diff --check` is clean.
+
+## 2026-06-24: PointNav-first result-order freeze
+
+Resolved the remaining result-order decision for the standalone manuscript.
+The paper now presents PointNav as the first result subsection because it is the
+cleanest mechanism test, then moves to the Robomimic endpoint matrix and
+precision/coverage caveats.
+
+Updated artifacts:
+
+- LaTeX source and PDF: `paper/triage_bc_paper.tex`,
+  `paper/triage_bc_paper.pdf`
+- Markdown draft: `paper/triage_bc_draft.md`
+- Manuscript checklist: `paper/MANUSCRIPT_CHECKLIST.md`
+- Outline: `PAPER_DRAFT_OUTLINE.md`
+- Completion plan status: `tri_piql_paper_completion_plan.md`
+
+Changes:
+
+- Added a `Controlled PointNav Mechanism Result` subsection at the start of the
+  LaTeX Results section.
+- Kept Robomimic as the benchmark endpoint evidence immediately afterward.
+- Recorded the result-order decision in the checklist, outline, and completion
+  plan so template conversion has one less open structural choice.
+- Preserved the conservative claim framing: PointNav isolates the support
+  recovery mechanism and is not presented as robotics-scale dominance evidence.
+
+Validation:
+
+```bash
+python -m py_compile scripts/validate_paper_claim_numbers.py scripts/validate_paper_artifact_refs.py scripts/summarize_final_endpoint_matrix.py scripts/summarize_primary_endpoint_uncertainty.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_artifact_refs.py
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/triage_bc_paper.tex
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+pdfinfo paper/triage_bc_paper.pdf
+git diff --check
+```
+
+Results:
+
+- Claim-number validator passes.
+- Artifact-reference validator checks `55` unique artifact references.
+- The compiled PDF is 14 pages on letter paper.
+- The final LaTeX log scan produced no warning, underfull, or overfull matches.
+- `git diff --check` is clean.
+
+## 2026-06-24: Primary endpoint paired-bootstrap audit
+
+Added a paired uncertainty audit for the primary Robomimic endpoint matrix using
+the staged per-episode metrics.
+
+Updated artifacts:
+
+- Paired-bootstrap script: `scripts/summarize_primary_endpoint_paired_bootstrap.py`
+- Paired-bootstrap CSV: `results/final_paper/tables/primary_endpoint_paired_bootstrap.csv`
+- Paired-bootstrap report: `results/final_paper/tables/primary_endpoint_paired_bootstrap_REPORT.md`
+- LaTeX source and PDF: `paper/triage_bc_paper.tex`,
+  `paper/triage_bc_paper.pdf`
+- Markdown draft: `paper/triage_bc_draft.md`
+- Manuscript checklist: `paper/MANUSCRIPT_CHECKLIST.md`
+- Paper README and reproduction checklist: `paper/README.md`,
+  `paper/REPRODUCE_PAPER.md`
+- Claim package: `results/PAPER_CLAIM_PACKAGE.md`
+- Outline and completion plan status: `PAPER_DRAFT_OUTLINE.md`,
+  `tri_piql_paper_completion_plan.md`
+- Claim-number validator: `scripts/validate_paper_claim_numbers.py`
+
+Method:
+
+- For each method pair, episode successes are averaged by held-out
+  `initial_demo_id`.
+- Bootstrap samples resample split seeds and paired initial states, avoiding the
+  assumption that repeated rollouts from the same initial states are fully
+  independent.
+- Exact split-level sign tests are reported as a low-power guardrail with only
+  three split seeds.
+
+Key results:
+
+| task | comparison | point delta | paired bootstrap 95% interval | split signs |
+|---|---:|---:|---:|---:|
+| Can 40p/80b | TRIAGE-BC - weighted BC | +0.060 | [-0.113, 0.240] | +++ |
+| Can 40p/80b | TRIAGE-BC - positive-only NN | -0.060 | [-0.313, 0.200] | --+ |
+| Lift MG | weighted BC - TRIAGE-BC | +0.122 | [-0.100, 0.317] | -++ |
+| Lift MG | TRIAGE-BC - all-demo BC | +0.306 | [0.211, 0.400] | +++ |
+
+Interpretation update:
+
+- The Can 40p/80b hard-support-over-weighted result remains directionally
+  consistent across splits, but the paired bootstrap interval crosses zero.
+- Can 40p/80b still does not support TRIAGE-BC over positive-only retrieval.
+- Lift MG remains a coverage-sensitive reversal favoring weighted BC over
+  TRIAGE-BC in point estimate, but not as a formal significance claim.
+- The only primary paired-bootstrap interval strictly above zero is TRIAGE-BC
+  over all-demo BC on Lift MG.
+- The manuscript now explicitly uses this as a wording guardrail rather than as
+  a new stronger claim.
+
+Validation:
+
+```bash
+python -m py_compile scripts/summarize_primary_endpoint_paired_bootstrap.py scripts/validate_paper_claim_numbers.py scripts/validate_paper_artifact_refs.py scripts/summarize_final_endpoint_matrix.py scripts/summarize_primary_endpoint_uncertainty.py
+python scripts/summarize_primary_endpoint_paired_bootstrap.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_artifact_refs.py
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/triage_bc_paper.tex
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+pdfinfo paper/triage_bc_paper.pdf
+git diff --check
+```
+
+Results:
+
+- Paired-bootstrap report regenerates from staged per-episode metrics.
+- Claim-number validator passes against the staged paired-bootstrap CSV and
+  manuscript text.
+- Artifact-reference validator checks `58` unique artifact references.
+- The compiled PDF is 14 pages on letter paper.
+- The final LaTeX log scan produced no warning, underfull, or overfull matches.
+- `git diff --check` is clean.
+
+## 2026-06-24: Provisional ICLR template conversion
+
+Converted the claim-checked standalone manuscript into a provisional
+ICLR-format submission shell.
+
+Updated artifacts:
+
+- ICLR-format source and PDF: `paper/iclr2026/main.tex`,
+  `paper/iclr2026/main.pdf`
+- Local ICLR 2026 style bundle: `paper/iclr2026/iclr2026_conference.sty`,
+  `paper/iclr2026/iclr2026_conference.bst`, `paper/iclr2026/fancyhdr.sty`,
+  `paper/iclr2026/natbib.sty`, `paper/iclr2026/math_commands.tex`
+- ICLR bibliography copy: `paper/iclr2026/references.bib`
+- Build helper: `paper/Makefile`
+- Standalone and ICLR claim validators:
+  `scripts/validate_paper_claim_numbers.py`,
+  `scripts/validate_paper_artifact_refs.py`
+- Paper docs and status handoff: `paper/README.md`,
+  `paper/MANUSCRIPT_CHECKLIST.md`, `paper/REPRODUCE_PAPER.md`,
+  `PAPER_DRAFT_OUTLINE.md`, `tri_piql_paper_completion_plan.md`
+- TeX intermediate ignores in `.gitignore`
+
+Changes:
+
+- Transplanted the standalone draft into the official ICLR 2026 style as a
+  provisional shell.
+- Moved the longer precision/coverage derivation to the appendix in the ICLR
+  source while keeping the concise precision/coverage view in the main text.
+- Placed the bibliography before the appendix and forced the appendix onto a
+  new page after the references.
+- Extended paper validators so the ICLR source is checked for quoted claim
+  numbers, graphics, and bibliography references.
+- Added an ICLR target to the paper Makefile.
+- Documented that the ICLR files should be refreshed if the final target venue
+  or year changes.
+
+Validation:
+
+```bash
+python -m py_compile scripts/summarize_final_endpoint_matrix.py scripts/summarize_primary_endpoint_uncertainty.py scripts/summarize_primary_endpoint_paired_bootstrap.py scripts/validate_paper_artifact_refs.py scripts/validate_paper_claim_numbers.py
+python scripts/summarize_primary_endpoint_paired_bootstrap.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_artifact_refs.py
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/triage_bc_paper.tex
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/iclr2026/main.tex
+make -C paper all
+make -C paper iclr
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+rg -n "undefined|Undefined|LaTeX Warning|Package natbib Warning|Overfull" paper/iclr2026/main.log
+pdfinfo paper/iclr2026/main.pdf
+pdftotext -layout -f 10 -l 10 paper/iclr2026/main.pdf -
+pdftotext -layout -f 11 -l 11 paper/iclr2026/main.pdf -
+git diff --check
+latexmk -c -cd paper/triage_bc_paper.tex
+latexmk -c -cd paper/iclr2026/main.tex
+```
+
+Results:
+
+- Claim-number validator passes against staged CSVs, the standalone manuscript,
+  the ICLR manuscript, and the Markdown draft.
+- Artifact-reference validator checks `63` unique local references.
+- The standalone PDF remains 14 pages on letter paper.
+- The ICLR PDF is 13 pages on letter paper.
+- `make -C paper all` and `make -C paper iclr` both report their PDFs are up
+  to date.
+- ICLR references begin on page 10 and appendix material begins on page 11, so
+  the main text fits the ICLR 2026 9-page main-text budget.
+- The standalone LaTeX log scan produced no warning, underfull, or overfull
+  matches before cleanup.
+- The ICLR log scan produced no unresolved-reference, natbib, or overfull
+  matches before cleanup; remaining underfull boxes are from template/page
+  balancing and long artifact paths.
+- `git diff --check` is clean.
+
+## 2026-06-24: ICLR reproducibility-map polish
+
+Polished the submission-facing reproducibility appendix without changing
+experimental claims or numbers.
+
+Updated artifacts:
+
+- Standalone source and PDF: `paper/triage_bc_paper.tex`,
+  `paper/triage_bc_paper.pdf`
+- ICLR source and PDF: `paper/iclr2026/main.tex`,
+  `paper/iclr2026/main.pdf`
+- Artifact-reference validator: `scripts/validate_paper_artifact_refs.py`
+- Manuscript checklist: `paper/MANUSCRIPT_CHECKLIST.md`
+
+Changes:
+
+- Renamed the internal `Artifact Checklist` appendix to `Reproducibility and
+  Artifact Map`.
+- Added a short reproducibility statement pointing to `METHOD_FREEZE.md`,
+  `configs/final_method.yaml`, `configs/final_eval.yaml`, and
+  `paper/REPRODUCE_PAPER.md`.
+- Made the ICLR source start references on page 10 and appendix material on
+  page 11 with explicit page breaks.
+- Extended the artifact-reference validator to check root-relative `\path{...}`
+  entries in TeX sources.
+
+Validation:
+
+```bash
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/triage_bc_paper.tex
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/iclr2026/main.tex
+python -m py_compile scripts/validate_paper_artifact_refs.py scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_artifact_refs.py
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+rg -n "undefined|Undefined|LaTeX Warning|Package natbib Warning|Overfull" paper/iclr2026/main.log
+pdfinfo paper/iclr2026/main.pdf
+pdftotext -layout -f 9 -l 11 paper/iclr2026/main.pdf -
+git diff --check
+```
+
+Results:
+
+- Claim-number validator passes.
+- Artifact-reference validator checks `63` unique local references, now
+  including root-relative TeX `\path{...}` entries.
+- The standalone PDF remains 14 pages.
+- The ICLR PDF remains 13 pages; page 9 ends at the conclusion, references
+  start on page 10, and appendix material starts on page 11.
+- Both LaTeX log scans produced no unresolved-reference, citation-warning, or
+  overfull matches under the recorded scan patterns.
+
+## 2026-06-24: PointNav bad-label-count appendix promotion
+
+Promoted an already-staged controlled ablation into the manuscript appendix so
+the paper has explicit label-efficiency evidence for the mechanism.
+
+Updated artifacts:
+
+- Standalone source and PDF: `paper/triage_bc_paper.tex`,
+  `paper/triage_bc_paper.pdf`
+- ICLR source and PDF: `paper/iclr2026/main.tex`,
+  `paper/iclr2026/main.pdf`
+- Markdown draft: `paper/triage_bc_draft.md`
+- Manuscript checklist: `paper/MANUSCRIPT_CHECKLIST.md`
+- Reproduction checklist: `paper/REPRODUCE_PAPER.md`
+- Claim-number validator: `scripts/validate_paper_claim_numbers.py`
+
+Evidence promoted:
+
+- Source report:
+  `results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md`
+- With 5 positive prefixes and `1/2/5` labeled bad shortcut trajectories, the
+  selected support has `1.000` demo purity, `1.000` transition purity, and
+  `0` hidden-bad demos in every row.
+- The 1-bad and 5-bad settings reach `1.000` gap-demo success at every tested
+  contamination level.
+- The 2-bad setting remains near-perfect but dips to `0.973` and `0.993` at
+  90% and 95% bad unlabeled data.
+
+Interpretation update:
+
+- This strengthens the controlled PointNav label-efficiency story.
+- It is explicitly framed as controlled mechanism evidence, not a claim that
+  bad labels are necessary on Can or that TRIAGE-BC beats positive-only
+  retrieval on robotics.
+
+Validation:
+
+```bash
+python -m py_compile scripts/validate_paper_claim_numbers.py scripts/validate_paper_artifact_refs.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_artifact_refs.py
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/triage_bc_paper.tex
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/iclr2026/main.tex
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+rg -n "undefined|Undefined|LaTeX Warning|Package natbib Warning|Overfull" paper/iclr2026/main.log
+pdfinfo paper/triage_bc_paper.pdf
+pdfinfo paper/iclr2026/main.pdf
+git diff --check
+pdftotext -layout -f 9 -l 11 paper/iclr2026/main.pdf -
+git diff --check
+```
+
+Results:
+
+- Claim-number validator passes and now checks the PointNav bad-label-count CSV
+  for pure selected support, zero hidden-bad admission, and the stated 1-bad and
+  5-bad perfect-success rows.
+- Artifact-reference validator checks `64` unique local references.
+- Standalone PDF is 15 pages.
+- ICLR PDF remains 13 pages; main text ends on page 9, references start on page
+  10, and appendix material starts on page 11.
+- Both LaTeX log scans produced no matches under the recorded scan patterns.
+- `git diff --check` is clean.
+
+## 2026-06-25: Submission-language cleanup
+
+Removed internal planning language from the paper sources so the draft reads as
+a submission artifact rather than a self-assessment memo.
+
+Updated artifacts:
+
+- Standalone source and PDF: `paper/triage_bc_paper.tex`,
+  `paper/triage_bc_paper.pdf`
+- ICLR source and PDF: `paper/iclr2026/main.tex`,
+  `paper/iclr2026/main.pdf`
+- Markdown draft: `paper/triage_bc_draft.md`
+
+Changes:
+
+- Replaced "current method" / "current evaluation" phrasing in the limitations
+  with submission-facing wording for TRIAGE-BC v0.1 and the 50-rollout
+  endpoint protocol.
+- Replaced the conclusion's internal "publishable version" sentence with a
+  direct central claim: support calibration is the bottleneck, and reliable
+  hidden-label-free score-to-support conversion is the next algorithmic step.
+- Updated the Markdown draft TODOs to acknowledge that the provisional ICLR
+  source already exists.
+
+Validation:
+
+```bash
+rg -n "A publishable version|Decide target template|transplant `triage_bc_paper\\.tex`|current method|current evidence|current evaluation|Remaining Draft TODOs" paper/iclr2026/main.tex paper/triage_bc_paper.tex paper/triage_bc_draft.md paper/MANUSCRIPT_CHECKLIST.md PAPER_DRAFT_OUTLINE.md tri_piql_paper_completion_plan.md
+python -m py_compile scripts/validate_paper_claim_numbers.py scripts/validate_paper_artifact_refs.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_artifact_refs.py
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/triage_bc_paper.tex
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/iclr2026/main.tex
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+rg -n "undefined|Undefined|LaTeX Warning|Package natbib Warning|Overfull" paper/iclr2026/main.log
+pdfinfo paper/triage_bc_paper.pdf
+pdfinfo paper/iclr2026/main.pdf
+pdftotext -layout -f 9 -l 11 paper/iclr2026/main.pdf -
+git diff --check
+```
+
+Results:
+
+- The wording scan now finds the old "current evidence" language only in
+  `tri_piql_paper_completion_plan.md`; the paper sources no longer contain the
+  internal "publishable version" wording.
+- Claim-number validator passes.
+- Artifact-reference validator checks `64` unique local references.
+- Standalone PDF remains 15 pages.
+- ICLR PDF remains 13 pages; main text ends on page 9, references start on page
+  10, and appendix material starts on page 11.
+- Both LaTeX log scans produced no matches under the recorded scan patterns.
+- `git diff --check` is clean.
+
+## 2026-06-25: Figure-map consistency guard
+
+Synchronized the manuscript handoff docs with the current compiled figure order
+and added a cheap structure validator to prevent future drift.
+
+Updated artifacts:
+
+- Structure validator: `scripts/validate_paper_structure.py`
+- Figure map: `PAPER_DRAFT_OUTLINE.md`
+- Reproduction checklist: `paper/REPRODUCE_PAPER.md`
+- Manuscript checklist: `paper/MANUSCRIPT_CHECKLIST.md`
+- Paper README: `paper/README.md`
+- Standalone and ICLR PDFs: `paper/triage_bc_paper.pdf`,
+  `paper/iclr2026/main.pdf`
+
+Changes:
+
+- Corrected the outline and reproduction map to match the manuscript order:
+  Figure 1 method diagram, Figure 2 PointNav mechanism, Figure 3 primary
+  robotics matrix, Figure 4 Can precision/coverage, Figure 5 score-shape
+  diagnostics.
+- Added `scripts/validate_paper_structure.py`, which checks both LaTeX sources
+  for the expected figure-label order and checks the Markdown figure-map rows.
+- Added the new validator to the paper README, reproduction checklist, and
+  manuscript submission checklist.
+
+Validation:
+
+```bash
+python -m py_compile scripts/validate_paper_artifact_refs.py scripts/validate_paper_claim_numbers.py scripts/validate_paper_structure.py scripts/summarize_primary_endpoint_paired_bootstrap.py
+python scripts/summarize_primary_endpoint_paired_bootstrap.py
+python scripts/validate_paper_structure.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_artifact_refs.py
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/triage_bc_paper.tex
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/iclr2026/main.tex
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+rg -n "undefined|Undefined|LaTeX Warning|Package natbib Warning|Overfull" paper/iclr2026/main.log
+pdfinfo paper/triage_bc_paper.pdf
+pdfinfo paper/iclr2026/main.pdf
+pdftotext -layout -f 9 -l 11 paper/iclr2026/main.pdf -
+git diff --check
+```
+
+Results:
+
+- Structure validator passes: `validated paper figure order and figure-map
+  rows`.
+- Claim-number validator passes.
+- Artifact-reference validator checks `65` unique local references.
+- Paired-bootstrap report regenerates from staged per-episode metrics.
+- Standalone PDF remains 15 pages.
+- ICLR PDF remains 13 pages; main text ends on page 9, references start on page
+  10, and appendix material starts on page 11.
+- Both LaTeX log scans produced no matches under the recorded scan patterns.
+- `git diff --check` is clean.
+
+## 2026-06-25: Automated ICLR page-budget guard
+
+Extended the paper structure validator so page-budget and appendix-boundary
+checks are automatic rather than only manual `pdfinfo` / `pdftotext` steps.
+
+Updated artifacts:
+
+- Structure validator: `scripts/validate_paper_structure.py`
+- Paper README: `paper/README.md`
+- Reproduction checklist: `paper/REPRODUCE_PAPER.md`
+- Manuscript checklist: `paper/MANUSCRIPT_CHECKLIST.md`
+- Standalone and ICLR PDFs: `paper/triage_bc_paper.pdf`,
+  `paper/iclr2026/main.pdf`
+
+Changes:
+
+- `scripts/validate_paper_structure.py` now checks:
+  - standalone PDF page count is 15;
+  - ICLR PDF page count is 13;
+  - ICLR page 9 still contains the conclusion and not references;
+  - ICLR page 10 contains references;
+  - ICLR page 11 starts the appendix.
+- Updated documentation for the new validator scope and expected output:
+  `validated paper figure order, figure-map rows, and PDF layout`.
+
+Validation:
+
+```bash
+python -m py_compile scripts/validate_paper_artifact_refs.py scripts/validate_paper_claim_numbers.py scripts/validate_paper_structure.py scripts/summarize_primary_endpoint_paired_bootstrap.py
+python scripts/summarize_primary_endpoint_paired_bootstrap.py
+python scripts/validate_paper_structure.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_artifact_refs.py
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/triage_bc_paper.tex
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/iclr2026/main.tex
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+rg -n "undefined|Undefined|LaTeX Warning|Package natbib Warning|Overfull" paper/iclr2026/main.log
+git diff --check
+```
+
+Results:
+
+- Structure validator passes: `validated paper figure order, figure-map rows,
+  and PDF layout`.
+- Claim-number validator passes.
+- Artifact-reference validator checks `65` unique local references.
+- Paired-bootstrap report regenerates from staged per-episode metrics.
+- Standalone PDF remains 15 pages.
+- ICLR PDF remains 13 pages, with the main text ending on page 9, references on
+  page 10, and appendix material beginning on page 11.
+- Both LaTeX log scans produced no matches under the recorded scan patterns.
+- `git diff --check` is clean.
+
+## 2026-06-25: Manuscript claim-contract validator
+
+Extended the claim-number validator so it also enforces the paper's core
+overclaim-avoidance contract across the standalone LaTeX, ICLR LaTeX, and
+Markdown manuscript sources.
+
+Updated artifacts:
+
+- Claim-number / claim-contract validator:
+  `scripts/validate_paper_claim_numbers.py`
+- Paper README: `paper/README.md`
+- Reproduction checklist: `paper/REPRODUCE_PAPER.md`
+- Manuscript checklist: `paper/MANUSCRIPT_CHECKLIST.md`
+- Outline: `PAPER_DRAFT_OUTLINE.md`
+- Standalone and ICLR PDFs: `paper/triage_bc_paper.pdf`,
+  `paper/iclr2026/main.pdf`
+
+Changes:
+
+- The validator now requires the manuscript sources to retain the key caveats:
+  not validated inverse-Q robotics, positive-only NN as a strongest Can
+  baseline, weighted BC as strongest on Lift, descriptive rather than formal
+  significance wording, repeated-start dependence, score-to-support framing,
+  and broad weighted coverage as an essential baseline.
+- It fails on unqualified overclaim patterns such as bad labels being necessary,
+  hard filtering always winning, TRIAGE-BC uniformly beating baselines, weighted
+  BC being weak, best-checkpoint proof language, or validated full inverse-Q
+  claims.
+- Updated paper docs to describe `scripts/validate_paper_claim_numbers.py` as a
+  number-and-claim-contract validator.
+
+Validation:
+
+```bash
+python -m py_compile scripts/validate_paper_artifact_refs.py scripts/validate_paper_claim_numbers.py scripts/validate_paper_structure.py scripts/summarize_primary_endpoint_paired_bootstrap.py
+python scripts/summarize_primary_endpoint_paired_bootstrap.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_structure.py
+python scripts/validate_paper_artifact_refs.py
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/triage_bc_paper.tex
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/iclr2026/main.tex
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+rg -n "undefined|Undefined|LaTeX Warning|Package natbib Warning|Overfull" paper/iclr2026/main.log
+pdfinfo paper/triage_bc_paper.pdf
+pdfinfo paper/iclr2026/main.pdf
+git diff --check
+```
+
+Results:
+
+- Claim validator passes: `validated paper claim numbers and claim contract
+  against staged CSVs and manuscript text`.
+- Structure validator passes: `validated paper figure order, figure-map rows,
+  and PDF layout`.
+- Artifact-reference validator checks `65` unique local references.
+- Paired-bootstrap report regenerates from staged per-episode metrics.
+- Standalone PDF remains 15 pages.
+- ICLR PDF remains 13 pages.
+- Both LaTeX log scans produced no matches under the recorded scan patterns.
+- `git diff --check` is clean.
+
+## 2026-06-25: Paired initial-state uncertainty figure
+
+Staged the planned final-evaluation uncertainty visual from existing endpoint
+episode metrics, without rerunning any policies.
+
+Updated artifacts:
+
+- `scripts/plot_primary_endpoint_paired_deltas.py`
+- `results/final_paper/tables/primary_endpoint_paired_initial_deltas.csv`
+- `results/final_paper/tables/primary_endpoint_paired_deltas_REPORT.md`
+- `results/final_paper/figures/primary_endpoint_paired_deltas.png`
+- `results/final_paper/figures/primary_endpoint_paired_deltas.pdf`
+- `paper/triage_bc_paper.tex`
+- `paper/iclr2026/main.tex`
+- `paper/README.md`
+- `paper/REPRODUCE_PAPER.md`
+- `paper/MANUSCRIPT_CHECKLIST.md`
+- `paper/triage_bc_draft.md`
+- `PAPER_DRAFT_OUTLINE.md`
+- `tri_piql_paper_completion_plan.md`
+- `results/final_paper/README.md`
+
+Changes:
+
+- Added a generator for paired initial-state endpoint deltas. Each plotted
+  point averages repeated rollouts from the same validation-positive start;
+  black intervals reuse the staged bootstrap that resamples split seeds and
+  paired initial states.
+- Included the paired-delta figure as an appendix uncertainty figure in both
+  standalone and ICLR-format LaTeX sources.
+- Wired the generator into `make -C paper validate`, paper reproduction docs,
+  and the structure/artifact validators.
+
+Validation:
+
+```bash
+make -C paper validate
+make -C paper all
+python scripts/plot_primary_endpoint_paired_deltas.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_structure.py
+python scripts/validate_paper_artifact_refs.py
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+rg -n "undefined|Undefined|LaTeX Warning|Package natbib Warning|Overfull" paper/iclr2026/main.log
+pdfinfo paper/triage_bc_paper.pdf
+pdfinfo paper/iclr2026/main.pdf
+git diff --check
+```
+
+Results:
+
+- `make -C paper validate` passes and regenerates the paired-delta figure.
+- `make -C paper all` passes through the same gate.
+- Claim validator passes: `validated paper claim numbers and claim contract
+  against staged CSVs and manuscript text`.
+- Structure validator passes: `validated paper figure order, figure-map rows,
+  and PDF layout`.
+- Artifact-reference validator checks `69` unique local references.
+- Standalone PDF remains 15 pages.
+- ICLR PDF remains 13 pages.
+- Both LaTeX log scans produced no matches under the recorded scan patterns.
+- `git diff --check` is clean.
+
+## 2026-06-25: Makefile validation gate
+
+Added a self-contained paper Makefile gate so the claim/package checks are a
+single command instead of a remembered command sequence.
+
+Updated artifacts:
+
+- `paper/Makefile`
+- `paper/README.md`
+- `paper/REPRODUCE_PAPER.md`
+- `paper/MANUSCRIPT_CHECKLIST.md`
+- `paper/triage_bc_paper.pdf`
+- `paper/iclr2026/main.pdf`
+
+Changes:
+
+- `make -C paper validate` now py-compiles the paper validators, regenerates
+  the paired-bootstrap audit, rebuilds both PDFs, runs the claim, structure, and
+  artifact-reference validators, and fails if the recorded LaTeX warning scans
+  find matches.
+- `make -C paper all` aliases the same validation gate.
+- Paper README, reproduction docs, and manuscript checklist now advertise the
+  Makefile gate as the shortest validation path while keeping the expanded
+  manual commands visible.
+
+Validation:
+
+```bash
+make -C paper validate
+make -C paper all
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_structure.py
+python scripts/validate_paper_artifact_refs.py
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+rg -n "undefined|Undefined|LaTeX Warning|Package natbib Warning|Overfull" paper/iclr2026/main.log
+pdfinfo paper/triage_bc_paper.pdf
+pdfinfo paper/iclr2026/main.pdf
+git diff --check
+```
+
+Results:
+
+- `make -C paper validate` passes and rebuilds both PDFs.
+- `make -C paper all` passes through the same gate.
+- Claim validator passes: `validated paper claim numbers and claim contract
+  against staged CSVs and manuscript text`.
+- Structure validator passes: `validated paper figure order, figure-map rows,
+  and PDF layout`.
+- Artifact-reference validator checks `65` unique local references.
+- Standalone PDF remains 15 pages.
+- ICLR PDF remains 13 pages.
+- Both LaTeX log scans produced no matches under the recorded scan patterns.
+- `git diff --check` is clean.
+
+## 2026-06-25: Bad-label control summary table
+
+Staged a generated bad-label control summary from existing final-paper artifacts,
+without rerunning policies.
+
+Updated artifacts:
+
+- `scripts/summarize_bad_label_control_table.py`
+- `results/final_paper/tables/bad_label_control_summary.csv`
+- `results/final_paper/tables/bad_label_control_summary_REPORT.md`
+- `paper/Makefile`
+- `paper/README.md`
+- `paper/REPRODUCE_PAPER.md`
+- `paper/MANUSCRIPT_CHECKLIST.md`
+- `paper/triage_bc_draft.md`
+- `PAPER_DRAFT_OUTLINE.md`
+- `tri_piql_paper_completion_plan.md`
+- `results/final_paper/README.md`
+- `results/PAPER_CLAIM_PACKAGE.md`
+- `scripts/validate_paper_structure.py`
+
+Changes:
+
+- Consolidated PointNav, Can 40, Can 20, Can 80, and Lift bad-aware versus
+  positive-only evidence into one generated paper-facing table.
+- Made the caveat explicit: explicit bad labels are useful calibration signal,
+  but the current bad-aware converter is not a broad positive-only winner.
+- Wired the generator into the paper Makefile validation path and artifact maps.
+
+Validation:
+
+```bash
+python -m py_compile scripts/summarize_bad_label_control_table.py scripts/validate_paper_structure.py scripts/validate_paper_artifact_refs.py scripts/validate_paper_claim_numbers.py
+python scripts/summarize_bad_label_control_table.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_structure.py
+python scripts/validate_paper_artifact_refs.py
+make -C paper validate
+make -C paper all
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+rg -n "undefined|Undefined|LaTeX Warning|Package natbib Warning|Overfull" paper/iclr2026/main.log
+pdfinfo paper/triage_bc_paper.pdf
+pdfinfo paper/iclr2026/main.pdf
+git diff --check
+```
+
+Results:
+
+- Bad-label generator reproduces the CSV and Markdown report.
+- Claim validator passes: `validated paper claim numbers and claim contract
+  against staged CSVs and manuscript text`.
+- Structure validator passes: `validated paper figure order, figure-map rows,
+  and PDF layout`.
+- Artifact-reference validator checks `72` unique local references.
+- `make -C paper validate` and `make -C paper all` both pass.
+- Standalone PDF remains 15 pages.
+- ICLR PDF remains 13 pages.
+- Strict LaTeX log scans produced no matches under the recorded scan patterns.
+- `git diff --check` is clean.
+
+## 2026-06-25: Compiled bad-label control appendix table
+
+Promoted the generated bad-label control summary into the compiled standalone
+and ICLR appendix drafts.
+
+Updated artifacts:
+
+- `paper/triage_bc_paper.tex`
+- `paper/iclr2026/main.tex`
+- `paper/triage_bc_draft.md`
+- `paper/MANUSCRIPT_CHECKLIST.md`
+- `paper/README.md`
+- `PAPER_DRAFT_OUTLINE.md`
+- `tri_piql_paper_completion_plan.md`
+- `scripts/validate_paper_claim_numbers.py`
+- `scripts/validate_paper_structure.py`
+
+Changes:
+
+- Added appendix table `tab:bad-label-controls` to both LaTeX drafts.
+- Kept the table as control evidence: bad labels improve calibration/support
+  purity in some settings, but positive-only retrieval remains stronger on the
+  frozen Can diagnostics and frozen Lift endpoint.
+- Extended the claim validator to read
+  `results/final_paper/tables/bad_label_control_summary.csv` and enforce the
+  table's endpoint/support numbers.
+- Extended the structure validator to require the new table label and updated
+  the ICLR page-count expectation to 14 pages while keeping the main-text
+  boundary checks: conclusion on page 9, references on page 10, appendix on
+  page 11.
+
+Validation:
+
+```bash
+python -m py_compile scripts/validate_paper_claim_numbers.py scripts/validate_paper_structure.py scripts/validate_paper_artifact_refs.py
+python scripts/summarize_bad_label_control_table.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_artifact_refs.py
+make -C paper validate
+make -C paper all
+pdftotext -layout paper/triage_bc_paper.pdf -
+pdftotext -layout paper/iclr2026/main.pdf -
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+rg -n "undefined|Undefined|LaTeX Warning|Package natbib Warning|Overfull" paper/iclr2026/main.log
+pdfinfo paper/triage_bc_paper.pdf
+pdfinfo paper/iclr2026/main.pdf
+```
+
+Results:
+
+- `make -C paper validate` and `make -C paper all` both pass.
+- Claim validator passes and now guards the bad-label CSV/table contract.
+- Structure validator passes with required figure and table labels.
+- Artifact-reference validator checks `72` unique local references.
+- Rendered PDF text contains the bad-label table rows, including Can 40p/80b
+  `110 pos/80 bad vs 106 pos/14 bad` and Lift MG
+  `421/20 vs 342/138 hidden pos/bad`.
+- Standalone PDF remains 15 pages.
+- ICLR PDF is now 14 pages total; main text still ends before references on
+  page 10 and appendix starts on page 11.
+- Strict LaTeX log scans produced no matches under the recorded scan patterns.

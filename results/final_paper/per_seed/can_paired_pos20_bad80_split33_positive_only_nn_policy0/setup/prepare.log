@@ -1,0 +1,2 @@
+wrote results/final_paper/per_seed/can_paired_pos20_bad80_split33_positive_only_nn_policy0/setup/config.json
+train filter final_can_paired_pos20_bad80_s33_positive_plus_positive_nn_top_unlabeled_demos_top20_seed0_train: 30 demos

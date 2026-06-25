@@ -1,0 +1,2 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/robomimic_lift_mg_official_bc_rnn_weighted_prob_seed0_train/can_weighted_prob_official_bc_rnn_seed0/20260622110141/models/model_epoch_200.pth,model_epoch_200,0.54,0.54,97.5,50

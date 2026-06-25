@@ -1,0 +1,24 @@
+{
+  "run_id": "can_paired_pos20_bad80_split11_weighted_bc_policy0",
+  "task": "can_paired",
+  "split_type": "pos20_bad80",
+  "split_seed": 11,
+  "method": "weighted_bc",
+  "policy_seed": 0,
+  "stage": "eval",
+  "dataset_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "split_path": "results/final_paper/splits/can_paired_pos20_bad80_split11/split_indices.json",
+  "score_dir": "results/final_paper/score_diagnostics/can_paired_pos20_bad80_split11_policy0",
+  "setup_dir": "results/final_paper/per_seed/can_paired_pos20_bad80_split11_weighted_bc_policy0/setup",
+  "train_dir": "results/final_paper/per_seed/can_paired_pos20_bad80_split11_weighted_bc_policy0/train",
+  "eval_dir": "results/final_paper/per_seed/can_paired_pos20_bad80_split11_weighted_bc_policy0/eval",
+  "router_decision": {
+    "router_v2_branch": "",
+    "source": "positive_plus_classifier_weighted_unlabeled_demos"
+  },
+  "diagnostics_path": "results/final_paper/per_seed/can_paired_pos20_bad80_split11_weighted_bc_policy0/setup/diagnostics.json",
+  "artifacts": {
+    "support_audit_csv": "results/final_paper/per_seed/can_paired_pos20_bad80_split11_weighted_bc_policy0/support_audit.csv",
+    "hidden_label_audit_csv": "results/final_paper/per_seed/can_paired_pos20_bad80_split11_weighted_bc_policy0/hidden_label_audit.csv"
+  }
+}

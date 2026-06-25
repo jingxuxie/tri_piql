@@ -1,0 +1,2 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/final_paper/per_seed/lift_mg_mg_sparse_split33_triage_bc_policy0/train/lift_mg_mg_sparse_split33_triage_bc_policy0_official_bc_rnn/20260624175323/models/model_epoch_200.pth,model_epoch_200,0.44,0.44,96.16,50

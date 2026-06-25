@@ -1,0 +1,105 @@
+experiment,n_pos,n_neg,bad_frac,method,success,selected_frac,selected_demo_purity,hidden_good_demos,hidden_bad_demos,source
+equal_label_budget,2,2,0.50,BC-all,0.460,,,,,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.50,pos+unlabeled BC,0.440,,,,,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.50,local weighted BC,0.147,,,,,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.50,TRIAGE-BC gap support,1.000,0.032,1.000,5.8,0.0,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.50,hidden-good oracle,1.000,0.032,1.000,5.8,0.0,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.50,TRIAGE-BC gap posterior,1.000,0.032,1.000,5.8,0.0,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.75,BC-all,0.360,,,,,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.75,pos+unlabeled BC,0.320,,,,,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.75,local weighted BC,0.000,,,,,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.75,TRIAGE-BC gap support,1.000,0.032,1.000,5.8,0.0,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.75,hidden-good oracle,1.000,0.032,1.000,5.8,0.0,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.75,TRIAGE-BC gap posterior,1.000,0.032,1.000,5.8,0.0,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.90,BC-all,0.180,,,,,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.90,pos+unlabeled BC,0.133,,,,,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.90,local weighted BC,0.173,,,,,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.90,TRIAGE-BC gap support,1.000,0.079,1.000,14.2,0.0,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.90,hidden-good oracle,1.000,0.079,1.000,14.2,0.0,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.90,TRIAGE-BC gap posterior,1.000,0.079,1.000,14.2,0.0,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.95,BC-all,0.140,,,,,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.95,pos+unlabeled BC,0.120,,,,,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.95,local weighted BC,0.000,,,,,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.95,TRIAGE-BC gap support,1.000,0.051,1.000,9.2,0.0,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.95,hidden-good oracle,1.000,0.051,1.000,9.2,0.0,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,2,2,0.95,TRIAGE-BC gap posterior,1.000,0.051,1.000,9.2,0.0,results/final_paper/ablations/continuous_pointnav_label_budget2_gap_selection_REPORT.md
+equal_label_budget,5,5,0.50,BC-all,0.400,,,,,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+equal_label_budget,5,5,0.50,pos+unlabeled BC,0.467,,,,,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+equal_label_budget,5,5,0.50,local weighted BC,0.200,,,,,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+equal_label_budget,5,5,0.50,TRIAGE-BC gap support,1.000,0.034,1.000,6.2,0.0,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+equal_label_budget,5,5,0.50,hidden-good oracle,1.000,0.034,1.000,6.2,0.0,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+equal_label_budget,5,5,0.75,BC-all,0.340,,,,,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+equal_label_budget,5,5,0.75,pos+unlabeled BC,0.293,,,,,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+equal_label_budget,5,5,0.75,local weighted BC,0.200,,,,,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+equal_label_budget,5,5,0.75,TRIAGE-BC gap support,1.000,0.062,1.000,11.2,0.0,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+equal_label_budget,5,5,0.75,hidden-good oracle,1.000,0.062,1.000,11.2,0.0,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+equal_label_budget,5,5,0.90,BC-all,0.240,,,,,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+equal_label_budget,5,5,0.90,pos+unlabeled BC,0.147,,,,,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+equal_label_budget,5,5,0.90,local weighted BC,0.000,,,,,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+equal_label_budget,5,5,0.90,TRIAGE-BC gap support,1.000,0.089,1.000,16.0,0.0,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+equal_label_budget,5,5,0.90,hidden-good oracle,1.000,0.089,1.000,16.0,0.0,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+equal_label_budget,5,5,0.95,BC-all,0.100,,,,,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+equal_label_budget,5,5,0.95,pos+unlabeled BC,0.113,,,,,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+equal_label_budget,5,5,0.95,local weighted BC,0.140,,,,,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+equal_label_budget,5,5,0.95,TRIAGE-BC gap support,1.000,0.057,1.000,10.2,0.0,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+equal_label_budget,5,5,0.95,hidden-good oracle,1.000,0.057,1.000,10.2,0.0,results/final_paper/ablations/continuous_pointnav_label_budget5_gap_selection_REPORT.md
+bad_label_count,5,1,0.50,BC-all,0.460,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,1,0.50,local weighted BC,0.187,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,1,0.50,TRIAGE-BC gap support,1.000,0.031,1.000,5.6,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,1,0.50,TRIAGE-BC gap posterior,1.000,0.031,1.000,5.6,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,1,0.50,hidden-good oracle,1.000,0.031,1.000,5.6,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,1,0.75,BC-all,0.360,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,1,0.75,local weighted BC,0.180,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,1,0.75,TRIAGE-BC gap support,1.000,0.049,1.000,8.8,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,1,0.75,TRIAGE-BC gap posterior,1.000,0.049,1.000,8.8,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,1,0.75,hidden-good oracle,1.000,0.049,1.000,8.8,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,1,0.90,BC-all,0.240,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,1,0.90,local weighted BC,0.000,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,1,0.90,TRIAGE-BC gap support,1.000,0.080,1.000,14.4,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,1,0.90,TRIAGE-BC gap posterior,1.000,0.080,1.000,14.4,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,1,0.90,hidden-good oracle,1.000,0.080,1.000,14.4,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,1,0.95,BC-all,0.153,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,1,0.95,local weighted BC,0.320,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,1,0.95,TRIAGE-BC gap support,1.000,0.057,1.000,10.2,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,1,0.95,TRIAGE-BC gap posterior,1.000,0.057,1.000,10.2,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,1,0.95,hidden-good oracle,0.800,0.057,1.000,10.2,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.50,BC-all,0.487,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.50,local weighted BC,0.200,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.50,TRIAGE-BC gap support,1.000,0.039,1.000,7.0,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.50,TRIAGE-BC gap posterior,1.000,0.039,1.000,7.0,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.50,hidden-good oracle,1.000,0.039,1.000,7.0,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.75,BC-all,0.353,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.75,local weighted BC,0.147,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.75,TRIAGE-BC gap support,1.000,0.037,1.000,6.6,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.75,TRIAGE-BC gap posterior,1.000,0.037,1.000,6.6,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.75,hidden-good oracle,1.000,0.037,1.000,6.6,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.90,BC-all,0.220,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.90,local weighted BC,0.000,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.90,TRIAGE-BC gap support,0.973,0.089,1.000,16.0,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.90,TRIAGE-BC gap posterior,1.000,0.089,1.000,16.0,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.90,hidden-good oracle,1.000,0.089,1.000,16.0,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.95,BC-all,0.147,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.95,local weighted BC,0.000,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.95,TRIAGE-BC gap support,0.993,0.057,1.000,10.2,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.95,TRIAGE-BC gap posterior,0.600,0.057,1.000,10.2,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,2,0.95,hidden-good oracle,1.000,0.057,1.000,10.2,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.50,BC-all,0.400,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.50,local weighted BC,0.200,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.50,TRIAGE-BC gap support,1.000,0.034,1.000,6.2,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.50,TRIAGE-BC gap posterior,1.000,0.034,1.000,6.2,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.50,hidden-good oracle,1.000,0.034,1.000,6.2,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.75,BC-all,0.340,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.75,local weighted BC,0.200,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.75,TRIAGE-BC gap support,1.000,0.062,1.000,11.2,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.75,TRIAGE-BC gap posterior,1.000,0.062,1.000,11.2,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.75,hidden-good oracle,1.000,0.062,1.000,11.2,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.90,BC-all,0.240,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.90,local weighted BC,0.000,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.90,TRIAGE-BC gap support,1.000,0.089,1.000,16.0,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.90,TRIAGE-BC gap posterior,1.000,0.089,1.000,16.0,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.90,hidden-good oracle,1.000,0.089,1.000,16.0,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.95,BC-all,0.100,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.95,local weighted BC,0.140,,,,,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.95,TRIAGE-BC gap support,1.000,0.057,1.000,10.2,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.95,TRIAGE-BC gap posterior,0.573,0.057,1.000,10.2,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md
+bad_label_count,5,5,0.95,hidden-good oracle,1.000,0.057,1.000,10.2,0.0,results/final_paper/ablations/continuous_pointnav_bad_label_count_npos5_REPORT.md

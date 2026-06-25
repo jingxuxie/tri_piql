@@ -1,0 +1,2 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/final_paper/per_seed/can_paired_balanced_80p80b_split33_positive_only_nn_policy0/train/can_paired_balanced_80p80b_split33_positive_only_nn_policy0_official_bc_rnn/20260624194002/models/model_epoch_200.pth,model_epoch_200,0.98,0.98,114.64,50

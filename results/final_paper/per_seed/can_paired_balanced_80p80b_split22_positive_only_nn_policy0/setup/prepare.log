@@ -1,0 +1,2 @@
+wrote results/final_paper/per_seed/can_paired_balanced_80p80b_split22_positive_only_nn_policy0/setup/config.json
+train filter final_can_paired_balanced_80p80b_s22_positive_plus_positive_nn_top_unlabeled_demos_top80_seed0_train: 90 demos

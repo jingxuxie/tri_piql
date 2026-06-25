@@ -1,0 +1,10 @@
+split,method,train_demos,selected_unlabeled,hidden_positive,hidden_bad,purity,endpoint_success,endpoint_successes,eval_episodes,avg_len,status
+11,triage_bc_adaptive_masscap,60,50,43,7,0.860,,,,,support_only
+11,positive_only_nn_top80,90,80,72,8,0.900,,,,,support_only
+11,classifier_score_top80,90,80,63,17,0.7875,,,,,support_only
+22,triage_bc_adaptive_masscap,85,75,55,20,0.7333,,,,,support_only
+22,positive_only_nn_top80,90,80,76,4,0.950,,,,,support_only
+22,classifier_score_top80,90,80,57,23,0.7125,,,,,support_only
+33,triage_bc_adaptive_masscap,50,40,39,1,0.975,0.860,43,50,147.64,endpoint
+33,positive_only_nn_top80,90,80,72,8,0.900,0.980,49,50,114.64,endpoint
+33,classifier_score_top80,90,80,70,10,0.875,,,,,support_only

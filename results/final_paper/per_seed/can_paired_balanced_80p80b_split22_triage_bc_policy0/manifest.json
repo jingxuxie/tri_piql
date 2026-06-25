@@ -1,0 +1,32 @@
+{
+  "run_id": "can_paired_balanced_80p80b_split22_triage_bc_policy0",
+  "task": "can_paired",
+  "split_type": "balanced_80p80b",
+  "split_seed": 22,
+  "method": "triage_bc",
+  "policy_seed": 0,
+  "stage": "prepare",
+  "dataset_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "split_path": "results/final_paper/splits/can_paired_balanced_80p80b_split22/split_indices.json",
+  "score_dir": "results/final_paper/score_diagnostics/can_paired_balanced_80p80b_split22_policy0",
+  "setup_dir": "results/final_paper/per_seed/can_paired_balanced_80p80b_split22_triage_bc_policy0/setup",
+  "train_dir": "results/final_paper/per_seed/can_paired_balanced_80p80b_split22_triage_bc_policy0/train",
+  "eval_dir": "results/final_paper/per_seed/can_paired_balanced_80p80b_split22_triage_bc_policy0/eval",
+  "router_decision": {
+    "router_v2_branch": "hard_adaptive_masscap",
+    "source": "positive_plus_classifier_adaptive_masscap_unlabeled_demos",
+    "reason": "score shape is not a large ambiguous pool; use calibrated mass-capped hard support",
+    "estimated_positive_mass": 101.77480867327829,
+    "count_ge_pos_min": 55,
+    "labeled_positive_p10": 0.8704862117767334,
+    "labeled_positive_min": 0.795079231262207,
+    "labeled_positive_mean": 0.9474749028682709,
+    "labeled_negative_mean": 0.056961099477484824,
+    "unlabeled_count": 160
+  },
+  "diagnostics_path": "results/final_paper/per_seed/can_paired_balanced_80p80b_split22_triage_bc_policy0/setup/diagnostics.json",
+  "artifacts": {
+    "support_audit_csv": "results/final_paper/per_seed/can_paired_balanced_80p80b_split22_triage_bc_policy0/support_audit.csv",
+    "hidden_label_audit_csv": "results/final_paper/per_seed/can_paired_balanced_80p80b_split22_triage_bc_policy0/hidden_label_audit.csv"
+  }
+}

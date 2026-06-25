@@ -1,0 +1,4 @@
+method,split11_successes,split22_successes,split33_successes,pooled_successes,pooled_episodes,pooled_success_rate,mean_success_by_split
+weighted BC,24,33,36,93,150,0.620,0.620
+positive-only NN top160,23,34,25,82,150,0.547,0.547
+TRIAGE-BC / pos-min,27,25,22,74,150,0.493,0.493

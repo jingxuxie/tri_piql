@@ -1,0 +1,13 @@
+split_seed,support_rule,train_demos,selected_unlabeled,hidden_positive,hidden_bad,purity,hidden_positive_recall,hidden_bad_admission,endpoint_success,endpoint_successes,endpoint_episodes,source
+11,triage_adaptive_masscap,60,50,20,30,0.400,1.000,0.375,0.660,33,50,router_v2_adaptive_masscap
+11,positive_only_nn_top20,30,20,17,3,0.850,0.850,0.037,0.680,34,50,positive_only_nearest_neighbor
+11,weighted_full_pool,110,100,20,80,0.200,1.000,1.000,0.360,18,50,weighted_bc_sampler
+11,classifier_top20,30,20,11,9,0.550,0.550,0.113,,,,classifier_score_precision_at_k
+22,triage_adaptive_masscap,63,53,18,35,0.340,0.900,0.438,0.260,13,50,router_v2_adaptive_masscap
+22,positive_only_nn_top20,30,20,17,3,0.850,0.850,0.037,0.400,20,50,positive_only_nearest_neighbor
+22,weighted_full_pool,110,100,20,80,0.200,1.000,1.000,,,,weighted_bc_sampler
+22,classifier_top20,30,20,14,6,0.700,0.700,0.075,,,,classifier_score_precision_at_k
+33,triage_adaptive_masscap,30,20,16,4,0.800,0.800,0.050,,,,router_v2_adaptive_masscap
+33,positive_only_nn_top20,30,20,15,5,0.750,0.750,0.062,,,,positive_only_nearest_neighbor
+33,weighted_full_pool,110,100,20,80,0.200,1.000,1.000,,,,weighted_bc_sampler
+33,classifier_top20,30,20,16,4,0.800,0.800,0.050,,,,classifier_score_precision_at_k

@@ -1,0 +1,24 @@
+{
+  "run_id": "lift_mg_mg_sparse_split33_bc_all_mixed_policy0",
+  "task": "lift_mg",
+  "split_type": "mg_sparse",
+  "split_seed": 33,
+  "method": "bc_all_mixed",
+  "policy_seed": 0,
+  "stage": "eval",
+  "dataset_path": "data/robomimic/v1.5/lift/mg/low_dim_sparse_v15.hdf5",
+  "split_path": "results/final_paper/splits/lift_mg_mg_sparse_split33/split_indices.json",
+  "score_dir": "",
+  "setup_dir": "results/final_paper/per_seed/lift_mg_mg_sparse_split33_bc_all_mixed_policy0/setup",
+  "train_dir": "results/final_paper/per_seed/lift_mg_mg_sparse_split33_bc_all_mixed_policy0/train",
+  "eval_dir": "results/final_paper/per_seed/lift_mg_mg_sparse_split33_bc_all_mixed_policy0/eval",
+  "router_decision": {
+    "router_v2_branch": "",
+    "source": "all_train_demos"
+  },
+  "diagnostics_path": "results/final_paper/per_seed/lift_mg_mg_sparse_split33_bc_all_mixed_policy0/setup/diagnostics.json",
+  "artifacts": {
+    "support_audit_csv": "results/final_paper/per_seed/lift_mg_mg_sparse_split33_bc_all_mixed_policy0/support_audit.csv",
+    "hidden_label_audit_csv": "results/final_paper/per_seed/lift_mg_mg_sparse_split33_bc_all_mixed_policy0/hidden_label_audit.csv"
+  }
+}

@@ -1,0 +1,10 @@
+method,seed,original_10ep_success,success_50ep,successes_50ep,episodes,avg_len,original_eval_dir,endpoint_eval_dir
+bad-aware pos-min,0,0.8,0.68,34,50,73.88,results/robomimic_lift_mg_official_bc_rnn_posmin_seed0_eval,results/robomimic_lift_mg_seed0_endpoint_50ep_posmin_eval
+bad-aware pos-min,1,0.4,0.52,26,50,90.72,results/robomimic_lift_mg_official_bc_rnn_posmin_seed1_eval,results/robomimic_lift_mg_seed1_endpoint_50ep_posmin_eval
+bad-aware pos-min,2,0.8,0.6,30,50,79.68,results/robomimic_lift_mg_official_bc_rnn_posmin_seed2_eval,results/robomimic_lift_mg_seed2_endpoint_50ep_posmin_eval
+weighted probability sampler,0,0.5,0.54,27,50,97.5,results/robomimic_lift_mg_official_bc_rnn_weighted_prob_seed0_eval,results/robomimic_lift_mg_seed0_endpoint_50ep_weighted_eval
+weighted probability sampler,1,0.7,0.56,28,50,92.32,results/robomimic_lift_mg_official_bc_rnn_weighted_prob_seed1_eval,results/robomimic_lift_mg_seed1_endpoint_50ep_weighted_eval
+weighted probability sampler,2,0.4,0.5,25,50,105.2,results/robomimic_lift_mg_official_bc_rnn_weighted_prob_seed2_eval,results/robomimic_lift_mg_seed2_endpoint_50ep_weighted_eval
+positive-only NN top160,0,0.5,0.62,31,50,84.62,results/robomimic_lift_mg_official_bc_rnn_posonly_nn_top160_seed0_eval,results/robomimic_lift_mg_seed0_endpoint_50ep_posonly_top160_eval
+positive-only NN top160,1,0.6,0.5,25,50,93.28,results/robomimic_lift_mg_official_bc_rnn_posonly_nn_top160_seed1_eval,results/robomimic_lift_mg_seed1_endpoint_50ep_posonly_top160_eval
+positive-only NN top160,2,0.6,0.56,28,50,84.42,results/robomimic_lift_mg_official_bc_rnn_posonly_nn_top160_seed2_eval,results/robomimic_lift_mg_seed2_endpoint_50ep_posonly_top160_eval

@@ -1,0 +1,2 @@
+method,split11_successes,split22_successes,split33_successes,pooled_successes,pooled_episodes,pooled_success_rate,mean_success_by_split,split11_selected_unlabeled,split11_hidden_positive,split11_hidden_bad,split11_purity,split22_selected_unlabeled,split22_hidden_positive,split22_hidden_bad,split22_purity,split33_selected_unlabeled,split33_hidden_positive,split33_hidden_bad,split33_purity
+classifier-score top160,16,19,33,68,150,0.453,0.453,160,154,6,0.963,160,150,10,0.938,160,158,2,0.988

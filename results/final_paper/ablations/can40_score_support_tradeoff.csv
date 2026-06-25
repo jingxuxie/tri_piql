@@ -1,0 +1,9 @@
+support_rule,num_splits,mean_selected,total_hidden_positive,total_hidden_bad,purity,hidden_positive_recall,hidden_bad_admission,selected_contamination,endpoint_success,endpoint_successes,endpoint_episodes,source
+classifier_top10,3,10.000,26,4,0.867,0.217,0.017,0.133,,,,classifier_score_precision_at_k
+classifier_top20,3,20.000,51,9,0.850,0.425,0.037,0.150,,,,classifier_score_precision_at_k
+classifier_top40,3,40.000,85,35,0.708,0.708,0.146,0.292,,,,classifier_score_precision_at_k
+classifier_top60,3,60.000,108,72,0.600,0.900,0.300,0.400,,,,classifier_score_precision_at_k
+classifier_top80,3,80.000,116,124,0.483,0.967,0.517,0.517,,,,classifier_score_precision_at_k
+triage_adaptive_masscap,3,63.333,110,80,0.579,0.917,0.333,0.421,0.660,99,150,router_v2_adaptive_masscap
+weighted_full_pool,3,120.000,120,240,0.333,1.000,1.000,0.667,0.600,90,150,weighted_bc_sampler
+positive_only_nn_top40,3,40.000,106,14,0.883,0.883,0.058,0.117,0.720,108,150,positive_only_nearest_neighbor

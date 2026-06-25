@@ -10,6 +10,13 @@ results/**/*_train/
 results/**/models/
 results/**/logs/
 results/**/videos/
+paper/**/*.aux
+paper/**/*.bbl
+paper/**/*.blg
+paper/**/*.fdb_latexmk
+paper/**/*.fls
+paper/**/*.log
+paper/**/*.out
 *.hdf5
 *.h5
 *.pt

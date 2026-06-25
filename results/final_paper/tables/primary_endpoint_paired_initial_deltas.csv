@@ -1,0 +1,361 @@
+task,comparison,left_method,right_method,split_seed,initial_demo_id,left_success_mean,right_success_mean,paired_delta,left_rollouts,right_rollouts
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,11,demo_105,1.000,1.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,11,demo_189,1.000,1.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,11,demo_29,1.000,1.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,11,demo_39,0.000,0.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,11,demo_45,1.000,1.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,11,demo_5,0.200,0.200,0.000,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,11,demo_53,0.800,0.600,0.200,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,11,demo_81,0.600,0.400,0.200,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,11,demo_89,1.000,1.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,11,demo_99,1.000,1.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,22,demo_105,0.000,0.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,22,demo_189,0.200,0.800,-0.600,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,22,demo_29,0.800,0.400,0.400,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,22,demo_39,0.000,0.600,-0.600,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,22,demo_45,0.400,0.000,0.400,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,22,demo_5,0.600,1.000,-0.400,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,22,demo_53,1.000,0.000,1.000,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,22,demo_81,0.800,0.400,0.400,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,22,demo_89,1.000,1.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,22,demo_99,0.400,0.200,0.200,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,33,demo_105,1.000,0.200,0.800,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,33,demo_189,0.800,1.000,-0.200,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,33,demo_29,0.800,0.600,0.200,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,33,demo_39,1.000,0.400,0.600,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,33,demo_45,1.000,0.200,0.800,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,33,demo_5,0.800,0.000,0.800,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,33,demo_53,1.000,1.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,33,demo_81,0.600,1.000,-0.400,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,33,demo_89,0.000,1.000,-1.000,5,5
+Can 40p/80b,TRIAGE-BC - weighted BC,TRIAGE-BC,weighted BC,33,demo_99,0.000,1.000,-1.000,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_105,1.000,0.000,1.000,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_189,1.000,1.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_29,1.000,0.000,1.000,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_39,0.000,1.000,-1.000,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_45,1.000,0.200,0.800,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_5,0.200,0.000,0.200,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_53,0.800,1.000,-0.200,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_81,0.600,1.000,-0.400,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_89,1.000,0.600,0.400,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_99,1.000,0.200,0.800,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_105,0.000,0.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_189,0.200,1.000,-0.800,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_29,0.800,0.000,0.800,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_39,0.000,1.000,-1.000,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_45,0.400,0.200,0.200,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_5,0.600,0.000,0.600,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_53,1.000,1.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_81,0.800,1.000,-0.200,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_89,1.000,0.800,0.200,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_99,0.400,0.600,-0.200,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_105,1.000,0.000,1.000,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_189,0.800,1.000,-0.200,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_29,0.800,0.000,0.800,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_39,1.000,1.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_45,1.000,0.200,0.800,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_5,0.800,0.000,0.800,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_53,1.000,1.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_81,0.600,1.000,-0.400,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_89,0.000,0.800,-0.800,5,5
+Can 40p/80b,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_99,0.000,0.600,-0.600,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,11,demo_105,1.000,0.400,0.600,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,11,demo_189,1.000,0.400,0.600,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,11,demo_29,1.000,0.600,0.400,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,11,demo_39,0.000,1.000,-1.000,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,11,demo_45,1.000,1.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,11,demo_5,0.200,1.000,-0.800,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,11,demo_53,0.800,1.000,-0.200,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,11,demo_81,0.600,1.000,-0.400,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,11,demo_89,1.000,1.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,11,demo_99,1.000,1.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,22,demo_105,0.000,1.000,-1.000,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,22,demo_189,0.200,0.800,-0.600,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,22,demo_29,0.800,1.000,-0.200,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,22,demo_39,0.000,0.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,22,demo_45,0.400,1.000,-0.600,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,22,demo_5,0.600,1.000,-0.400,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,22,demo_53,1.000,1.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,22,demo_81,0.800,0.000,0.800,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,22,demo_89,1.000,0.800,0.200,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,22,demo_99,0.400,1.000,-0.600,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,33,demo_105,1.000,0.000,1.000,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,33,demo_189,0.800,0.600,0.200,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,33,demo_29,0.800,1.000,-0.200,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,33,demo_39,1.000,0.000,1.000,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,33,demo_45,1.000,0.400,0.600,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,33,demo_5,0.800,1.000,-0.200,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,33,demo_53,1.000,1.000,0.000,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,33,demo_81,0.600,1.000,-0.400,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,33,demo_89,0.000,0.600,-0.600,5,5
+Can 40p/80b,TRIAGE-BC - positive-only NN,TRIAGE-BC,positive-only NN,33,demo_99,0.000,0.000,0.000,5,5
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1019,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1022,1.000,0.000,1.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1024,1.000,0.500,0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1102,1.000,0.500,0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1127,0.000,0.500,-0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1160,0.500,0.000,0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1202,0.500,1.000,-0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1208,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1216,0.000,0.000,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1229,1.000,0.000,1.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1231,0.000,1.000,-1.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1254,1.000,0.000,1.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1265,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1290,0.000,1.000,-1.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1300,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1305,0.000,0.000,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1325,0.500,1.000,-0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1330,0.000,1.000,-1.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1352,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1358,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1360,0.000,0.000,0.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1378,0.000,1.000,-1.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1383,0.000,1.000,-1.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1395,0.000,0.000,0.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1422,0.000,1.000,-1.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1429,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1443,0.000,0.000,0.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1458,0.000,1.000,-1.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_1470,1.000,0.000,1.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,11,demo_901,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1023,1.000,0.500,0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1102,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1112,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1128,1.000,0.000,1.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1213,0.500,0.000,0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1215,0.500,0.000,0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1229,0.500,0.000,0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1234,0.000,0.500,-0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1238,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1251,0.500,1.000,-0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1256,0.000,0.000,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1258,0.500,0.000,0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1271,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1274,1.000,0.500,0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1304,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1307,0.000,1.000,-1.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1310,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1314,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1330,1.000,0.000,1.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1369,0.000,0.000,0.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1373,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1383,0.000,0.000,0.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1418,1.000,0.000,1.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1420,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1438,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1444,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1459,0.000,0.000,0.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_1478,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_365,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,22,demo_541,1.000,0.000,1.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1032,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1087,1.000,0.500,0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1116,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1140,0.500,1.000,-0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1199,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1206,0.500,0.000,0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1208,1.000,0.500,0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1224,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1239,0.500,0.000,0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1243,1.000,0.500,0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1251,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1252,0.000,0.000,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1271,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1291,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1295,1.000,0.000,1.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1316,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1321,0.500,0.000,0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1368,1.000,0.000,1.000,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1369,1.000,0.500,0.500,2,2
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1378,1.000,0.000,1.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1389,1.000,0.000,1.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1423,0.000,0.000,0.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1424,0.000,0.000,0.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1440,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1455,1.000,0.000,1.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1466,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1477,1.000,0.000,1.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1481,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_1500,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - TRIAGE-BC,weighted BC,TRIAGE-BC,33,demo_956,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1019,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1022,1.000,0.000,1.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1024,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1102,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1127,0.000,0.500,-0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1160,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1202,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1208,1.000,0.000,1.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1216,0.000,0.500,-0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1229,1.000,0.500,0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1231,0.000,0.000,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1254,1.000,0.000,1.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1265,0.500,0.000,0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1290,0.000,0.000,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1300,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1305,0.000,0.500,-0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1325,0.500,0.000,0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1330,0.000,0.000,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1352,0.500,1.000,-0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1358,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1360,0.000,1.000,-1.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1378,0.000,0.000,0.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1383,0.000,1.000,-1.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1395,0.000,0.000,0.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1422,0.000,0.000,0.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1429,1.000,0.000,1.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1443,0.000,1.000,-1.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1458,0.000,1.000,-1.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_1470,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,11,demo_901,0.500,1.000,-0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1023,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1102,1.000,0.500,0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1112,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1128,1.000,0.000,1.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1213,0.500,0.000,0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1215,0.500,0.000,0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1229,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1234,0.000,0.000,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1238,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1251,0.500,1.000,-0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1256,0.000,0.000,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1258,0.500,1.000,-0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1271,0.500,1.000,-0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1274,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1304,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1307,0.000,0.500,-0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1310,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1314,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1330,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1369,0.000,1.000,-1.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1373,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1383,0.000,1.000,-1.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1418,1.000,0.000,1.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1420,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1438,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1444,1.000,0.000,1.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1459,0.000,1.000,-1.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_1478,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_365,0.500,1.000,-0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,22,demo_541,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1032,0.500,1.000,-0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1087,1.000,0.500,0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1116,1.000,0.500,0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1140,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1199,1.000,0.500,0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1206,0.500,1.000,-0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1208,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1224,0.500,1.000,-0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1239,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1243,1.000,0.500,0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1251,0.500,0.000,0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1252,0.000,0.000,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1271,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1291,0.500,0.500,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1295,1.000,0.000,1.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1316,0.500,0.000,0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1321,0.500,0.000,0.500,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1368,1.000,0.000,1.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1369,1.000,1.000,0.000,2,2
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1378,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1389,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1423,0.000,0.000,0.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1424,0.000,0.000,0.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1440,1.000,0.000,1.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1455,1.000,0.000,1.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1466,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1477,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1481,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_1500,1.000,1.000,0.000,1,1
+Lift MG,weighted BC - positive-only NN,weighted BC,positive-only NN,33,demo_956,0.500,0.000,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1019,1.000,1.000,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1022,0.000,0.000,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1024,0.500,0.000,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1102,0.500,0.000,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1127,0.500,0.000,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1160,0.000,0.500,-0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1202,1.000,0.500,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1208,1.000,1.000,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1216,0.000,0.000,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1229,0.000,0.000,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1231,1.000,0.000,1.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1254,0.000,0.000,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1265,0.500,0.000,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1290,1.000,0.500,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1300,0.500,0.500,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1305,0.000,0.500,-0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1325,1.000,0.500,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1330,1.000,0.500,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1352,0.500,0.000,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1358,1.000,1.000,0.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1360,0.000,0.000,0.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1378,1.000,0.000,1.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1383,1.000,0.000,1.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1395,0.000,0.000,0.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1422,1.000,0.000,1.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1429,1.000,1.000,0.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1443,0.000,0.000,0.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1458,1.000,0.000,1.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_1470,0.000,0.000,0.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,11,demo_901,0.500,0.000,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1023,0.500,0.000,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1102,1.000,1.000,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1112,1.000,0.500,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1128,0.000,0.000,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1213,0.000,0.000,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1215,0.000,0.000,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1229,0.000,0.000,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1234,0.500,0.000,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1238,0.500,0.000,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1251,1.000,0.500,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1256,0.000,0.500,-0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1258,0.000,0.000,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1271,0.500,0.500,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1274,0.500,0.000,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1304,1.000,0.000,1.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1307,1.000,0.500,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1310,1.000,0.000,1.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1314,1.000,0.000,1.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1330,0.000,1.000,-1.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1369,0.000,0.000,0.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1373,1.000,0.000,1.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1383,0.000,0.000,0.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1418,0.000,0.000,0.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1420,1.000,0.000,1.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1438,1.000,0.000,1.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1444,1.000,0.000,1.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1459,0.000,0.000,0.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_1478,1.000,0.000,1.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_365,0.500,1.000,-0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,22,demo_541,0.000,0.000,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1032,0.500,0.500,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1087,0.500,0.000,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1116,1.000,0.500,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1140,1.000,0.000,1.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1199,1.000,0.000,1.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1206,0.000,0.000,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1208,0.500,0.500,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1224,0.500,0.000,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1239,0.000,0.000,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1243,0.500,0.500,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1251,0.500,0.500,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1252,0.000,0.000,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1271,1.000,0.500,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1291,0.500,0.000,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1295,0.000,0.000,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1316,0.500,0.000,0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1321,0.000,0.500,-0.500,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1368,0.000,0.000,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1369,0.500,0.500,0.000,2,2
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1378,0.000,0.000,0.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1389,0.000,0.000,0.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1423,0.000,0.000,0.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1424,0.000,0.000,0.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1440,1.000,0.000,1.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1455,0.000,0.000,0.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1466,1.000,0.000,1.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1477,0.000,0.000,0.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1481,1.000,0.000,1.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_1500,1.000,0.000,1.000,1,1
+Lift MG,TRIAGE-BC - all-demo BC,TRIAGE-BC,all-demo BC,33,demo_956,0.500,0.000,0.500,2,2

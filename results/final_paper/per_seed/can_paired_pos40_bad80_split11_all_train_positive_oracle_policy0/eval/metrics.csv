@@ -1,0 +1,2 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/final_paper/per_seed/can_paired_pos40_bad80_split11_all_train_positive_oracle_policy0/train/can_paired_pos40_bad80_split11_all_train_positive_oracle_policy0_official_bc_rnn/20260624151616/models/model_epoch_200.pth,model_epoch_200,0.98,0.98,111.2,50

@@ -1,0 +1,2 @@
+wrote results/final_paper/per_seed/can_paired_pos20_bad80_split33_triage_bc_policy0/setup/config.json
+train filter final_can_paired_pos20_bad80_s33_positive_plus_classifier_adaptive_masscap_unlabeled_demos_posx4_cap1p25_max80_seed0_train: 30 demos

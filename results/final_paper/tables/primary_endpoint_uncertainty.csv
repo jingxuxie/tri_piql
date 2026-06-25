@@ -1,0 +1,11 @@
+task,method,successes,episodes,pooled_success_rate,wilson95_low,wilson95_high,split_mean,split_std,split11_success_rate,split22_success_rate,split33_success_rate,split11_successes,split22_successes,split33_successes
+Can 40p/80b,all-demo BC,81,150,0.540,0.460,0.618,0.540,0.035,0.500,0.560,0.560,25,28,28
+Can 40p/80b,weighted BC,90,150,0.600,0.520,0.675,0.600,0.144,0.720,0.440,0.640,36,22,32
+Can 40p/80b,positive-only NN,108,150,0.720,0.643,0.786,0.720,0.144,0.840,0.760,0.560,42,38,28
+Can 40p/80b,TRIAGE-BC,99,150,0.660,0.581,0.731,0.660,0.125,0.760,0.520,0.700,38,26,35
+Can 40p/80b,all-positive oracle,147,150,0.980,0.943,0.993,0.980,0.000,0.980,0.980,0.980,49,49,49
+Lift MG,all-demo BC,31,150,0.207,0.150,0.278,0.207,0.050,0.260,0.200,0.160,13,10,8
+Lift MG,weighted BC,93,150,0.620,0.540,0.694,0.620,0.125,0.480,0.660,0.720,24,33,36
+Lift MG,positive-only NN,82,150,0.547,0.467,0.624,0.547,0.117,0.460,0.680,0.500,23,34,25
+Lift MG,TRIAGE-BC,74,150,0.493,0.414,0.573,0.493,0.050,0.540,0.500,0.440,27,25,22
+Lift MG,all-positive oracle,105,150,0.700,0.622,0.768,0.700,0.053,0.660,0.680,0.760,33,34,38

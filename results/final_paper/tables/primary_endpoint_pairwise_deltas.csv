@@ -1,0 +1,7 @@
+task,comparison,pooled_delta,split_mean_delta,split_std_delta,split11_delta,split22_delta,split33_delta,direction_consistent
+Can 40p/80b,TRIAGE-BC - weighted BC,0.060,0.060,0.020,0.040,0.080,0.060,true
+Can 40p/80b,TRIAGE-BC - all-demo BC,0.120,0.120,0.151,0.260,-0.040,0.140,false
+Can 40p/80b,TRIAGE-BC - positive-only NN,-0.060,-0.060,0.191,-0.080,-0.240,0.140,false
+Lift MG,weighted BC - TRIAGE-BC,0.127,0.127,0.172,-0.060,0.160,0.280,false
+Lift MG,weighted BC - positive-only NN,0.073,0.073,0.129,0.020,-0.020,0.220,false
+Lift MG,TRIAGE-BC - all-demo BC,0.287,0.287,0.012,0.280,0.300,0.280,true

@@ -219,7 +219,8 @@ def main() -> None:
         episode_rows.extend(ckpt_episode_rows)
         print(
             f"{checkpoint.name}: success={row['success_rate']:.3f} "
-            f"return={row['avg_return']:.3f} len={row['avg_len']:.1f}"
+            f"return={row['avg_return']:.3f} len={row['avg_len']:.1f}",
+            flush=True,
         )
 
     with (args.out_dir / "metrics.csv").open("w", newline="", encoding="utf-8") as f:

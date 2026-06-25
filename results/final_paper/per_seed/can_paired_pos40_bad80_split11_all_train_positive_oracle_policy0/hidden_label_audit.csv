@@ -1,0 +1,2 @@
+task,split_type,split_seed,method,policy_seed,selected_unlabeled,hidden_positive,hidden_bad,purity,train_demo_count,train_filter_key
+can_paired,pos40_bad80,11,all_train_positive_oracle,0,0,0,0,0.0,90,final_can_paired_pos40_bad80_s11_all_train_positive_seed0_train

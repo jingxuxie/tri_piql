@@ -1,0 +1,2 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/robomimic_lift_mg_official_bc_rnn_posmin_seed1_train/can_positive_plus_classifier_demo_threshold_unlabeled_demos_official_bc_rnn_seed1/20260622100002/models/model_epoch_200.pth,model_epoch_200,0.52,0.52,90.72,50

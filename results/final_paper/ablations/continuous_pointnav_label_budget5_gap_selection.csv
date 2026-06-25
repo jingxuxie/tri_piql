@@ -1,0 +1,5 @@
+bad_frac,bc_all,pos_unlabeled_bc,local_weighted_bc,triage_gap_demo_bc,oracle_good_bc,selected_frac,selected_demo_purity,selected_transition_purity,hidden_good_demos,hidden_bad_demos
+0.50,0.400,0.467,0.200,1.000,1.000,0.034,1.000,1.000,6.2,0.0
+0.75,0.340,0.293,0.200,1.000,1.000,0.062,1.000,1.000,11.2,0.0
+0.90,0.240,0.147,0.000,1.000,1.000,0.089,1.000,1.000,16.0,0.0
+0.95,0.100,0.113,0.140,1.000,1.000,0.057,1.000,1.000,10.2,0.0

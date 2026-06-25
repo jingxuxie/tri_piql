@@ -1,0 +1,7 @@
+task,comparison,point_delta,bootstrap95_low,bootstrap95_high,split11_delta,split22_delta,split33_delta,split_signs,split_sign_p_two_sided,initial_states_per_split,bootstrap_samples,note
+Can 40p/80b,TRIAGE-BC - weighted BC,0.060,-0.113,0.240,0.040,0.080,0.060,+++,0.250,10/10/10,10000,bootstrap resamples split seeds and paired initial states; repeated rollouts per initial state are averaged first
+Can 40p/80b,TRIAGE-BC - all-demo BC,0.120,-0.133,0.380,0.260,-0.040,0.140,+-+,1.000,10/10/10,10000,bootstrap resamples split seeds and paired initial states; repeated rollouts per initial state are averaged first
+Can 40p/80b,TRIAGE-BC - positive-only NN,-0.060,-0.313,0.200,-0.080,-0.240,0.140,--+,1.000,10/10/10,10000,bootstrap resamples split seeds and paired initial states; repeated rollouts per initial state are averaged first
+Lift MG,weighted BC - TRIAGE-BC,0.122,-0.100,0.317,-0.100,0.167,0.300,-++,1.000,30/30/30,10000,bootstrap resamples split seeds and paired initial states; repeated rollouts per initial state are averaged first
+Lift MG,weighted BC - positive-only NN,0.050,-0.111,0.222,-0.033,-0.033,0.217,--+,1.000,30/30/30,10000,bootstrap resamples split seeds and paired initial states; repeated rollouts per initial state are averaged first
+Lift MG,TRIAGE-BC - all-demo BC,0.306,0.211,0.400,0.300,0.317,0.300,+++,0.250,30/30/30,10000,bootstrap resamples split seeds and paired initial states; repeated rollouts per initial state are averaged first

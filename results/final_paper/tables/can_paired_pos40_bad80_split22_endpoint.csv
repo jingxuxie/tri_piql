@@ -1,0 +1,3 @@
+task,split_type,split_seed,method,router_branch,policy_seed,checkpoint,eval_episodes,success_rate,selected_unlabeled,hidden_positive,hidden_bad,purity,notes
+can_paired,pos40_bad80,22,triage_bc,hard_adaptive_masscap,0,model_epoch_200,50,0.520,73,36,37,0.4931506849,"second frozen final split endpoint; lower-purity hard support"
+can_paired,pos40_bad80,22,weighted_bc,,0,model_epoch_200,50,0.440,120,40,80,0.3333333333,"matched classifier-probability weighted sampler baseline"

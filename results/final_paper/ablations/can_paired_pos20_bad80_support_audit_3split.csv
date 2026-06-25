@@ -1,0 +1,5 @@
+support_rule,num_splits,mean_train_demos,mean_selected_unlabeled,total_hidden_positive,total_hidden_bad,purity,hidden_positive_recall,hidden_bad_admission,selected_contamination,endpoint_num_splits,endpoint_success,endpoint_successes,endpoint_episodes,source
+classifier_top20,3,30.000,20.000,41,19,0.683,0.683,0.079,0.317,0,,,,classifier_score_precision_at_k
+triage_adaptive_masscap,3,51.000,41.000,54,69,0.439,0.900,0.287,0.561,2,0.460,46,100,router_v2_adaptive_masscap
+positive_only_nn_top20,3,30.000,20.000,49,11,0.817,0.817,0.046,0.183,2,0.540,54,100,positive_only_nearest_neighbor
+weighted_full_pool,3,110.000,100.000,60,240,0.200,1.000,1.000,0.800,1,0.360,18,50,weighted_bc_sampler

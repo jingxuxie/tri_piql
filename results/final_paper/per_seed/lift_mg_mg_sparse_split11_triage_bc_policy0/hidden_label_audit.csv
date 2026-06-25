@@ -1,0 +1,2 @@
+task,split_type,split_seed,method,policy_seed,selected_unlabeled,hidden_positive,hidden_bad,purity,train_demo_count,train_filter_key
+lift_mg,mg_sparse,11,triage_bc,0,178,169,9,0.949438202247191,188,final_lift_mg_mg_sparse_s11_positive_plus_classifier_demo_threshold_unlabeled_demos_pos_min_seed0_train

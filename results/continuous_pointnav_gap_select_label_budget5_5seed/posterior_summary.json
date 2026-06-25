@@ -1,0 +1,74 @@
+[
+  {
+    "bad_frac": 0.5,
+    "prior": 0.05,
+    "posterior_mean": 0.049999964982271196,
+    "demo_weight_purity_mean": 0.9999999999999976,
+    "demo_weight_purity_std": 2.4145755584882908e-15,
+    "transition_weight_purity_mean": 0.9999999999999993,
+    "transition_weight_purity_std": 7.143489329906233e-16
+  },
+  {
+    "bad_frac": 0.5,
+    "prior": 0.1,
+    "posterior_mean": 0.09999994933605194,
+    "demo_weight_purity_mean": 0.9999999999999971,
+    "demo_weight_purity_std": 2.8051537443747342e-15,
+    "transition_weight_purity_mean": 0.9999999999999991,
+    "transition_weight_purity_std": 8.699502462476852e-16
+  },
+  {
+    "bad_frac": 0.75,
+    "prior": 0.05,
+    "posterior_mean": 0.049999989569187164,
+    "demo_weight_purity_mean": 0.9999999999999307,
+    "demo_weight_purity_std": 1.2152506501764462e-13,
+    "transition_weight_purity_mean": 0.9999999999999792,
+    "transition_weight_purity_std": 3.6614206028451614e-14
+  },
+  {
+    "bad_frac": 0.75,
+    "prior": 0.1,
+    "posterior_mean": 0.09999998509883881,
+    "demo_weight_purity_mean": 0.9999999999999032,
+    "demo_weight_purity_std": 1.694573012318449e-13,
+    "transition_weight_purity_mean": 0.9999999999999709,
+    "transition_weight_purity_std": 5.0995626574941993e-14
+  },
+  {
+    "bad_frac": 0.9,
+    "prior": 0.05,
+    "posterior_mean": 0.05000002011656761,
+    "demo_weight_purity_mean": 0.9999999999995488,
+    "demo_weight_purity_std": 6.241517913626109e-13,
+    "transition_weight_purity_mean": 0.9999999999998647,
+    "transition_weight_purity_std": 1.880500072050889e-13
+  },
+  {
+    "bad_frac": 0.9,
+    "prior": 0.1,
+    "posterior_mean": 0.09999999105930328,
+    "demo_weight_purity_mean": 0.9555555585803314,
+    "demo_weight_purity_std": 0.064788337161743,
+    "transition_weight_purity_mean": 0.9853680052687265,
+    "transition_weight_purity_std": 0.02159774549848359
+  },
+  {
+    "bad_frac": 0.95,
+    "prior": 0.05,
+    "posterior_mean": 0.04999999180436134,
+    "demo_weight_purity_mean": 0.9111094796282027,
+    "demo_weight_purity_std": 0.17777693518692775,
+    "transition_weight_purity_mean": 0.9626040628656268,
+    "transition_weight_purity_std": 0.07479069041438298
+  },
+  {
+    "bad_frac": 0.95,
+    "prior": 0.1,
+    "posterior_mean": 0.09999998956918717,
+    "demo_weight_purity_mean": 0.5666666979744861,
+    "demo_weight_purity_std": 0.16254154989565336,
+    "transition_weight_purity_mean": 0.7977398716809182,
+    "transition_weight_purity_std": 0.12166140076396467
+  }
+]

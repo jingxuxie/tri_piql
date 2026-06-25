@@ -1,0 +1,4 @@
+method,success,successes,eval_episodes,avg_len,train_demos,selected_unlabeled,hidden_positive,hidden_bad,purity,checkpoint
+positive_only_nn_top20,0.680,34,50,206.80,30,20,17,3,0.850,results/final_paper/per_seed/can_paired_pos20_bad80_split11_positive_only_nn_policy0/train/can_paired_pos20_bad80_split11_positive_only_nn_policy0_official_bc_rnn/20260624190423/models/model_epoch_200.pth
+triage_bc_adaptive_masscap,0.660,33,50,209.84,60,50,20,30,0.400,results/final_paper/per_seed/can_paired_pos20_bad80_split11_triage_bc_policy0/train/can_paired_pos20_bad80_split11_triage_bc_policy0_official_bc_rnn/20260624190843/models/model_epoch_200.pth
+weighted_bc_sampler,0.360,18,50,296.86,110,100,20,80,0.200,results/final_paper/per_seed/can_paired_pos20_bad80_split11_weighted_bc_policy0/train/can_paired_pos20_bad80_split11_weighted_bc_policy0_official_bc_rnn/20260624191744/models/model_epoch_200.pth
