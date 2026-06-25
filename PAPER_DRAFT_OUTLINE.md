@@ -2,7 +2,7 @@
 
 Working title:
 
-> TRIAGE-BC: Tri-Signal Support Calibration for Offline Imitation from Success, Failure, and Mixed Logs
+> When Do Bad Demonstrations Help Offline Imitation? A Precision-Coverage Study
 
 This is a paper-writing scaffold, not a claim expansion. It maps the current frozen evidence into a draft structure and keeps the limitations explicit.
 
@@ -18,6 +18,7 @@ Use:
 - Tri-signal scoring can recover useful hidden-positive support in controlled settings.
 - Hard support can beat soft weighting on frozen Can 40p/80b.
 - Soft weighting can beat hard support when coverage dominates, as on frozen Lift MG and Can MG stress diagnostics.
+- A frozen v0.2 portfolio router passes a fresh Can+Lift gate by selecting hard union on Can and weighted coverage on Lift (`209/300` versus `187/300` best per-split baselines), but paired-bootstrap intervals cross zero and keep the claim directional.
 - Strong positive-only retrieval is a first-class baseline and often beats the current bad-aware converter.
 
 Avoid:
@@ -30,14 +31,14 @@ Avoid:
 
 ## Abstract Skeleton
 
-Offline imitation datasets often contain a small number of trusted successful demonstrations, a small number of known failures, and a larger unlabeled log with mixed behavior. A common response is to clone all data or softly weight the log with a learned score, but these choices can fail under action-conflicting contamination or coverage-sensitive tasks. We study the score-to-policy conversion problem: how scarce successes and failures should calibrate support selection from a mixed log. TRIAGE-BC learns a tri-signal desirability score, estimates hidden positive mass, and routes between hard support, soft weighting, and abstention. In controlled continuous PointNav, adaptive score-gap support reaches perfect success under extreme contamination. On frozen Robomimic endpoints, hard support improves over weighted BC and all-demo cloning on Can 40p/80b, while Lift MG and Can MG expose coverage and abstention limitations. The resulting evidence supports a narrower but useful conclusion: support calibration is the bottleneck, and strong no-bad-label retrieval must be included in this problem class.
+Offline imitation datasets often contain a small number of trusted successful demonstrations, a small number of known failures, and a larger unlabeled log with mixed behavior. A common response is to clone all data or softly weight the log with a learned score, but these choices can fail under action-conflicting contamination or coverage-sensitive tasks. We study the score-to-policy conversion problem: how scarce successes and failures should calibrate support selection from a mixed log. TRIAGE-BC learns a tri-signal desirability score, estimates hidden positive mass, and routes between hard support, soft weighting, and abstention. In controlled continuous PointNav, adaptive score-gap support reaches perfect success under extreme contamination. On frozen Robomimic endpoints, v0.1 exposes the precision/coverage tradeoff, and a frozen v0.2 portfolio router reaches `209/300` selected-branch successes versus `187/300` for best per-split baselines on fresh Can+Lift splits. The resulting evidence supports a narrower but useful conclusion: support calibration is the bottleneck, and strong no-bad-label retrieval must be included in this problem class.
 
 ## Contributions
 
 1. Formalize offline imitation from scarce positive demonstrations, scarce failure demonstrations, and a contaminated unlabeled log as a score-to-support conversion problem.
-2. Propose TRIAGE-BC v0.1: tri-signal score learning, trajectory-score calibration, positive-mass estimation, hidden-label-free support routing, and BC-RNN-GMM policy learning.
+2. Propose TRIAGE-BC v0.1 and a frozen v0.2 portfolio router: tri-signal score learning, trajectory-score calibration, positive-mass estimation, hidden-label-free support routing, and BC-RNN-GMM policy learning.
 3. Provide controlled PointNav evidence that adaptive score-gap support can solve heavy-contamination settings where all-demo, positive-plus-unlabeled, and local weighted BC degrade.
-4. Provide frozen Robomimic evidence showing both sides of the precision/coverage tradeoff: Can 40p/80b favors hard selected support over weighted BC, while Lift MG favors broader weighted coverage.
+4. Provide frozen Robomimic evidence showing both sides of the precision/coverage tradeoff: Can 40p/80b favors hard selected support, Lift MG favors broader weighted coverage, and fresh v0.2 branch selection improves the combined Can+Lift gate.
 5. Establish strong caveats through positive-only NN, all-positive oracle, score-shape diagnostics, and Can MG branch-proxy failure.
 
 ## Recommended Paper Structure
@@ -89,7 +90,7 @@ Make the distinction explicit:
 
 ### 4. Method
 
-Describe TRIAGE-BC v0.1 using `METHOD_FREEZE.md` and `configs/final_method.yaml`.
+Describe TRIAGE-BC v0.1 using `METHOD_FREEZE.md` and `configs/final_method.yaml`, then describe the frozen v0.2 portfolio router using `METHOD_FREEZE_V02.md`.
 
 Subsections:
 
@@ -102,7 +103,8 @@ Subsections:
    - soft weighted sampler,
    - abstention.
 5. Frozen router and algorithmic summary.
-6. Policy backbone: official Robomimic BC-RNN-GMM for robotics; lightweight BC for controlled PointNav.
+6. v0.2 portfolio router over hard union, soft weighted BC, and stress abstention.
+7. Policy backbone: official Robomimic BC-RNN-GMM for robotics; lightweight BC for controlled PointNav.
 
 Important caveat:
 
@@ -224,6 +226,7 @@ List directly:
 
 - Positive-only NN is strongest on frozen Can 40p/80b and Can 20p/80b diagnostics.
 - Weighted BC is strongest on frozen Lift MG.
+- v0.2 selected weighted BC is only a modest Lift improvement over positive-only NN (`80/150` versus `74/150`) and loses one fresh split.
 - Can MG is an abstention/stress diagnostic, not a main success.
 - Square and Transport are support-side relative-quality diagnostics, not failure-demo policy benchmarks.
 - The robotics method relies on a strong BC-RNN-GMM backbone.
@@ -253,6 +256,7 @@ core overclaim-avoidance caveats are guarded by
 | Appendix Figure | `results/final_paper/figures/primary_endpoint_paired_deltas.png` | Paired initial-state endpoint uncertainty |
 | Appendix Table | `results/final_paper/tables/primary_endpoint_uncertainty.csv` | Primary endpoint uncertainty |
 | Appendix Table | `results/final_paper/tables/primary_endpoint_paired_bootstrap.csv` | Paired initial-state bootstrap uncertainty |
+| Appendix Table | `results/final_paper_v02/tables/v02_fresh_gate_uncertainty_REPORT.md` | Fresh v0.2 paired initial-state uncertainty |
 | Appendix Table | In-source table `tab:bad-label-controls` backed by `results/final_paper/tables/bad_label_control_summary.csv` | Bad-label versus positive-only control summary in the compiled appendix |
 | Appendix Table | `results/final_paper/tables/bad_label_control_summary.csv` | Bad-label versus positive-only control summary |
 | Appendix Table | `results/final_paper/ablations/can_paired_pos20_bad80_support_audit_3split.csv` | Heavy-contamination Can caveat |
@@ -315,5 +319,5 @@ Can MG stress:
 
 Result ordering is frozen for submission formatting: PointNav-first mechanism
 evidence, then Robomimic endpoint evidence and caveats. The provisional ICLR
-compile is 13 pages total, with references on page 10 and appendix material
+compile is 15 pages total, with references on page 10 and appendix material
 starting on page 11.

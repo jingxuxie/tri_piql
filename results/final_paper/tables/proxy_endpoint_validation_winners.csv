@@ -1,0 +1,5 @@
+setting_id,setting_label,endpoint_winner,endpoint_winner_success,coverage_proxy_winner,coverage_proxy_winner_success,coverage_proxy_matches_endpoint,audit_score_winner,audit_score_winner_success,audit_score_matches_endpoint
+can40,Can 40p/80b,positive-NN/risk union top40,116/150,weighted BC full pool,90/150,false,positive-NN/risk union top40,116/150,true
+lift_mg,Lift MG,weighted BC,93/150,weighted BC,93/150,true,classifier top-k,68/150,false
+can20,Can 20p/80b,positive-only NN top20,54/100,weighted BC full pool,18/50,false,positive-only NN top20,54/100,true
+can80,Can 80p/80b,positive-only NN top80,49/50,positive-only NN top80,49/50,true,positive-only NN top80,49/50,true

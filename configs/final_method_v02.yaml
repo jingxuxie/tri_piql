@@ -1,0 +1,128 @@
+method:
+  name: TRIAGE-BC
+  version: v0.2_development_portfolio_router
+  freeze_date: "2026-06-25"
+  paper_framing: offline_imitation_score_to_support_portfolio_routing
+  hidden_labels_allowed_in_decisions: false
+  freeze_contract: METHOD_FREEZE_V02.md
+
+score_model:
+  type: state_action_binary_classifier
+  feature_mode: obs
+  classifier_steps: 800
+  classifier_batch_size: 512
+  hidden_dim: 128
+  depth: 2
+  learning_rate: 0.0001
+  classifier_seed_offset: 77
+  trajectory_aggregation: mean_transition_probability
+
+router_v02:
+  features:
+    - estimated_positive_mass
+    - count_ge_pos_min
+  decisions:
+    - branch: stress_abstain
+      condition:
+        estimated_positive_mass_gte: 800
+        count_ge_pos_min_gte: 400
+      action: do_not_train_main_method_branch
+    - branch: soft_weighted
+      condition:
+        estimated_positive_mass_gte: 200
+        count_ge_pos_min_gte: 80
+      action: train_classifier_probability_weighted_bc
+    - branch: hard_risk_union
+      condition: otherwise
+      action: train_positive_nn_risk_union_support
+
+hard_risk_union:
+  positive_nn_component: positive_nn_topK
+  risk_component: positive_nn_risk_fusion_topK
+  union_order: positive_nn_then_risk_fusion
+  fusion_weights:
+    positive_nn_rank: 0.5
+    combined_risk_rank: 0.5
+  combined_risk: action_conflict_risk_plus_bad_neighbor_risk
+  top_k:
+    can_paired_pos40_bad80: 40
+    can_paired_pos20_bad80: 20
+    can_paired_balanced_80p80b: 80
+    lift_mg_sparse: 160
+
+soft_weighted:
+  positive_demo_weight: 1.0
+  unlabeled_weight: max(0.05, demo_mean_score)
+  num_samples_multiplier: 1.0
+
+stress_abstain:
+  train_main_method_branch: false
+  report_score_shape: true
+  report_support_audit: true
+
+robomimic_policy:
+  algorithm: bc
+  backbone: official_robomimic_bc_rnn_gmm
+  obs_keys:
+    - robot0_eef_pos
+    - robot0_eef_quat
+    - robot0_gripper_qpos
+    - object
+  seq_length: 10
+  frame_stack: 1
+  actor_layer_dims:
+    - 1024
+    - 1024
+  rnn:
+    enabled: true
+    type: LSTM
+    hidden_dim: 400
+    num_layers: 2
+    open_loop: false
+    bidirectional: false
+  gmm:
+    enabled: true
+    num_modes: 5
+    min_std: 0.0001
+    std_activation: softplus
+    low_noise_eval: true
+  optimization:
+    policy_lr: 0.0001
+    train_batch_size: 100
+    num_epochs: 200
+    epoch_steps: 100
+    l2_weight: 1.0
+    l1_weight: 0.0
+    cos_weight: 0.0
+    cuda: true
+  checkpoints:
+    save_epochs:
+      - 50
+      - 100
+      - 150
+      - 200
+    main_endpoint_epoch: 200
+    no_best_checkpoint_selection: true
+
+fresh_split_gate:
+  split_seeds:
+    - 101
+    - 202
+    - 303
+  primary_tasks:
+    - can_paired_pos40_bad80
+    - lift_mg_sparse
+  stress_tasks:
+    - can_mg_sparse
+  primary_policy_seeds:
+    - 0
+
+required_fresh_baselines:
+  can_paired_pos40_bad80:
+    - positive_only_nn_top40
+    - weighted_bc
+    - triage_bc_v01
+  lift_mg_sparse:
+    - weighted_bc
+    - positive_only_nn_top160
+    - triage_bc_v01

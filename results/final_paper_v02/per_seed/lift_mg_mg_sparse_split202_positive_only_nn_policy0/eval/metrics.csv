@@ -1,0 +1,2 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/final_paper_v02/per_seed/lift_mg_mg_sparse_split202_positive_only_nn_policy0/train/lift_mg_mg_sparse_split202_positive_only_nn_policy0_official_bc_rnn/20260625105310/models/model_epoch_200.pth,model_epoch_200,0.5,0.5,91.66,50

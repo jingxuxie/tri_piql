@@ -1,0 +1,2 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/final_paper/ablations/v02_action_risk_endpoint_smoke_can40/split11/pnrf40/train/v02risk_can40_s11_pnrf40_seed0_bc_rnn_e50/20260625052516/models/model_epoch_50.pth,model_epoch_50,0.2,0.2,345.9,10

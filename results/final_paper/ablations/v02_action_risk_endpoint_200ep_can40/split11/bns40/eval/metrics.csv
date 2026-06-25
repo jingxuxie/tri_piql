@@ -1,0 +1,2 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/final_paper/ablations/v02_action_risk_endpoint_200ep_can40/split11/bns40/train/v02risk200_can40_s11_bns40_seed0_bc_rnn_e200/20260625052835/models/model_epoch_200.pth,model_epoch_200,0.72,0.72,188.42,50

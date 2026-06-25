@@ -1,0 +1,28 @@
+{
+  "split_path": "results/final_paper/ablations/can_coverage_shift_splits/split101/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "env_name": "PickPlaceCan",
+  "env_version": "1.5.1",
+  "eval_init_mode": "valid_positive_states",
+  "eval_initial_ids": [
+    "demo_29",
+    "demo_49",
+    "demo_61",
+    "demo_73",
+    "demo_99",
+    "demo_153",
+    "demo_161",
+    "demo_179",
+    "demo_181",
+    "demo_193"
+  ],
+  "eval_episodes": 10,
+  "eval_horizon": 400,
+  "seed": 0,
+  "device": "cuda",
+  "checkpoints": [
+    "/home/eston/tri-piql/results/final_paper/ablations/can_coverage_shift_endpoint_smoke/split101/bap40/train/cov_can_s101_bap40_seed0_bc_rnn_e50/20260625034844/models/model_epoch_50.pth",
+    "/home/eston/tri-piql/results/final_paper/ablations/can_coverage_shift_endpoint_smoke/split101/hrfbh40/train/cov_can_s101_hrfbh40_seed0_bc_rnn_e50/20260625035000/models/model_epoch_50.pth",
+    "/home/eston/tri-piql/results/final_paper/ablations/can_coverage_shift_endpoint_smoke/split101/sapn40/train/cov_can_s101_sapn40_seed0_bc_rnn_e50/20260625034727/models/model_epoch_50.pth"
+  ]
+}

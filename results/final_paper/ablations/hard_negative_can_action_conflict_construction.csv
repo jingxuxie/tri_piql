@@ -1,0 +1,4 @@
+split_seed,split_path,positive_anchor_demo,labeled_positive_count,labeled_negative_count,unlabeled_positive_count,unlabeled_negative_count,valid_positive_count,valid_negative_count,hidden_positive_state_gap_mean,hidden_positive_state_gap_min,unlabeled_bad_state_distance_mean,valid_bad_state_distance_mean,unlabeled_bad_action_conflict_mean,valid_bad_action_conflict_mean,unlabeled_bad_hard_score_mean,valid_bad_hard_score_mean
+101,results/final_paper/ablations/hard_negative_can_action_conflict_splits/split101/split_indices.json,demo_63,10,10,40,80,10,10,14.878,13.003,19.986,23.773,7.140,7.671,0.032,-1.744
+202,results/final_paper/ablations/hard_negative_can_action_conflict_splits/split202/split_indices.json,demo_37,10,10,40,80,10,10,14.093,12.451,20.143,23.219,7.640,7.761,0.026,-1.806
+303,results/final_paper/ablations/hard_negative_can_action_conflict_splits/split303/split_indices.json,demo_83,10,10,40,80,10,10,13.183,11.274,20.223,23.215,7.725,8.047,0.002,-1.843

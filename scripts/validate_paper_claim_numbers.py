@@ -193,6 +193,82 @@ def main() -> None:
     can_mg_proxies = read_csv(ROOT / "results" / "final_paper" / "ablations" / "can_mg_branch_proxy_summary" / "proxy_winners.csv")
     lift_top160 = read_csv(ROOT / "results" / "final_paper" / "ablations" / "lift_mg_classifier_top160_endpoint_summary.csv")
     bad_label_summary = read_csv(ROOT / "results" / "final_paper" / "tables" / "bad_label_control_summary.csv")
+    hard_negative = read_csv(
+        ROOT
+        / "results"
+        / "final_paper"
+        / "ablations"
+        / "hard_negative_can_endpoint_200ep"
+        / "endpoint_200ep_3split_summary.csv"
+    )
+    coverage_shift = read_csv(
+        ROOT
+        / "results"
+        / "final_paper"
+        / "ablations"
+        / "can_coverage_shift_endpoint_200ep"
+        / "endpoint_200ep_3split_summary.csv"
+    )
+    prefix_positive = read_csv(
+        ROOT
+        / "results"
+        / "final_paper"
+        / "tables"
+        / "can_prefix_positive_diagnostic.csv"
+    )
+    v02_policy_coverage_split11 = read_csv(
+        ROOT
+        / "results"
+        / "final_paper"
+        / "tables"
+        / "v02_policy_coverage_diagnostic.csv"
+    )
+    v02_policy_coverage_split22 = read_csv(
+        ROOT
+        / "results"
+        / "final_paper"
+        / "tables"
+        / "v02_policy_coverage_diagnostic_split22.csv"
+    )
+    v02_action_risk_setup_split11 = read_csv(
+        ROOT
+        / "results"
+        / "final_paper"
+        / "ablations"
+        / "v02_action_risk_endpoint_200ep_can40"
+        / "split11"
+        / "endpoint_setup_summary.csv"
+    )
+    v02_action_risk_setup_split22 = read_csv(
+        ROOT
+        / "results"
+        / "final_paper"
+        / "ablations"
+        / "v02_action_risk_endpoint_200ep_can40"
+        / "split22"
+        / "endpoint_setup_summary.csv"
+    )
+    v02_fresh_gate = read_csv(
+        ROOT
+        / "results"
+        / "final_paper_v02"
+        / "tables"
+        / "v02_fresh_gate_summary.csv"
+    )
+    v02_fresh_gate_per_split = read_csv(
+        ROOT
+        / "results"
+        / "final_paper_v02"
+        / "tables"
+        / "v02_fresh_gate_per_split.csv"
+    )
+    v02_fresh_uncertainty = read_csv(
+        ROOT
+        / "results"
+        / "final_paper_v02"
+        / "tables"
+        / "v02_fresh_gate_uncertainty.csv"
+    )
 
     main_counts = {
         ("Can 40p/80b", "all-positive oracle"): (147, 150),
@@ -307,6 +383,250 @@ def main() -> None:
         if (as_int(lift_row, "pooled_successes", failures, "Lift top160"), as_int(lift_row, "pooled_episodes", failures, "Lift top160")) != (68, 150):
             fail("Lift classifier top160 expected 68/150", failures)
     expect_doc_contains(docs, ["latex", "iclr_latex", "markdown", "checklist"], "68/150", failures)
+
+    hard_negative_expected = {
+        ("101", "hybrid_rank_fusion_badaware_heavy_top40"): (33, 50, 36, 4),
+        ("101", "state_action_positive_nn_top40"): (30, 50, 16, 24),
+        ("202", "hybrid_rank_fusion_badaware_heavy_top40"): (35, 50, 38, 2),
+        ("202", "state_action_positive_nn_top40"): (27, 50, 22, 18),
+        ("303", "hybrid_rank_fusion_badaware_heavy_top40"): (36, 50, 39, 1),
+        ("303", "state_action_positive_nn_top40"): (34, 50, 32, 8),
+    }
+    aggregate: dict[str, list[int]] = {}
+    for (split_seed, candidate_id), (successes, episodes, hidden_pos, hidden_bad) in hard_negative_expected.items():
+        row = find_row(hard_negative, failures, split_seed=split_seed, candidate_id=candidate_id)
+        if not row:
+            continue
+        context = f"Hard-negative Can split {split_seed} {candidate_id}"
+        if as_int(row, "success_count", failures, context) != successes:
+            fail(f"{context}: endpoint successes mismatch", failures)
+        if as_int(row, "eval_episodes", failures, context) != episodes:
+            fail(f"{context}: endpoint episodes mismatch", failures)
+        if as_int(row, "selected_hidden_positive", failures, context) != hidden_pos:
+            fail(f"{context}: hidden positives mismatch", failures)
+        if as_int(row, "selected_hidden_bad", failures, context) != hidden_bad:
+            fail(f"{context}: hidden bad mismatch", failures)
+        entry = aggregate.setdefault(candidate_id, [0, 0, 0, 0])
+        entry[0] += successes
+        entry[1] += episodes
+        entry[2] += hidden_pos
+        entry[3] += hidden_bad
+    expected_aggregate = {
+        "hybrid_rank_fusion_badaware_heavy_top40": [104, 150, 113, 7],
+        "state_action_positive_nn_top40": [91, 150, 70, 50],
+    }
+    if aggregate != expected_aggregate:
+        fail(f"Hard-negative Can aggregate expected {expected_aggregate}, got {aggregate}", failures)
+    for needle in ["104/150", "91/150"]:
+        expect_doc_contains(docs, ["latex", "iclr_latex", "markdown", "checklist"], needle, failures)
+    for needle in ["113 hidden positives", "7 hidden bad", "70 hidden positives", "50 hidden bad"]:
+        expect_doc_contains(docs, ["latex", "iclr_latex", "markdown"], needle, failures)
+
+    coverage_shift_expected = {
+        ("101", "hybrid_rank_fusion_badaware_heavy_top40"): (39, 50, 39, 1),
+        ("101", "state_action_positive_nn_top40"): (35, 50, 34, 6),
+        ("202", "hybrid_rank_fusion_badaware_heavy_top40"): (41, 50, 39, 1),
+        ("202", "state_action_positive_nn_top40"): (29, 50, 34, 6),
+        ("303", "hybrid_rank_fusion_badaware_heavy_top40"): (40, 50, 40, 0),
+        ("303", "state_action_positive_nn_top40"): (39, 50, 37, 3),
+    }
+    aggregate = {}
+    for (split_seed, candidate_id), (successes, episodes, hidden_pos, hidden_bad) in coverage_shift_expected.items():
+        row = find_row(coverage_shift, failures, split_seed=split_seed, candidate_id=candidate_id)
+        if not row:
+            continue
+        context = f"Coverage-shift Can split {split_seed} {candidate_id}"
+        if as_int(row, "success_count", failures, context) != successes:
+            fail(f"{context}: endpoint successes mismatch", failures)
+        if as_int(row, "eval_episodes", failures, context) != episodes:
+            fail(f"{context}: endpoint episodes mismatch", failures)
+        if as_int(row, "selected_hidden_positive", failures, context) != hidden_pos:
+            fail(f"{context}: hidden positives mismatch", failures)
+        if as_int(row, "selected_hidden_bad", failures, context) != hidden_bad:
+            fail(f"{context}: hidden bad mismatch", failures)
+        entry = aggregate.setdefault(candidate_id, [0, 0, 0, 0])
+        entry[0] += successes
+        entry[1] += episodes
+        entry[2] += hidden_pos
+        entry[3] += hidden_bad
+    expected_coverage_aggregate = {
+        "hybrid_rank_fusion_badaware_heavy_top40": [120, 150, 118, 2],
+        "state_action_positive_nn_top40": [103, 150, 105, 15],
+    }
+    if aggregate != expected_coverage_aggregate:
+        fail(f"Coverage-shift Can aggregate expected {expected_coverage_aggregate}, got {aggregate}", failures)
+    for needle in ["120/150", "103/150"]:
+        expect_doc_contains(docs, ["latex", "iclr_latex", "markdown", "checklist"], needle, failures)
+    for needle in ["118 hidden positives", "2 hidden bad", "105 hidden positives", "15 hidden bad"]:
+        expect_doc_contains(docs, ["latex", "iclr_latex", "markdown"], needle, failures)
+
+    prefix_positive_expected = {
+        "prefix_bad_aware_state_top80": (119, 150, 195, 45),
+        "prefix_state_action_nn_top80": (6, 150, 37, 203),
+    }
+    for candidate_id, (successes, episodes, hidden_pos, hidden_bad) in prefix_positive_expected.items():
+        row = find_row(prefix_positive, failures, candidate_id=candidate_id)
+        if not row:
+            continue
+        context = f"Prefix-positive Can {candidate_id}"
+        success_parts = row["success"].split("/")
+        if len(success_parts) != 2:
+            fail(f"{context}: malformed success field {row['success']!r}", failures)
+            continue
+        got_successes = int(success_parts[0])
+        got_episodes = int(success_parts[1])
+        if (got_successes, got_episodes) != (successes, episodes):
+            fail(
+                f"{context}: expected {successes}/{episodes}, got {got_successes}/{got_episodes}",
+                failures,
+            )
+        if as_int(row, "hidden_positive_selected", failures, context) != hidden_pos:
+            fail(f"{context}: hidden positives mismatch", failures)
+        if as_int(row, "hidden_bad_selected", failures, context) != hidden_bad:
+            fail(f"{context}: hidden bad mismatch", failures)
+    for needle in ["119/150", "6/150"]:
+        expect_doc_contains(docs, ["latex", "iclr_latex", "markdown", "checklist"], needle, failures)
+    for needle in ["195 hidden positives", "45 hidden bad", "37 hidden positives", "203 hidden bad"]:
+        expect_doc_contains(docs, ["latex", "iclr_latex", "markdown"], needle, failures)
+
+    v02_endpoint_expected = [
+        (v02_policy_coverage_split11, "positive_nn_risk_fusion_top40", 0.820, 49, 1, "split 11 risk fusion"),
+        (v02_policy_coverage_split11, "positive_only_nn", 0.840, 46, 4, "split 11 positive-only"),
+        (v02_policy_coverage_split22, "positive_nn_risk_fusion_top40", 0.640, 50, 0, "split 22 risk fusion"),
+        (v02_policy_coverage_split22, "positive_only_nn", 0.760, 47, 3, "split 22 positive-only"),
+    ]
+    for rows, method_id, success, train_pos, train_bad, context in v02_endpoint_expected:
+        row = find_row(rows, failures, method_id=method_id)
+        if not row:
+            continue
+        expect_float_field(row, "endpoint_success", success, failures, f"v0.2 action-risk {context}", tol=1e-9)
+        if as_int(row, "train_positive_count", failures, f"v0.2 action-risk {context}") != train_pos:
+            fail(f"v0.2 action-risk {context}: train positive count mismatch", failures)
+        if as_int(row, "train_bad_count", failures, f"v0.2 action-risk {context}") != train_bad:
+            fail(f"v0.2 action-risk {context}: train bad count mismatch", failures)
+    v02_setup_expected = [
+        (v02_action_risk_setup_split11, "positive_nn_risk_fusion_top40", 39, 1, "split 11 risk fusion setup"),
+        (v02_action_risk_setup_split22, "positive_nn_risk_fusion_top40", 40, 0, "split 22 risk fusion setup"),
+    ]
+    for rows, candidate_id, hidden_pos, hidden_bad, context in v02_setup_expected:
+        row = find_row(rows, failures, candidate_id=candidate_id)
+        if not row:
+            continue
+        if as_int(row, "selected_hidden_positive", failures, f"v0.2 action-risk {context}") != hidden_pos:
+            fail(f"v0.2 action-risk {context}: selected hidden positives mismatch", failures)
+        if as_int(row, "selected_hidden_bad", failures, f"v0.2 action-risk {context}") != hidden_bad:
+            fail(f"v0.2 action-risk {context}: selected hidden bad mismatch", failures)
+    for needle in ["0.820", "0.840", "0.640", "0.760"]:
+        expect_doc_contains(docs, ["latex", "iclr_latex", "markdown", "checklist"], needle, failures)
+    for needle in ["39 hidden positives", "1 hidden bad", "40 hidden positives", "0 hidden bad"]:
+        expect_doc_contains(docs, ["latex", "iclr_latex", "markdown"], needle, failures)
+
+    v02_fresh_expected = {
+        "Can 40p/80b": (129, 150, 113, 150, "+0.107", 3, 0),
+        "Lift MG": (80, 150, 74, 150, "+0.040", 2, 1),
+    }
+    for setting_label, (
+        selected_success,
+        selected_episodes,
+        baseline_success,
+        baseline_episodes,
+        margin,
+        winning_splits,
+        losing_splits,
+    ) in v02_fresh_expected.items():
+        row = find_row(v02_fresh_gate, failures, setting_label=setting_label)
+        if not row:
+            continue
+        context = f"v0.2 fresh gate {setting_label}"
+        if as_int(row, "selected_success", failures, context) != selected_success:
+            fail(f"{context}: selected success mismatch", failures)
+        if as_int(row, "selected_episodes", failures, context) != selected_episodes:
+            fail(f"{context}: selected episodes mismatch", failures)
+        if as_int(row, "best_baseline_success", failures, context) != baseline_success:
+            fail(f"{context}: best baseline success mismatch", failures)
+        if as_int(row, "best_baseline_episodes", failures, context) != baseline_episodes:
+            fail(f"{context}: best baseline episodes mismatch", failures)
+        if row.get("margin") != margin:
+            fail(f"{context}: expected margin {margin}, got {row.get('margin')}", failures)
+        if as_int(row, "winning_splits", failures, context) != winning_splits:
+            fail(f"{context}: winning split count mismatch", failures)
+        if as_int(row, "losing_splits", failures, context) != losing_splits:
+            fail(f"{context}: losing split count mismatch", failures)
+
+    combined_selected = sum(as_int(row, "selected_success", failures, "v0.2 fresh gate combined") for row in v02_fresh_gate)
+    combined_selected_eps = sum(as_int(row, "selected_episodes", failures, "v0.2 fresh gate combined") for row in v02_fresh_gate)
+    combined_baseline = sum(as_int(row, "best_baseline_success", failures, "v0.2 fresh gate combined") for row in v02_fresh_gate)
+    combined_baseline_eps = sum(as_int(row, "best_baseline_episodes", failures, "v0.2 fresh gate combined") for row in v02_fresh_gate)
+    if (combined_selected, combined_selected_eps, combined_baseline, combined_baseline_eps) != (209, 300, 187, 300):
+        fail(
+            "v0.2 fresh gate combined expected selected 209/300 and best baselines 187/300, "
+            f"got {combined_selected}/{combined_selected_eps} and {combined_baseline}/{combined_baseline_eps}",
+            failures,
+        )
+    for needle in ["209/300", "187/300", "129/150", "113/150", "80/150", "74/150"]:
+        expect_doc_contains(docs, ["latex", "iclr_latex", "markdown", "checklist"], needle, failures)
+    for needle in ["+8/50", "+5/50", "+3/50", "-2/50"]:
+        expect_doc_contains(docs, ["latex", "iclr_latex", "markdown"], needle, failures)
+    for needle in ["-0.033", "0.260", "-0.083", "0.178", "-0.022", "0.179"]:
+        expect_doc_contains(docs, ["latex", "iclr_latex", "markdown", "checklist"], needle, failures)
+
+    v02_uncertainty_expected = {
+        "Can 40p/80b": (129, 150, 113, 150, 0.107, -0.033, 0.260, "+++", "0.250"),
+        "Lift MG": (80, 150, 74, 150, 0.040, -0.083, 0.178, "++-", "1.000"),
+        "Combined Can+Lift": (209, 300, 187, 300, 0.073, -0.022, 0.179, "+++++-", "0.219"),
+    }
+    for scope, (
+        selected_success,
+        selected_episodes,
+        baseline_success,
+        baseline_episodes,
+        pooled_delta,
+        boot_low,
+        boot_high,
+        split_signs,
+        sign_p,
+    ) in v02_uncertainty_expected.items():
+        row = find_row(v02_fresh_uncertainty, failures, scope=scope)
+        if not row:
+            continue
+        context = f"v0.2 fresh uncertainty {scope}"
+        if as_int(row, "selected_success", failures, context) != selected_success:
+            fail(f"{context}: selected success mismatch", failures)
+        if as_int(row, "selected_episodes", failures, context) != selected_episodes:
+            fail(f"{context}: selected episodes mismatch", failures)
+        if as_int(row, "best_baseline_success", failures, context) != baseline_success:
+            fail(f"{context}: baseline success mismatch", failures)
+        if as_int(row, "best_baseline_episodes", failures, context) != baseline_episodes:
+            fail(f"{context}: baseline episodes mismatch", failures)
+        expect_float_field(row, "pooled_delta", pooled_delta, failures, context)
+        expect_float_field(row, "paired_bootstrap95_low", boot_low, failures, context)
+        expect_float_field(row, "paired_bootstrap95_high", boot_high, failures, context)
+        if row.get("split_signs") != split_signs:
+            fail(f"{context}: expected split signs {split_signs}, got {row.get('split_signs')}", failures)
+        if row.get("split_sign_p_two_sided") != sign_p:
+            fail(f"{context}: expected sign p {sign_p}, got {row.get('split_sign_p_two_sided')}", failures)
+
+    v02_split_expected = {
+        ("Can 40p/80b", "101"): ("positive_nn_risk_union_top40", 45, "weighted_bc", 37),
+        ("Can 40p/80b", "202"): ("positive_nn_risk_union_top40", 45, "positive_only_nn", 40),
+        ("Can 40p/80b", "303"): ("positive_nn_risk_union_top40", 39, "positive_only_nn", 36),
+        ("Lift MG", "101"): ("weighted_bc", 31, "positive_only_nn", 28),
+        ("Lift MG", "202"): ("weighted_bc", 30, "positive_only_nn", 25),
+        ("Lift MG", "303"): ("weighted_bc", 19, "positive_only_nn", 21),
+    }
+    for (setting_label, split_seed), (selected_method, selected_success, baseline_method, baseline_success) in v02_split_expected.items():
+        row = find_row(v02_fresh_gate_per_split, failures, setting_label=setting_label, split_seed=split_seed)
+        if not row:
+            continue
+        context = f"v0.2 fresh gate {setting_label} split {split_seed}"
+        if row.get("selected_method") != selected_method:
+            fail(f"{context}: selected method mismatch", failures)
+        if as_int(row, "selected_success", failures, context) != selected_success:
+            fail(f"{context}: selected successes mismatch", failures)
+        if row.get("best_baseline_method") != baseline_method:
+            fail(f"{context}: best baseline method mismatch", failures)
+        if as_int(row, "best_baseline_success", failures, context) != baseline_success:
+            fail(f"{context}: best baseline successes mismatch", failures)
 
     bad_label_expected = {
         "Controlled PointNav n+=5, n- in {1,2,5}": (

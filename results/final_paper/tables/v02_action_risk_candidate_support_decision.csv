@@ -1,0 +1,5 @@
+setting_id,setting_label,baseline_id,baseline_recall,baseline_bad_admission,best_id,best_family,best_recall,best_bad_admission,best_audit_score,best_risk_id,best_risk_family,best_risk_recall,best_risk_bad_admission,best_risk_audit_score,risk_candidates_dominate_baseline,risk_dominating_candidate_count
+can40,Can 40p/80b,positive_nn_top40,0.883,0.058,bad_neighbor_safe_top40,risk-only,1.000,0.000,1.000,bad_neighbor_safe_top40,risk-only,1.000,0.000,1.000,true,8
+can20,Can 20p/80b,positive_nn_top20,0.817,0.046,bad_neighbor_safe_top20,risk-only,1.000,0.000,1.000,bad_neighbor_safe_top20,risk-only,1.000,0.000,1.000,true,8
+can80,Can 80p/80b,positive_nn_top80,0.917,0.083,bad_neighbor_safe_top80,risk-only,1.000,0.000,1.000,bad_neighbor_safe_top80,risk-only,1.000,0.000,1.000,true,8
+lift_mg,Lift MG,positive_nn_top160,0.413,0.040,classifier_top320,bad-aware hard,0.859,0.073,0.786,bad_neighbor_safe_top320,risk-only,0.855,0.073,0.782,true,8

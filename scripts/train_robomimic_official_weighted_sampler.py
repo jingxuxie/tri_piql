@@ -32,6 +32,8 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--demo-weights", type=Path, required=True)
+    parser.add_argument("--experiment-name", type=str, default=None)
+    parser.add_argument("--output-dir", type=Path, default=None)
     parser.add_argument(
         "--num-samples-multiplier",
         type=float,
@@ -253,6 +255,11 @@ def train(config, *, device: torch.device, demo_weights_path: Path, num_samples_
 def main() -> None:
     args = parse_args()
     config = load_config(args.config)
+    with config.values_unlocked():
+        if args.experiment_name is not None:
+            config.experiment.name = args.experiment_name
+        if args.output_dir is not None:
+            config.train.output_dir = str(args.output_dir.resolve())
     device = TorchUtils.get_torch_device(try_to_use_cuda=config.train.cuda)
     config.lock()
     train(

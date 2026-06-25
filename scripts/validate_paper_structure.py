@@ -21,11 +21,15 @@ EXPECTED_FIGURE_LABELS = [
     "fig:score-shapes",
     "fig:diagnostic-matrix",
     "fig:paired-deltas",
+    "fig:prefix-positive-can",
 ]
 
 EXPECTED_TABLE_LABELS = [
     "tab:main-results",
+    "tab:v02-gate",
     "tab:bad-label-controls",
+    "tab:hard-negative-can",
+    "tab:coverage-shift-can",
 ]
 
 EXPECTED_DOC_ROWS = {
@@ -45,7 +49,17 @@ EXPECTED_DOC_ROWS = {
         "| Figure 4 | `../results/final_paper/figures/can40_precision_coverage.pdf` | Can 40 precision/coverage frontier. |",
         "| Figure 5 | `../results/final_paper/figures/score_shape_diagnostics.pdf` | Score-shape and abstention diagnostics. |",
         "| Appendix Figure | `../results/final_paper/figures/primary_endpoint_paired_deltas.pdf` | Paired initial-state endpoint uncertainty. |",
+        "| Appendix Figure | `../results/final_paper/figures/can_prefix_positive_diagnostic.pdf` | Can prefix-positive generated diagnostic. |",
+        "| Main Table | In-source table `tab:v02-gate` in `../paper/triage_bc_paper.tex` | Fresh v0.2 Can+Lift endpoint gate. |",
+        "| Appendix Table | `../results/final_paper_v02/tables/v02_fresh_gate_REPORT.md` | Combined v0.2 fresh Can+Lift endpoint gate. |",
+        "| Appendix Table | `../results/final_paper_v02/tables/v02_fresh_gate_uncertainty_REPORT.md` | Fresh v0.2 paired initial-state uncertainty audit. |",
+        "| Appendix Table | `../results/final_paper_v02/tables/v02_fresh_router_support_REPORT.md` | Fresh v0.2 hidden-label audit and branch decisions. |",
         "| Appendix Table | `../results/final_paper/tables/bad_label_control_summary_REPORT.md` | Bad-label versus positive-only control summary. |",
+        "| Appendix Table | `../results/final_paper/ablations/hard_negative_can_action_conflict_REPORT.md` | Support-only hard-negative Can action-conflict diagnostic. |",
+        "| Appendix Table | `../results/final_paper/ablations/hard_negative_can_endpoint_200ep/REPORT.md` | Three-split hard-negative Can endpoint check. |",
+        "| Appendix Table | `../results/final_paper/ablations/can_coverage_shift_REPORT.md` | Support-only coverage-shift Can diagnostic. |",
+        "| Appendix Table | `../results/final_paper/ablations/can_coverage_shift_endpoint_200ep/REPORT.md` | Three-split coverage-shift Can endpoint check. |",
+        "| Appendix Table | `../results/final_paper/tables/can_prefix_positive_diagnostic_REPORT.md` | Three-split prefix-positive Can endpoint check. |",
     ],
     ROOT / "paper" / "REPRODUCE_PAPER.md": [
         "| Figure 1, method diagram | `../results/final_paper/figures/triage_bc_method_diagram.pdf` | `../scripts/plot_triage_bc_method_diagram.py` |",
@@ -55,6 +69,18 @@ EXPECTED_DOC_ROWS = {
         "| Figure 5, score-shape diagnostics | `../results/final_paper/figures/score_shape_diagnostics.pdf` | `../scripts/plot_score_shape_diagnostics.py` |",
         "| Primary paired delta figure | `../results/final_paper/figures/primary_endpoint_paired_deltas.pdf` | `../scripts/plot_primary_endpoint_paired_deltas.py` |",
         "| Bad-label control summary | `../results/final_paper/tables/bad_label_control_summary_REPORT.md` | `../scripts/summarize_bad_label_control_table.py` |",
+        "| Fresh v0.2 Can+Lift gate | `../results/final_paper_v02/tables/v02_fresh_gate_REPORT.md` | `../scripts/summarize_v02_fresh_gate.py` |",
+        "| Fresh v0.2 uncertainty audit | `../results/final_paper_v02/tables/v02_fresh_gate_uncertainty_REPORT.md` | `../scripts/summarize_v02_fresh_gate_uncertainty.py` |",
+        "| Fresh v0.2 router support audit | `../results/final_paper_v02/tables/v02_fresh_router_support_REPORT.md` | `../scripts/summarize_v02_fresh_router_support_audit.py` |",
+        "| Master evidence tables | `../results/final_paper/tables/baseline_strength_REPORT.md` | `../scripts/summarize_master_evidence_tables.py` |",
+        "| Candidate-family audit | `../results/final_paper/tables/candidate_family_oracle_proxy_REPORT.md` | `../scripts/summarize_candidate_family_audit.py` |",
+        "| Hybrid support audit | `../results/final_paper/tables/hybrid_candidate_support_REPORT.md` | `../scripts/summarize_hybrid_candidate_support_audit.py` |",
+        "| Hard-negative Can diagnostic | `../results/final_paper/ablations/hard_negative_can_action_conflict_REPORT.md` | `../scripts/summarize_hard_negative_can_action_conflict_audit.py` |",
+        "| Hard-negative Can endpoint check | `../results/final_paper/ablations/hard_negative_can_endpoint_200ep/REPORT.md` | `../scripts/summarize_hard_negative_can_endpoint_smoke.py` |",
+        "| Coverage-shift Can diagnostic | `../results/final_paper/ablations/can_coverage_shift_REPORT.md` | `../scripts/summarize_can_coverage_shift_audit.py` |",
+        "| Coverage-shift Can endpoint check | `../results/final_paper/ablations/can_coverage_shift_endpoint_200ep/REPORT.md` | `../scripts/summarize_hard_negative_can_endpoint_smoke.py` |",
+        "| Prefix-positive Can diagnostic figure | `../results/final_paper/figures/can_prefix_positive_diagnostic.pdf` | `../scripts/summarize_can_prefix_positive_endpoint.py`, then `../scripts/plot_can_prefix_positive_diagnostic.py` |",
+        "| Prefix-positive Can diagnostic report | `../results/final_paper/tables/can_prefix_positive_diagnostic_REPORT.md` | `../scripts/plot_can_prefix_positive_diagnostic.py` |",
     ],
 }
 
@@ -128,11 +154,11 @@ def main() -> None:
     except RuntimeError as exc:
         failures.append(str(exc))
     else:
-        if standalone_pages != 15:
-            failures.append(f"paper/triage_bc_paper.pdf has {standalone_pages} pages, expected 15")
-        if iclr_pages != 14:
-            failures.append(f"paper/iclr2026/main.pdf has {iclr_pages} pages, expected 14")
-        if "8     C ONCLUSION" not in page9:
+        if standalone_pages != 17:
+            failures.append(f"paper/triage_bc_paper.pdf has {standalone_pages} pages, expected 17")
+        if iclr_pages != 15:
+            failures.append(f"paper/iclr2026/main.pdf has {iclr_pages} pages, expected 15")
+        if not re.search(r"\b8\s+C ONCLUSION\b", page9):
             failures.append("paper/iclr2026/main.pdf page 9 no longer contains the conclusion heading")
         if "R EFERENCES" in page9:
             failures.append("paper/iclr2026/main.pdf page 9 contains references; main text budget drifted")

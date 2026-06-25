@@ -1,0 +1,14 @@
+setting_id,setting_label,row_role,candidate_id,candidate_label,candidate_family,endpoint_status,coverage_proxy_score,audit_oracle_score,endpoint_success_rate,endpoint_successes,endpoint_episodes
+can40,Can 40p/80b,primary,triage_adaptive_masscap,TRIAGE-BC adaptive masscap,bad_aware_hard,complete_3split_endpoint,0.528,0.584,0.660,99,150
+can40,Can 40p/80b,primary,positive_only_nn_top40,positive-only NN top40,positive_only,complete_3split_endpoint,0.333,0.825,0.720,108,150
+can40,Can 40p/80b,primary,weighted_full_pool,weighted BC full pool,soft_weighted,complete_3split_endpoint,1.000,0.000,0.600,90,150
+can40,Can 40p/80b,primary,positive_nn_risk_union_top40,positive-NN/risk union top40,union_hybrid,complete_3split_endpoint,0.375,0.925,0.773,116,150
+lift_mg,Lift MG,primary,triage_bc,TRIAGE-BC,bad_aware_hard,complete_3split_endpoint,0.104,0.502,0.493,74,150
+lift_mg,Lift MG,primary,classifier_topk,classifier top-k,bad_aware_hard,complete_3split_endpoint,0.113,0.553,0.453,68,150
+lift_mg,Lift MG,primary,positive_only_nn,positive-only NN,positive_only,complete_3split_endpoint,0.113,0.373,0.547,82,150
+lift_mg,Lift MG,primary,weighted_bc,weighted BC,soft_weighted,complete_3split_endpoint,1.000,0.000,0.620,93,150
+can20,Can 20p/80b,diagnostic,triage_adaptive_masscap,TRIAGE-BC adaptive masscap,bad_aware_hard,partial_endpoint,0.410,0.613,0.460,46,100
+can20,Can 20p/80b,diagnostic,positive_only_nn_top20,positive-only NN top20,positive_only,partial_endpoint,0.200,0.771,0.540,54,100
+can20,Can 20p/80b,diagnostic,weighted_full_pool,weighted BC full pool,soft_weighted,partial_endpoint,1.000,0.000,0.360,18,50
+can80,Can 80p/80b,diagnostic,triage_bc_adaptive_masscap,TRIAGE-BC adaptive masscap,bad_aware_hard,partial_endpoint,0.344,0.454,0.860,43,50
+can80,Can 80p/80b,diagnostic,positive_only_nn_top80,positive-only NN top80,positive_only,partial_endpoint,0.500,0.834,0.980,49,50

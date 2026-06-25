@@ -1,0 +1,20 @@
+task,task_label,split_type,method,method_label,row_role,support_split_count,endpoint_split_count,support_split_seeds,endpoint_split_seeds,support_selected_unlabeled,support_train_demos,support_hidden_positive,support_hidden_bad,support_purity,endpoint_successes,endpoint_episodes,endpoint_success_rate,completion_status
+can_paired,Can 20p/80b,pos20_bad80,triage_bc,TRIAGE-BC,diagnostic,3,2,11/22/33,11/22,123,153,54,69,0.439,46,100,0.460,partial_endpoint
+can_paired,Can 20p/80b,pos20_bad80,classifier_topk,classifier top-k,diagnostic,1,0,11,,20,30,11,9,0.550,,,,support_only
+can_paired,Can 20p/80b,pos20_bad80,positive_only_nn,positive-only NN,diagnostic,3,2,11/22/33,11/22,60,90,49,11,0.817,54,100,0.540,partial_endpoint
+can_paired,Can 20p/80b,pos20_bad80,weighted_bc,weighted BC,diagnostic,3,1,11/22/33,11,300,330,60,240,0.200,18,50,0.360,partial_endpoint
+can_paired,Can 40p/80b,pos40_bad80,triage_bc,TRIAGE-BC,primary,3,3,11/22/33,11/22/33,190,220,110,80,0.579,99,150,0.660,complete_3split_endpoint
+can_paired,Can 40p/80b,pos40_bad80,bc_all_mixed,all-demo BC,primary,3,3,11/22/33,11/22/33,0,540,0,0,0.000,81,150,0.540,complete_3split_endpoint
+can_paired,Can 40p/80b,pos40_bad80,all_train_positive_oracle,all-positive oracle,oracle,3,3,11/22/33,11/22/33,0,270,0,0,0.000,147,150,0.980,complete_3split_endpoint
+can_paired,Can 40p/80b,pos40_bad80,positive_only_nn,positive-only NN,primary,3,3,11/22/33,11/22/33,120,150,106,14,0.883,108,150,0.720,complete_3split_endpoint
+can_paired,Can 40p/80b,pos40_bad80,weighted_bc,weighted BC,primary,3,3,11/22/33,11/22/33,360,390,120,240,0.333,90,150,0.600,complete_3split_endpoint
+can_paired,Can 80p/80b,balanced_80p80b,triage_bc,TRIAGE-BC,diagnostic,3,1,11/22/33,33,165,195,137,28,0.830,43,50,0.860,partial_endpoint
+can_paired,Can 80p/80b,balanced_80p80b,classifier_topk,classifier top-k,diagnostic,3,0,11/22/33,,240,270,190,50,0.792,,,,support_only
+can_paired,Can 80p/80b,balanced_80p80b,positive_only_nn,positive-only NN,diagnostic,3,1,11/22/33,33,240,270,220,20,0.917,49,50,0.980,partial_endpoint
+can_paired,Can 80p/80b,balanced_80p80b,weighted_bc,weighted BC,diagnostic,1,0,11,,160,170,80,80,0.500,,,,support_only
+lift_mg,Lift MG,mg_sparse,triage_bc,TRIAGE-BC,primary,3,3,11/22/33,11/22/33,441,471,421,20,0.955,74,150,0.493,complete_3split_endpoint
+lift_mg,Lift MG,mg_sparse,bc_all_mixed,all-demo BC,primary,3,3,11/22/33,11/22/33,0,4320,0,0,0.000,31,150,0.207,complete_3split_endpoint
+lift_mg,Lift MG,mg_sparse,all_train_positive_oracle,all-positive oracle,oracle,3,3,11/22/33,11/22/33,0,858,0,0,0.000,105,150,0.700,complete_3split_endpoint
+lift_mg,Lift MG,mg_sparse,classifier_topk,classifier top-k,primary,3,3,11/22/33,11/22/33,480,510,462,18,0.963,68,150,0.453,complete_3split_endpoint
+lift_mg,Lift MG,mg_sparse,positive_only_nn,positive-only NN,primary,3,3,11/22/33,11/22/33,480,510,342,138,0.713,82,150,0.547,complete_3split_endpoint
+lift_mg,Lift MG,mg_sparse,weighted_bc,weighted BC,primary,3,3,11/22/33,11/22/33,4260,4290,828,3432,0.194,93,150,0.620,complete_3split_endpoint

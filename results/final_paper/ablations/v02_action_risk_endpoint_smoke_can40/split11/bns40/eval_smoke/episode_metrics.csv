@@ -1,0 +1,11 @@
+checkpoint,episode,initial_demo_id,success,return,length
+/home/eston/tri-piql/results/final_paper/ablations/v02_action_risk_endpoint_smoke_can40/split11/bns40/train/v02risk_can40_s11_bns40_seed0_bc_rnn_e50/20260625051951/models/model_epoch_50.pth,0,demo_5,0.0,0.0,400.0
+/home/eston/tri-piql/results/final_paper/ablations/v02_action_risk_endpoint_smoke_can40/split11/bns40/train/v02risk_can40_s11_bns40_seed0_bc_rnn_e50/20260625051951/models/model_epoch_50.pth,1,demo_29,0.0,0.0,400.0
+/home/eston/tri-piql/results/final_paper/ablations/v02_action_risk_endpoint_smoke_can40/split11/bns40/train/v02risk_can40_s11_bns40_seed0_bc_rnn_e50/20260625051951/models/model_epoch_50.pth,2,demo_39,0.0,0.0,400.0
+/home/eston/tri-piql/results/final_paper/ablations/v02_action_risk_endpoint_smoke_can40/split11/bns40/train/v02risk_can40_s11_bns40_seed0_bc_rnn_e50/20260625051951/models/model_epoch_50.pth,3,demo_45,0.0,0.0,400.0
+/home/eston/tri-piql/results/final_paper/ablations/v02_action_risk_endpoint_smoke_can40/split11/bns40/train/v02risk_can40_s11_bns40_seed0_bc_rnn_e50/20260625051951/models/model_epoch_50.pth,4,demo_53,0.0,0.0,400.0
+/home/eston/tri-piql/results/final_paper/ablations/v02_action_risk_endpoint_smoke_can40/split11/bns40/train/v02risk_can40_s11_bns40_seed0_bc_rnn_e50/20260625051951/models/model_epoch_50.pth,5,demo_81,0.0,0.0,400.0
+/home/eston/tri-piql/results/final_paper/ablations/v02_action_risk_endpoint_smoke_can40/split11/bns40/train/v02risk_can40_s11_bns40_seed0_bc_rnn_e50/20260625051951/models/model_epoch_50.pth,6,demo_89,0.0,0.0,400.0
+/home/eston/tri-piql/results/final_paper/ablations/v02_action_risk_endpoint_smoke_can40/split11/bns40/train/v02risk_can40_s11_bns40_seed0_bc_rnn_e50/20260625051951/models/model_epoch_50.pth,7,demo_99,0.0,0.0,400.0
+/home/eston/tri-piql/results/final_paper/ablations/v02_action_risk_endpoint_smoke_can40/split11/bns40/train/v02risk_can40_s11_bns40_seed0_bc_rnn_e50/20260625051951/models/model_epoch_50.pth,8,demo_105,1.0,1.0,144.0
+/home/eston/tri-piql/results/final_paper/ablations/v02_action_risk_endpoint_smoke_can40/split11/bns40/train/v02risk_can40_s11_bns40_seed0_bc_rnn_e50/20260625051951/models/model_epoch_50.pth,9,demo_189,0.0,0.0,400.0

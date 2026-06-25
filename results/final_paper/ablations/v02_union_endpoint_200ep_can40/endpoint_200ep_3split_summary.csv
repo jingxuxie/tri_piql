@@ -1,0 +1,8 @@
+method_id,method_role,split_count,success_count,eval_episodes,endpoint_success,split_successes
+all_train_positive_oracle,oracle_control,3,147,150,0.980,11:0.980;22:0.980;33:0.980
+positive_nn_risk_union_top40,union_candidate,3,116,150,0.773,11:0.760;22:0.780;33:0.780
+positive_nn_risk_fusion_top40,failed_v02_gate,2,73,100,0.730,11:0.820;22:0.640
+positive_only_nn,strong_baseline,3,108,150,0.720,11:0.840;22:0.760;33:0.560
+triage_bc,v01_method,3,99,150,0.660,11:0.760;22:0.520;33:0.700
+weighted_bc,strong_baseline,3,90,150,0.600,11:0.720;22:0.440;33:0.640
+bc_all_mixed,mixed_log_baseline,3,81,150,0.540,11:0.500;22:0.560;33:0.560

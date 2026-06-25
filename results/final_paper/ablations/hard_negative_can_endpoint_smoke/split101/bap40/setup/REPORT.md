@@ -1,0 +1,22 @@
+# Hard-Negative Can Endpoint Setup
+
+Candidate: `bad_aware_proxy_top40`.
+Split: `/home/eston/tri-piql/results/final_paper/ablations/hard_negative_can_action_conflict_splits/split101/split_indices.json`.
+Train filter key: `hn_can_s101_bap40_seed0_train`.
+Train demos: `50`.
+Selected unlabeled demos: `40`.
+Selected hidden positives: `40`.
+Selected hidden bad: `0`.
+Config: `/home/eston/tri-piql/results/final_paper/ablations/hard_negative_can_endpoint_smoke/split101/bap40/setup/config.json`.
+
+## Train
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config /home/eston/tri-piql/results/final_paper/ablations/hard_negative_can_endpoint_smoke/split101/bap40/setup/config.json
+```
+
+## Evaluate
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_official_policy.py --split-path /home/eston/tri-piql/results/final_paper/ablations/hard_negative_can_action_conflict_splits/split101/split_indices.json --out-dir /home/eston/tri-piql/results/final_paper/ablations/hard_negative_can_endpoint_smoke/split101/bap40/eval_smoke --checkpoint-glob '/home/eston/tri-piql/results/final_paper/ablations/hard_negative_can_endpoint_smoke/split101/bap40/train/**/models/model_epoch_*.pth' --eval-episodes 10 --eval-horizon 400 --eval-init-mode valid_positive_states --device cuda --seed 0
+```

@@ -1,0 +1,28 @@
+{
+  "split_path": "results/final_paper/ablations/hard_negative_can_action_conflict_splits/split101/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "env_name": "PickPlaceCan",
+  "env_version": "1.5.1",
+  "eval_init_mode": "valid_positive_states",
+  "eval_initial_ids": [
+    "demo_21",
+    "demo_57",
+    "demo_69",
+    "demo_89",
+    "demo_127",
+    "demo_131",
+    "demo_153",
+    "demo_165",
+    "demo_189",
+    "demo_197"
+  ],
+  "eval_episodes": 10,
+  "eval_horizon": 400,
+  "seed": 0,
+  "device": "cuda",
+  "checkpoints": [
+    "/home/eston/tri-piql/results/final_paper/ablations/hard_negative_can_endpoint_smoke/split101/bap40/train/hn_can_s101_bap40_seed0_bc_rnn_e50/20260625022133/models/model_epoch_50.pth",
+    "/home/eston/tri-piql/results/final_paper/ablations/hard_negative_can_endpoint_smoke/split101/hrfbh40/train/hn_can_s101_hrfbh40_seed0_bc_rnn_e50/20260625022253/models/model_epoch_50.pth",
+    "/home/eston/tri-piql/results/final_paper/ablations/hard_negative_can_endpoint_smoke/split101/sapn40/train/hn_can_s101_sapn40_seed0_bc_rnn_e50/20260625022012/models/model_epoch_50.pth"
+  ]
+}

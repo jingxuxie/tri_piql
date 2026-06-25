@@ -1,0 +1,8 @@
+quantity,value,rate
+primary_portfolio_success,209/300,0.697
+primary_strongest_baseline_matched_success,201/300,0.670
+primary_v01_success,173/300,0.577
+primary_all_positive_oracle_success,252/300,0.840
+complete_primary_development_endpoint_rows,2,
+needs_endpoint_rows,4,
+stress_abstained_rows,2,

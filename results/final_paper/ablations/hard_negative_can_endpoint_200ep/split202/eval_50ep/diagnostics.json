@@ -1,0 +1,27 @@
+{
+  "split_path": "results/final_paper/ablations/hard_negative_can_action_conflict_splits/split202/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "env_name": "PickPlaceCan",
+  "env_version": "1.5.1",
+  "eval_init_mode": "valid_positive_states",
+  "eval_initial_ids": [
+    "demo_25",
+    "demo_47",
+    "demo_49",
+    "demo_57",
+    "demo_59",
+    "demo_69",
+    "demo_77",
+    "demo_129",
+    "demo_153",
+    "demo_193"
+  ],
+  "eval_episodes": 50,
+  "eval_horizon": 400,
+  "seed": 0,
+  "device": "cuda",
+  "checkpoints": [
+    "/home/eston/tri-piql/results/final_paper/ablations/hard_negative_can_endpoint_200ep/split202/hrfbh40/train/hn_can_s202_hrfbh40_seed0_bc_rnn_e200/20260625025942/models/model_epoch_200.pth",
+    "/home/eston/tri-piql/results/final_paper/ablations/hard_negative_can_endpoint_200ep/split202/sapn40/train/hn_can_s202_sapn40_seed0_bc_rnn_e200/20260625025523/models/model_epoch_200.pth"
+  ]
+}

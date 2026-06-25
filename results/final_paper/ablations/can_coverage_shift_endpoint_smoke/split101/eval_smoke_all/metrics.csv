@@ -1,0 +1,4 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/final_paper/ablations/can_coverage_shift_endpoint_smoke/split101/bap40/train/cov_can_s101_bap40_seed0_bc_rnn_e50/20260625034844/models/model_epoch_50.pth,model_epoch_50,0.2,0.2,350.8,10
+/home/eston/tri-piql/results/final_paper/ablations/can_coverage_shift_endpoint_smoke/split101/hrfbh40/train/cov_can_s101_hrfbh40_seed0_bc_rnn_e50/20260625035000/models/model_epoch_50.pth,model_epoch_50,0.4,0.4,308.0,10
+/home/eston/tri-piql/results/final_paper/ablations/can_coverage_shift_endpoint_smoke/split101/sapn40/train/cov_can_s101_sapn40_seed0_bc_rnn_e50/20260625034727/models/model_epoch_50.pth,model_epoch_50,0.0,0.0,400.0,10

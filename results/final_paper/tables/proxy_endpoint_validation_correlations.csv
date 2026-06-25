@@ -1,0 +1,7 @@
+analysis_set,num_rows,coverage_proxy_pearson,coverage_proxy_spearman,audit_score_pearson,audit_score_spearman
+all endpoint-evaluated support rows,13,-0.043,0.160,0.454,0.414
+primary complete rows,8,0.327,0.518,0.417,0.539
+Can 40p/80b rows,4,-0.887,-0.800,0.947,1.000
+Lift MG rows,4,0.847,0.632,-0.966,-1.000
+Can 20p/80b rows,3,-0.979,-1.000,0.965,1.000
+Can 80p/80b rows,2,1.000,1.000,1.000,1.000

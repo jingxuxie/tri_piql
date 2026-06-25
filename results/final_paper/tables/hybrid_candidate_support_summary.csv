@@ -1,0 +1,95 @@
+setting_id,setting_label,row_role,candidate_id,candidate_family,split_count,selected_unlabeled,hidden_positive_selected,hidden_bad_selected,total_hidden_positive,total_hidden_bad,support_purity,hidden_positive_recall,hidden_bad_admission,selected_contamination
+can40,Can 40p/80b,primary,positive_nn_top20,positive-only,3,60,60,0,120,240,1.000,0.500,0.000,0.000
+can40,Can 40p/80b,primary,positive_nn_top40,positive-only,3,120,106,14,120,240,0.883,0.883,0.058,0.117
+can40,Can 40p/80b,primary,positive_nn_top60,positive-only,3,180,117,63,120,240,0.650,0.975,0.263,0.350
+can40,Can 40p/80b,primary,positive_nn_top80,positive-only,3,240,119,121,120,240,0.496,0.992,0.504,0.504
+can40,Can 40p/80b,primary,classifier_top20,bad-aware hard,3,60,51,9,120,240,0.850,0.425,0.037,0.150
+can40,Can 40p/80b,primary,classifier_top40,bad-aware hard,3,120,85,35,120,240,0.708,0.708,0.146,0.292
+can40,Can 40p/80b,primary,classifier_top60,bad-aware hard,3,180,108,72,120,240,0.600,0.900,0.300,0.400
+can40,Can 40p/80b,primary,classifier_top80,bad-aware hard,3,240,116,124,120,240,0.483,0.967,0.517,0.517
+can40,Can 40p/80b,primary,triage_existing,bad-aware hard,3,190,110,80,120,240,0.579,0.917,0.333,0.421
+can40,Can 40p/80b,primary,hybrid_filter_mid_mean_fill_classifier_to40,hybrid,3,120,102,18,120,240,0.850,0.850,0.075,0.150
+can40,Can 40p/80b,primary,hybrid_filter_mid_mean_pos40,hybrid,3,99,97,2,120,240,0.980,0.808,0.008,0.020
+can40,Can 40p/80b,primary,hybrid_filter_mid_minpos_maxneg_fill_classifier_to40,hybrid,3,120,102,18,120,240,0.850,0.850,0.075,0.150
+can40,Can 40p/80b,primary,hybrid_filter_mid_minpos_maxneg_pos40,hybrid,3,97,96,1,120,240,0.990,0.800,0.004,0.010
+can40,Can 40p/80b,primary,hybrid_filter_pos_min_fill_classifier_to40,hybrid,3,120,85,35,120,240,0.708,0.708,0.146,0.292
+can40,Can 40p/80b,primary,hybrid_filter_pos_min_pos40,hybrid,3,33,33,0,120,240,1.000,0.275,0.000,0.000
+can40,Can 40p/80b,primary,hybrid_filter_pos_p10_fill_classifier_to40,hybrid,3,120,85,35,120,240,0.708,0.708,0.146,0.292
+can40,Can 40p/80b,primary,hybrid_filter_pos_p10_pos40,hybrid,3,25,25,0,120,240,1.000,0.208,0.000,0.000
+can40,Can 40p/80b,primary,hybrid_intersection_pos40_classifier40,hybrid,3,81,80,1,120,240,0.988,0.667,0.004,0.012
+can40,Can 40p/80b,primary,hybrid_intersection_pos40_classifier80,hybrid,3,111,102,9,120,240,0.919,0.850,0.037,0.081
+can40,Can 40p/80b,primary,hybrid_pareto_top40,hybrid,3,120,105,15,120,240,0.875,0.875,0.062,0.125
+can40,Can 40p/80b,primary,hybrid_rank_fusion_classifier_heavy_top40,hybrid,3,120,98,22,120,240,0.817,0.817,0.092,0.183
+can40,Can 40p/80b,primary,hybrid_rank_fusion_equal_top40,hybrid,3,120,105,15,120,240,0.875,0.875,0.062,0.125
+can40,Can 40p/80b,primary,hybrid_union_pos40_classifier20,hybrid,3,132,109,23,120,240,0.826,0.908,0.096,0.174
+can40,Can 40p/80b,primary,hybrid_union_pos40_triage,hybrid,3,206,116,90,120,240,0.563,0.967,0.375,0.437
+can20,Can 20p/80b,diagnostic,positive_nn_top10,positive-only,3,30,30,0,60,240,1.000,0.500,0.000,0.000
+can20,Can 20p/80b,diagnostic,positive_nn_top20,positive-only,3,60,49,11,60,240,0.817,0.817,0.046,0.183
+can20,Can 20p/80b,diagnostic,positive_nn_top40,positive-only,3,120,59,61,60,240,0.492,0.983,0.254,0.508
+can20,Can 20p/80b,diagnostic,classifier_top10,bad-aware hard,3,30,23,7,60,240,0.767,0.383,0.029,0.233
+can20,Can 20p/80b,diagnostic,classifier_top20,bad-aware hard,3,60,41,19,60,240,0.683,0.683,0.079,0.317
+can20,Can 20p/80b,diagnostic,classifier_top40,bad-aware hard,3,120,54,66,60,240,0.450,0.900,0.275,0.550
+can20,Can 20p/80b,diagnostic,triage_existing,bad-aware hard,3,123,54,69,60,240,0.439,0.900,0.287,0.561
+can20,Can 20p/80b,diagnostic,hybrid_filter_mid_mean_fill_classifier_to20,hybrid,3,60,50,10,60,240,0.833,0.833,0.042,0.167
+can20,Can 20p/80b,diagnostic,hybrid_filter_mid_mean_pos20,hybrid,3,47,45,2,60,240,0.957,0.750,0.008,0.043
+can20,Can 20p/80b,diagnostic,hybrid_filter_mid_minpos_maxneg_fill_classifier_to20,hybrid,3,60,50,10,60,240,0.833,0.833,0.042,0.167
+can20,Can 20p/80b,diagnostic,hybrid_filter_mid_minpos_maxneg_pos20,hybrid,3,46,45,1,60,240,0.978,0.750,0.004,0.022
+can20,Can 20p/80b,diagnostic,hybrid_filter_pos_min_fill_classifier_to20,hybrid,3,60,41,19,60,240,0.683,0.683,0.079,0.317
+can20,Can 20p/80b,diagnostic,hybrid_filter_pos_min_pos20,hybrid,3,17,17,0,60,240,1.000,0.283,0.000,0.000
+can20,Can 20p/80b,diagnostic,hybrid_filter_pos_p10_fill_classifier_to20,hybrid,3,60,41,19,60,240,0.683,0.683,0.079,0.317
+can20,Can 20p/80b,diagnostic,hybrid_filter_pos_p10_pos20,hybrid,3,15,15,0,60,240,1.000,0.250,0.000,0.000
+can20,Can 20p/80b,diagnostic,hybrid_intersection_pos20_classifier20,hybrid,3,36,36,0,60,240,1.000,0.600,0.000,0.000
+can20,Can 20p/80b,diagnostic,hybrid_intersection_pos20_classifier40,hybrid,3,47,44,3,60,240,0.936,0.733,0.013,0.064
+can20,Can 20p/80b,diagnostic,hybrid_pareto_top20,hybrid,3,60,50,10,60,240,0.833,0.833,0.042,0.167
+can20,Can 20p/80b,diagnostic,hybrid_rank_fusion_classifier_heavy_top20,hybrid,3,60,50,10,60,240,0.833,0.833,0.042,0.167
+can20,Can 20p/80b,diagnostic,hybrid_rank_fusion_equal_top20,hybrid,3,60,50,10,60,240,0.833,0.833,0.042,0.167
+can20,Can 20p/80b,diagnostic,hybrid_union_pos20_classifier10,hybrid,3,69,51,18,60,240,0.739,0.850,0.075,0.261
+can20,Can 20p/80b,diagnostic,hybrid_union_pos20_triage,hybrid,3,136,57,79,60,240,0.419,0.950,0.329,0.581
+can80,Can 80p/80b,diagnostic,positive_nn_top120,positive-only,3,360,238,122,240,240,0.661,0.992,0.508,0.339
+can80,Can 80p/80b,diagnostic,positive_nn_top160,positive-only,3,480,240,240,240,240,0.500,1.000,1.000,0.500
+can80,Can 80p/80b,diagnostic,positive_nn_top40,positive-only,3,120,120,0,240,240,1.000,0.500,0.000,0.000
+can80,Can 80p/80b,diagnostic,positive_nn_top80,positive-only,3,240,220,20,240,240,0.917,0.917,0.083,0.083
+can80,Can 80p/80b,diagnostic,classifier_top120,bad-aware hard,3,360,235,125,240,240,0.653,0.979,0.521,0.347
+can80,Can 80p/80b,diagnostic,classifier_top160,bad-aware hard,3,480,240,240,240,240,0.500,1.000,1.000,0.500
+can80,Can 80p/80b,diagnostic,classifier_top40,bad-aware hard,3,120,110,10,240,240,0.917,0.458,0.042,0.083
+can80,Can 80p/80b,diagnostic,classifier_top80,bad-aware hard,3,240,190,50,240,240,0.792,0.792,0.208,0.208
+can80,Can 80p/80b,diagnostic,triage_existing,bad-aware hard,3,165,137,28,240,240,0.830,0.571,0.117,0.170
+can80,Can 80p/80b,diagnostic,hybrid_filter_mid_mean_fill_classifier_to80,hybrid,3,240,212,28,240,240,0.883,0.883,0.117,0.117
+can80,Can 80p/80b,diagnostic,hybrid_filter_mid_mean_pos80,hybrid,3,202,200,2,240,240,0.990,0.833,0.008,0.010
+can80,Can 80p/80b,diagnostic,hybrid_filter_mid_minpos_maxneg_fill_classifier_to80,hybrid,3,240,212,28,240,240,0.883,0.883,0.117,0.117
+can80,Can 80p/80b,diagnostic,hybrid_filter_mid_minpos_maxneg_pos80,hybrid,3,197,196,1,240,240,0.995,0.817,0.004,0.005
+can80,Can 80p/80b,diagnostic,hybrid_filter_pos_min_fill_classifier_to80,hybrid,3,240,190,50,240,240,0.792,0.792,0.208,0.208
+can80,Can 80p/80b,diagnostic,hybrid_filter_pos_min_pos80,hybrid,3,68,68,0,240,240,1.000,0.283,0.000,0.000
+can80,Can 80p/80b,diagnostic,hybrid_filter_pos_p10_fill_classifier_to80,hybrid,3,240,190,50,240,240,0.792,0.792,0.208,0.208
+can80,Can 80p/80b,diagnostic,hybrid_filter_pos_p10_pos80,hybrid,3,58,58,0,240,240,1.000,0.242,0.000,0.000
+can80,Can 80p/80b,diagnostic,hybrid_intersection_pos80_classifier160,hybrid,3,240,220,20,240,240,0.917,0.917,0.083,0.083
+can80,Can 80p/80b,diagnostic,hybrid_intersection_pos80_classifier80,hybrid,3,182,179,3,240,240,0.984,0.746,0.013,0.016
+can80,Can 80p/80b,diagnostic,hybrid_pareto_top80,hybrid,3,240,219,21,240,240,0.912,0.912,0.087,0.087
+can80,Can 80p/80b,diagnostic,hybrid_rank_fusion_classifier_heavy_top80,hybrid,3,240,211,29,240,240,0.879,0.879,0.121,0.121
+can80,Can 80p/80b,diagnostic,hybrid_rank_fusion_equal_top80,hybrid,3,240,219,21,240,240,0.912,0.912,0.087,0.087
+can80,Can 80p/80b,diagnostic,hybrid_union_pos80_classifier40,hybrid,3,255,225,30,240,240,0.882,0.938,0.125,0.118
+can80,Can 80p/80b,diagnostic,hybrid_union_pos80_triage,hybrid,3,274,226,48,240,240,0.825,0.942,0.200,0.175
+lift_mg,Lift MG,primary,positive_nn_top160,positive-only,3,480,342,138,828,3432,0.713,0.413,0.040,0.287
+lift_mg,Lift MG,primary,positive_nn_top320,positive-only,3,960,444,516,828,3432,0.463,0.536,0.150,0.537
+lift_mg,Lift MG,primary,positive_nn_top480,positive-only,3,1440,519,921,828,3432,0.360,0.627,0.268,0.640
+lift_mg,Lift MG,primary,positive_nn_top80,positive-only,3,240,223,17,828,3432,0.929,0.269,0.005,0.071
+lift_mg,Lift MG,primary,classifier_top160,bad-aware hard,3,480,462,18,828,3432,0.963,0.558,0.005,0.037
+lift_mg,Lift MG,primary,classifier_top320,bad-aware hard,3,960,711,249,828,3432,0.741,0.859,0.073,0.259
+lift_mg,Lift MG,primary,classifier_top480,bad-aware hard,3,1440,764,676,828,3432,0.531,0.923,0.197,0.469
+lift_mg,Lift MG,primary,classifier_top80,bad-aware hard,3,240,237,3,828,3432,0.988,0.286,0.001,0.013
+lift_mg,Lift MG,primary,triage_existing,bad-aware hard,3,441,421,20,828,3432,0.955,0.508,0.006,0.045
+lift_mg,Lift MG,primary,hybrid_filter_mid_mean_fill_classifier_to160,hybrid,3,480,441,39,828,3432,0.919,0.533,0.011,0.081
+lift_mg,Lift MG,primary,hybrid_filter_mid_mean_pos160,hybrid,3,372,339,33,828,3432,0.911,0.409,0.010,0.089
+lift_mg,Lift MG,primary,hybrid_filter_mid_minpos_maxneg_fill_classifier_to160,hybrid,3,480,443,37,828,3432,0.923,0.535,0.011,0.077
+lift_mg,Lift MG,primary,hybrid_filter_mid_minpos_maxneg_pos160,hybrid,3,369,339,30,828,3432,0.919,0.409,0.009,0.081
+lift_mg,Lift MG,primary,hybrid_filter_pos_min_fill_classifier_to160,hybrid,3,480,462,18,828,3432,0.963,0.558,0.005,0.037
+lift_mg,Lift MG,primary,hybrid_filter_pos_min_pos160,hybrid,3,262,258,4,828,3432,0.985,0.312,0.001,0.015
+lift_mg,Lift MG,primary,hybrid_filter_pos_p10_fill_classifier_to160,hybrid,3,480,462,18,828,3432,0.963,0.558,0.005,0.037
+lift_mg,Lift MG,primary,hybrid_filter_pos_p10_pos160,hybrid,3,242,240,2,828,3432,0.992,0.290,0.001,0.008
+lift_mg,Lift MG,primary,hybrid_intersection_pos160_classifier160,hybrid,3,286,283,3,828,3432,0.990,0.342,0.001,0.010
+lift_mg,Lift MG,primary,hybrid_intersection_pos160_classifier320,hybrid,3,368,338,30,828,3432,0.918,0.408,0.009,0.082
+lift_mg,Lift MG,primary,hybrid_pareto_top160,hybrid,3,480,422,58,828,3432,0.879,0.510,0.017,0.121
+lift_mg,Lift MG,primary,hybrid_rank_fusion_classifier_heavy_top160,hybrid,3,480,437,43,828,3432,0.910,0.528,0.013,0.090
+lift_mg,Lift MG,primary,hybrid_rank_fusion_equal_top160,hybrid,3,480,422,58,828,3432,0.879,0.510,0.017,0.121
+lift_mg,Lift MG,primary,hybrid_union_pos160_classifier80,hybrid,3,532,392,140,828,3432,0.737,0.473,0.041,0.263
+lift_mg,Lift MG,primary,hybrid_union_pos160_triage,hybrid,3,659,505,154,828,3432,0.766,0.610,0.045,0.234

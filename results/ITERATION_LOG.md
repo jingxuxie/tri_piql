@@ -5243,7 +5243,6 @@ Results:
 - Standalone PDF remains 15 pages.
 - ICLR PDF remains 13 pages.
 - Strict LaTeX log scans produced no matches under the recorded scan patterns.
-- `git diff --check` is clean.
 
 ## 2026-06-25: Compiled bad-label control appendix table
 
@@ -5306,3 +5305,1726 @@ Results:
 - ICLR PDF is now 14 pages total; main text still ends before references on
   page 10 and appendix starts on page 11.
 - Strict LaTeX log scans produced no matches under the recorded scan patterns.
+
+## 2026-06-25: Master evidence tables for high-impact v0.2 gate
+
+Generated standardized endpoint/support evidence tables from current
+final-paper per-seed artifacts, and wired them into the paper validation path.
+
+Updated artifacts:
+
+- `scripts/summarize_master_evidence_tables.py`
+- `results/final_paper/tables/endpoint_master_table.csv`
+- `results/final_paper/tables/support_master_table.csv`
+- `results/final_paper/tables/baseline_strength_REPORT.md`
+- `paper/Makefile`
+- `paper/README.md`
+- `paper/REPRODUCE_PAPER.md`
+- `paper/MANUSCRIPT_CHECKLIST.md`
+- `results/final_paper/README.md`
+- `scripts/validate_paper_structure.py`
+- `triage_bc_high_impact_completion_plan.md`
+
+Changes:
+
+- Normalized `53` support rows and `40` endpoint rows from final-paper
+  manifests, support audits, hidden-label audits, and endpoint metrics.
+- Report confirms the current v0.1 matrix does not clear the high-impact
+  methods bar: Can 40p/80b is led by positive-only NN, and Lift MG is led by
+  weighted BC.
+- Can 20p/80b and Can 80p/80b are explicitly marked diagnostic/incomplete.
+- Reconciled the Can 20p/80b split-22 endpoint extension from
+  `eval_endpoint_200/metrics.csv`.
+- Added the generator to `make -C paper validate` and to the reproduction
+  checklist.
+
+Validation:
+
+```bash
+python -m py_compile scripts/summarize_master_evidence_tables.py scripts/validate_paper_structure.py scripts/validate_paper_artifact_refs.py scripts/validate_paper_claim_numbers.py
+python scripts/summarize_master_evidence_tables.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_artifact_refs.py
+python scripts/validate_paper_structure.py
+make -C paper validate
+pdfinfo paper/triage_bc_paper.pdf
+pdfinfo paper/iclr2026/main.pdf
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+rg -n "undefined|Undefined|LaTeX Warning|Package natbib Warning|Overfull" paper/iclr2026/main.log
+git diff --check
+```
+
+Results:
+
+- Master evidence generator reproduces the two CSVs and Markdown report.
+- Claim validator passes.
+- Structure validator passes.
+- Artifact-reference validator checks `74` unique local references.
+- `make -C paper validate` passes.
+- Standalone PDF remains 15 pages.
+- ICLR PDF remains 14 pages.
+- Strict LaTeX log scans produced no matches under the recorded scan patterns.
+- `git diff --check` is clean.
+
+## 2026-06-25: Hard-negative Can split-101 endpoint smoke and 200-epoch check
+
+Promoted the hard-negative Can action-conflict diagnostic from support-only
+evidence to a bounded endpoint check on generated split seed 101. The split
+uses 10 labeled positive demos plus 40 selected unlabeled demos, so the endpoint
+comparison directly tests whether a bad-aware selector can beat state-action
+positive-NN support when the bad demos are nearest-neighbor action conflicts.
+
+Updated artifacts:
+
+- `scripts/prepare_hard_negative_can_endpoint_configs.py`
+- `scripts/summarize_hard_negative_can_endpoint_smoke.py`
+- `results/final_paper/ablations/hard_negative_can_endpoint_smoke/split101/endpoint_setup_summary.csv`
+- `results/final_paper/ablations/hard_negative_can_endpoint_smoke/split101/endpoint_smoke_summary.csv`
+- `results/final_paper/ablations/hard_negative_can_endpoint_smoke/split101/REPORT.md`
+- `results/final_paper/ablations/hard_negative_can_endpoint_200ep/split101/endpoint_setup_summary.csv`
+- `results/final_paper/ablations/hard_negative_can_endpoint_200ep/split101/endpoint_200ep_summary.csv`
+- `results/final_paper/ablations/hard_negative_can_endpoint_200ep/split101/REPORT.md`
+- `paper/Makefile`
+- `paper/README.md`
+- `paper/REPRODUCE_PAPER.md`
+- `paper/MANUSCRIPT_CHECKLIST.md`
+- `results/final_paper/README.md`
+- `scripts/validate_paper_structure.py`
+- `triage_bc_high_impact_completion_plan.md`
+
+Endpoint smoke at 50 epochs / 10 valid-positive rollouts:
+
+| support rule | selected hidden pos | selected hidden bad | success |
+|---|---:|---:|---:|
+| `hybrid_rank_fusion_badaware_heavy_top40` | 36 | 4 | 4/10 |
+| `bad_aware_proxy_top40` | 40 | 0 | 1/10 |
+| `state_action_positive_nn_top40` | 16 | 24 | 0/10 |
+
+Endpoint check at the frozen 200-epoch / 50-rollout budget:
+
+| support rule | selected hidden pos | selected hidden bad | success |
+|---|---:|---:|---:|
+| `hybrid_rank_fusion_badaware_heavy_top40` | 36 | 4 | 33/50 |
+| `state_action_positive_nn_top40` | 16 | 24 | 30/50 |
+
+Interpretation:
+
+- The hard-negative construction is doing its job: state-action positive-NN
+  support admits many action-conflict bad demos on split 101, while the
+  bad-aware and hybrid selectors recover much cleaner hidden-positive support.
+- The endpoint result is promising but modest: the hybrid beats positive-NN by
+  only 3 successes out of 50 on one generated split.
+- This should stay framed as a development endpoint check until split seeds
+  202 and 303 are run under the same 200-epoch / 50-rollout protocol.
+- Pure bad-aware support is too narrow for the endpoint despite perfect support
+  purity in the smoke; the useful candidate is the coverage-buffered hybrid.
+
+Validation commands:
+
+```bash
+python scripts/prepare_hard_negative_can_endpoint_configs.py --split-seed 101 --num-epochs 50 --epoch-steps 100 --save-every-epochs 25
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/hard_negative_can_endpoint_smoke/split101/sapn40/setup/robomimic_bc_rnn_config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/hard_negative_can_endpoint_smoke/split101/bap40/setup/robomimic_bc_rnn_config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/hard_negative_can_endpoint_smoke/split101/hrfbh40/setup/robomimic_bc_rnn_config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_official_policy.py --split-path results/final_paper/ablations/hard_negative_can_action_conflict_splits/split101/split_indices.json --out-dir results/final_paper/ablations/hard_negative_can_endpoint_smoke/split101/eval_smoke_all --checkpoint-glob "results/final_paper/ablations/hard_negative_can_endpoint_smoke/split101/*/train/**/models/model_epoch_50.pth" --eval-episodes 10 --eval-horizon 400 --eval-init-mode valid_positive_states --device cuda --seed 0
+python scripts/prepare_hard_negative_can_endpoint_configs.py --split-seed 101 --out-root results/final_paper/ablations/hard_negative_can_endpoint_200ep --num-epochs 200 --epoch-steps 100 --save-every-epochs 50 --candidate state_action_positive_nn_top40 --candidate hybrid_rank_fusion_badaware_heavy_top40
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/hard_negative_can_endpoint_200ep/split101/sapn40/setup/robomimic_bc_rnn_config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/hard_negative_can_endpoint_200ep/split101/hrfbh40/setup/robomimic_bc_rnn_config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_official_policy.py --split-path results/final_paper/ablations/hard_negative_can_action_conflict_splits/split101/split_indices.json --out-dir results/final_paper/ablations/hard_negative_can_endpoint_200ep/split101/eval_50ep --checkpoint-glob "results/final_paper/ablations/hard_negative_can_endpoint_200ep/split101/*/train/**/models/model_epoch_200.pth" --eval-episodes 50 --eval-horizon 400 --eval-init-mode valid_positive_states --device cuda --seed 0
+python scripts/summarize_hard_negative_can_endpoint_smoke.py
+python scripts/summarize_hard_negative_can_endpoint_smoke.py --root results/final_paper/ablations/hard_negative_can_endpoint_200ep/split101 --eval-subdir eval_50ep --summary-name endpoint_200ep_summary.csv --report-name REPORT.md
+```
+
+Results:
+
+- Smoke summary reproduces `4/10`, `1/10`, and `0/10` for hybrid, bad-aware,
+  and positive-NN respectively.
+- 200-epoch summary reproduces `33/50` for the hybrid and `30/50` for
+  positive-NN top40.
+
+## 2026-06-25: Hard-negative Can action-conflict support diagnostic
+
+Built a cheap Experiment Group C1 diagnostic that generates Can splits where
+labeled positives are a compact successful cluster, hidden positives are far
+from that cluster, and bad demos are ranked by near-positive state distance plus
+action conflict. The goal is to test whether bad labels can matter before
+spending GPU time on endpoint BC.
+
+Updated artifacts:
+
+- `scripts/summarize_hard_negative_can_action_conflict_audit.py`
+- `results/final_paper/ablations/hard_negative_can_action_conflict_construction.csv`
+- `results/final_paper/ablations/hard_negative_can_action_conflict_support_per_split.csv`
+- `results/final_paper/ablations/hard_negative_can_action_conflict_summary.csv`
+- `results/final_paper/ablations/hard_negative_can_action_conflict_REPORT.md`
+- `results/final_paper/ablations/hard_negative_can_action_conflict_splits/`
+- `paper/Makefile`
+- `paper/README.md`
+- `paper/REPRODUCE_PAPER.md`
+- `paper/MANUSCRIPT_CHECKLIST.md`
+- `results/final_paper/README.md`
+- `scripts/validate_paper_structure.py`
+- `triage_bc_high_impact_completion_plan.md`
+
+Changes:
+
+- Generated split seeds `101`, `202`, and `303` from the paired low-dimensional
+  Can dataset without training policies.
+- Construction audit confirms selected unlabeled bad demos are closer in state
+  to the labeled-positive cluster than held-out valid bad demos, and have much
+  higher hard-negative score (`~0.0` versus about `-1.8`).
+- Support gate over three generated splits: state-action positive-NN top40
+  reaches `0.583` hidden-positive recall, `0.208` hidden-bad admission, and
+  `0.583` purity.
+- The bad-aware distance proxy top40 reaches `1.000` hidden-positive recall,
+  `0.000` hidden-bad admission, and `1.000` purity.
+- Hybrid rank fusion top40 reaches `0.875` hidden-positive recall, `0.062`
+  hidden-bad admission, and `0.875` purity.
+- Added the generator to `make -C paper validate`, the reproduction map, the
+  manuscript checklist, and the structure validator. This is support evidence
+  only; endpoint BC is still required before making a rollout claim.
+
+Validation:
+
+```bash
+python -m py_compile scripts/validate_paper_artifact_refs.py scripts/validate_paper_claim_numbers.py scripts/validate_paper_structure.py scripts/summarize_primary_endpoint_paired_bootstrap.py scripts/plot_primary_endpoint_paired_deltas.py scripts/summarize_bad_label_control_table.py scripts/summarize_master_evidence_tables.py scripts/summarize_candidate_family_audit.py scripts/summarize_hybrid_candidate_support_audit.py scripts/summarize_hard_negative_can_action_conflict_audit.py
+python scripts/summarize_hard_negative_can_action_conflict_audit.py
+python scripts/validate_paper_structure.py
+python scripts/validate_paper_artifact_refs.py
+make -C paper validate
+pdfinfo paper/triage_bc_paper.pdf
+pdfinfo paper/iclr2026/main.pdf
+git diff --check
+```
+
+Results:
+
+- Hard-negative Can generator reproduces the construction CSV, per-split CSV,
+  summary CSV, report, and split JSON files in about 3 seconds.
+- Structure validator passes.
+- Artifact-reference validator checks `80` unique local references.
+- `make -C paper validate` passes.
+- Standalone PDF remains 15 pages.
+- ICLR PDF remains 14 pages.
+- Strict Makefile LaTeX log scans produced no matches under the recorded scan
+  patterns.
+- `git diff --check` is clean.
+
+## 2026-06-25: Candidate-family oracle/proxy audit for v0.2 gate
+
+Generated a candidate-family audit from staged endpoint, support, and Can MG
+proxy artifacts to answer whether the current portfolio contains a branch that
+can beat the strongest baseline before spending fresh GPU budget.
+
+Updated artifacts:
+
+- `scripts/summarize_candidate_family_audit.py`
+- `results/final_paper/tables/candidate_family_audit.csv`
+- `results/final_paper/tables/candidate_family_decision_table.csv`
+- `results/final_paper/tables/candidate_family_oracle_proxy_REPORT.md`
+- `paper/Makefile`
+- `paper/README.md`
+- `paper/REPRODUCE_PAPER.md`
+- `paper/MANUSCRIPT_CHECKLIST.md`
+- `results/final_paper/README.md`
+- `scripts/validate_paper_structure.py`
+- `triage_bc_high_impact_completion_plan.md`
+
+Changes:
+
+- Audited `24` candidate/support rows across Can 40p/80b, Lift MG, Can
+  20p/80b, and Can 80p/80b.
+- Added endpoint-oracle, strongest-baseline, bad-aware-only, coverage-proxy,
+  and audit-support winner summaries.
+- The current endpoint-evaluated portfolio only matches the strongest baseline
+  by selecting that baseline: positive-only NN on Can 40p/80b and weighted BC
+  on Lift MG.
+- No bad-aware hard branch currently beats the strongest positive-only/weighted
+  baseline on an endpoint-evaluated robotics setting.
+- Can MG proxy stress remains a warning: simple positive/negative likelihood
+  proxies miss the rollout-best weighted branch on original Can MG.
+- Added the generator to `make -C paper validate` and to the reproduction
+  checklist.
+
+Validation:
+
+```bash
+python -m py_compile scripts/summarize_candidate_family_audit.py scripts/summarize_master_evidence_tables.py scripts/validate_paper_structure.py scripts/validate_paper_artifact_refs.py scripts/validate_paper_claim_numbers.py
+python scripts/summarize_master_evidence_tables.py
+python scripts/summarize_candidate_family_audit.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_structure.py
+python scripts/validate_paper_artifact_refs.py
+make -C paper validate
+pdfinfo paper/triage_bc_paper.pdf
+pdfinfo paper/iclr2026/main.pdf
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+rg -n "undefined|Undefined|LaTeX Warning|Package natbib Warning|Overfull" paper/iclr2026/main.log
+git diff --check
+```
+
+Results:
+
+- Candidate-family audit generator reproduces the two CSVs and Markdown report.
+- Claim validator passes.
+- Structure validator passes.
+- Artifact-reference validator checks `76` unique local references.
+- `make -C paper validate` passes.
+- Standalone PDF remains 15 pages.
+- ICLR PDF remains 14 pages.
+- Strict LaTeX log scans produced no matches under the recorded scan patterns.
+- `git diff --check` is clean.
+
+## 2026-06-25: Hybrid candidate support screen before endpoint training
+
+Generated a support-only hybrid candidate audit from staged split files,
+classifier score diagnostics, and full positive-NN support rankings. This
+checks whether simple positive-NN / classifier hybrids are worth GPU endpoint
+training before committing fresh runs.
+
+Updated artifacts:
+
+- `scripts/summarize_hybrid_candidate_support_audit.py`
+- `results/final_paper/tables/hybrid_candidate_support_per_split.csv`
+- `results/final_paper/tables/hybrid_candidate_support_summary.csv`
+- `results/final_paper/tables/hybrid_candidate_support_REPORT.md`
+- `paper/Makefile`
+- `paper/README.md`
+- `paper/REPRODUCE_PAPER.md`
+- `paper/MANUSCRIPT_CHECKLIST.md`
+- `results/final_paper/README.md`
+- `scripts/validate_paper_structure.py`
+- `triage_bc_high_impact_completion_plan.md`
+
+Changes:
+
+- Audited `94` summary rows and `282` per-split rows across Can 40p/80b, Lift
+  MG, Can 20p/80b, and Can 80p/80b.
+- Added full positive-only NN top-k support sweeps from HDF5 state-action
+  rankings.
+- Added hybrid support rules: intersections, classifier-threshold filters,
+  threshold-then-refill variants, unions, rank fusion, and Pareto-style top-k.
+- Can 40p/80b: positive-only top40 remains the practical frontier point
+  (`0.883` recall, `0.058` bad admission). Cleaner hybrids such as
+  `hybrid_filter_mid_mean_pos40` improve purity (`0.980`) but lower recall
+  (`0.808`), while coverage-restored variants admit more bad demos.
+- Lift MG: classifier-heavy hybrids are pure but still hard-support variants;
+  the audit supports treating Lift as a soft/coverage branch instead of
+  spending endpoint budget on another hard-filter policy.
+- Added the generator to `make -C paper validate` and to the reproduction
+  checklist.
+
+Validation:
+
+```bash
+python -m py_compile scripts/summarize_hybrid_candidate_support_audit.py scripts/summarize_candidate_family_audit.py scripts/summarize_master_evidence_tables.py scripts/validate_paper_structure.py scripts/validate_paper_artifact_refs.py scripts/validate_paper_claim_numbers.py
+python scripts/summarize_master_evidence_tables.py
+python scripts/summarize_candidate_family_audit.py
+python scripts/summarize_hybrid_candidate_support_audit.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_structure.py
+python scripts/validate_paper_artifact_refs.py
+make -C paper validate
+pdfinfo paper/triage_bc_paper.pdf
+pdfinfo paper/iclr2026/main.pdf
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+rg -n "undefined|Undefined|LaTeX Warning|Package natbib Warning|Overfull" paper/iclr2026/main.log
+git diff --check
+```
+
+Results:
+
+- Hybrid support audit generator reproduces the per-split CSV, summary CSV, and
+  Markdown report in about 15 seconds.
+- Claim validator passes.
+- Structure validator passes.
+- Artifact-reference validator checks `78` unique local references.
+- `make -C paper validate` passes.
+- Standalone PDF remains 15 pages.
+- ICLR PDF remains 14 pages.
+- Strict LaTeX log scans produced no matches under the recorded scan patterns.
+- `git diff --check` is clean.
+
+## 2026-06-25: Endpoint-check artifact validation refresh
+
+Refreshed the paper validation gate after adding the hard-negative Can
+split-101 endpoint smoke and 200-epoch endpoint-check artifacts.
+
+Validation:
+
+```bash
+python -m py_compile scripts/prepare_hard_negative_can_endpoint_configs.py scripts/summarize_hard_negative_can_endpoint_smoke.py scripts/validate_paper_structure.py
+python scripts/summarize_hard_negative_can_endpoint_smoke.py
+python scripts/summarize_hard_negative_can_endpoint_smoke.py --root results/final_paper/ablations/hard_negative_can_endpoint_200ep/split101 --eval-subdir eval_50ep --summary-name endpoint_200ep_summary.csv --report-name REPORT.md
+python scripts/validate_paper_structure.py
+python scripts/validate_paper_artifact_refs.py
+python scripts/validate_paper_claim_numbers.py
+make -C paper validate
+pdfinfo paper/triage_bc_paper.pdf
+pdfinfo paper/iclr2026/main.pdf
+git diff --check
+```
+
+Results:
+
+- Endpoint summary scripts regenerate the smoke and 200-epoch reports.
+- Structure validator passes.
+- Artifact-reference validator checks `82` unique local references.
+- Claim-number validator passes.
+- `make -C paper validate` passes and rebuilds both PDFs.
+
+## 2026-06-25: Hard-negative diagnostic manuscript integration
+
+Promoted the generated hard-negative Can three-split endpoint check from a
+paper-facing report into the appendix text, while keeping the framing explicit:
+the winning row is a bad-aware rank-fusion hybrid candidate on a generated
+action-conflict diagnostic, not the frozen TRIAGE-BC v0.1 primary benchmark.
+
+Updated artifacts:
+
+- `paper/triage_bc_paper.tex`
+- `paper/iclr2026/main.tex`
+- `paper/triage_bc_draft.md`
+- `scripts/validate_paper_claim_numbers.py`
+- `scripts/validate_paper_structure.py`
+- `paper/triage_bc_paper.pdf`
+- `paper/iclr2026/main.pdf`
+
+Changes:
+
+- Added an appendix table for the hard-negative Can diagnostic:
+  bad-aware hybrid top40 selects `113` hidden positives and `7` hidden bad
+  demos and reaches `104/150`; state-action positive-NN top40 selects `70`
+  hidden positives and `50` hidden bad demos and reaches `91/150`.
+- Added matching prose to the standalone LaTeX, ICLR LaTeX, and Markdown draft.
+- Extended the claim-number validator to load
+  `results/final_paper/ablations/hard_negative_can_endpoint_200ep/endpoint_200ep_3split_summary.csv`
+  and verify all per-split hard-negative endpoint/support counts plus the
+  aggregate `104/150` versus `91/150` claim.
+- Added `tab:hard-negative-can` to the structure validator's required table
+  label order.
+- Updated the standalone PDF page-count expectation from 15 to 16. The ICLR
+  shell remains 14 pages total, with references still beginning on page 10 and
+  appendix material on page 11.
+
+Validation:
+
+```bash
+python -m py_compile scripts/validate_paper_claim_numbers.py scripts/validate_paper_structure.py scripts/summarize_hard_negative_can_endpoint_smoke.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_structure.py
+git diff --check
+make -C paper validate
+```
+
+Results:
+
+- Claim-number validator passes and now covers the hard-negative diagnostic
+  counts.
+- Structure validator passes with the new table label and standalone 16-page
+  PDF expectation.
+- Artifact-reference validator checks `82` unique local references.
+- `make -C paper validate` passes.
+- Standalone PDF is now 16 pages.
+- ICLR PDF remains 14 pages.
+- Standalone PDF remains 15 pages.
+- ICLR PDF remains 14 pages.
+- `git diff --check` is clean.
+
+## 2026-06-25: Hard-negative Can three-split endpoint check
+
+Completed the split-seed 202 and 303 endpoint follow-up for the generated
+hard-negative Can action-conflict diagnostic, then aggregated split seeds
+101/202/303. This upgrades the previous split-101 development signal into a
+three-split targeted diagnostic.
+
+Updated artifacts:
+
+- `results/final_paper/ablations/hard_negative_can_endpoint_200ep/split202/endpoint_setup_summary.csv`
+- `results/final_paper/ablations/hard_negative_can_endpoint_200ep/split202/endpoint_200ep_summary.csv`
+- `results/final_paper/ablations/hard_negative_can_endpoint_200ep/split202/REPORT.md`
+- `results/final_paper/ablations/hard_negative_can_endpoint_200ep/split303/endpoint_setup_summary.csv`
+- `results/final_paper/ablations/hard_negative_can_endpoint_200ep/split303/endpoint_200ep_summary.csv`
+- `results/final_paper/ablations/hard_negative_can_endpoint_200ep/split303/REPORT.md`
+- `results/final_paper/ablations/hard_negative_can_endpoint_200ep/endpoint_200ep_3split_summary.csv`
+- `results/final_paper/ablations/hard_negative_can_endpoint_200ep/REPORT.md`
+- `scripts/summarize_hard_negative_can_endpoint_smoke.py`
+- `paper/Makefile`
+- `paper/README.md`
+- `paper/REPRODUCE_PAPER.md`
+- `paper/MANUSCRIPT_CHECKLIST.md`
+- `results/final_paper/README.md`
+- `scripts/validate_paper_structure.py`
+- `triage_bc_high_impact_completion_plan.md`
+
+Endpoint results at 200 epochs / 50 valid-positive rollouts per split:
+
+| split | hybrid selected pos/bad | positive-NN selected pos/bad | hybrid success | positive-NN success |
+|---:|---:|---:|---:|---:|
+| 101 | 36/4 | 16/24 | 33/50 | 30/50 |
+| 202 | 38/2 | 22/18 | 35/50 | 27/50 |
+| 303 | 39/1 | 32/8 | 36/50 | 34/50 |
+| aggregate | 113/7 | 70/50 | 104/150 | 91/150 |
+
+Interpretation:
+
+- The generated hard-negative construction now gives the clearest robotics
+  endpoint case for bad-aware selection: the hybrid rank-fusion rule beats
+  state-action positive-NN by `13/150` successes while admitting far fewer
+  hidden bad demos.
+- This should be framed as targeted generated-diagnostic evidence, not as a
+  primary Robomimic benchmark row, because the split construction was designed
+  to expose action-conflict negatives.
+- The result is strong enough to justify writing an appendix diagnostic around
+  hard-negative support quality and endpoint transfer.
+
+Validation:
+
+```bash
+conda run -n tri-piql python scripts/prepare_hard_negative_can_endpoint_configs.py --split-seed 202 --out-root results/final_paper/ablations/hard_negative_can_endpoint_200ep --num-epochs 200 --epoch-steps 100 --save-every-epochs 50 --candidate state_action_positive_nn_top40 --candidate hybrid_rank_fusion_badaware_heavy_top40
+conda run -n tri-piql python scripts/prepare_hard_negative_can_endpoint_configs.py --split-seed 303 --out-root results/final_paper/ablations/hard_negative_can_endpoint_200ep --num-epochs 200 --epoch-steps 100 --save-every-epochs 50 --candidate state_action_positive_nn_top40 --candidate hybrid_rank_fusion_badaware_heavy_top40
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/hard_negative_can_endpoint_200ep/split202/sapn40/setup/config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/hard_negative_can_endpoint_200ep/split202/hrfbh40/setup/config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/hard_negative_can_endpoint_200ep/split303/sapn40/setup/config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/hard_negative_can_endpoint_200ep/split303/hrfbh40/setup/config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_official_policy.py --split-path results/final_paper/ablations/hard_negative_can_action_conflict_splits/split202/split_indices.json --out-dir results/final_paper/ablations/hard_negative_can_endpoint_200ep/split202/eval_50ep --checkpoint-glob "results/final_paper/ablations/hard_negative_can_endpoint_200ep/split202/*/train/**/models/model_epoch_200.pth" --eval-episodes 50 --eval-horizon 400 --eval-init-mode valid_positive_states --device cuda --seed 0
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_official_policy.py --split-path results/final_paper/ablations/hard_negative_can_action_conflict_splits/split303/split_indices.json --out-dir results/final_paper/ablations/hard_negative_can_endpoint_200ep/split303/eval_50ep --checkpoint-glob "results/final_paper/ablations/hard_negative_can_endpoint_200ep/split303/*/train/**/models/model_epoch_200.pth" --eval-episodes 50 --eval-horizon 400 --eval-init-mode valid_positive_states --device cuda --seed 0
+python scripts/summarize_hard_negative_can_endpoint_smoke.py --root results/final_paper/ablations/hard_negative_can_endpoint_200ep/split202 --eval-subdir eval_50ep --summary-name endpoint_200ep_summary.csv --report-name REPORT.md
+python scripts/summarize_hard_negative_can_endpoint_smoke.py --root results/final_paper/ablations/hard_negative_can_endpoint_200ep/split303 --eval-subdir eval_50ep --summary-name endpoint_200ep_summary.csv --report-name REPORT.md
+python scripts/summarize_hard_negative_can_endpoint_smoke.py --root results/final_paper/ablations/hard_negative_can_endpoint_200ep --eval-subdir eval_50ep --summary-name endpoint_200ep_3split_summary.csv --report-name REPORT.md --aggregate-splits
+python scripts/validate_paper_structure.py
+python scripts/validate_paper_artifact_refs.py
+python scripts/validate_paper_claim_numbers.py
+make -C paper validate
+```
+
+Results:
+
+- Aggregate endpoint report reproduces hybrid `104/150` versus positive-NN
+  `91/150`.
+- Structure validator passes.
+- Artifact-reference validator checks `82` unique local references.
+- Claim-number validator passes.
+- `make -C paper validate` passes and rebuilds both PDFs.
+
+## 2026-06-25: Final hard-negative manuscript validation status
+
+The appendix now includes the generated hard-negative Can table in both LaTeX
+sources and the Markdown draft. The paper-facing claim is validator-backed by
+the three-split endpoint CSV, and the build gate passes after updating the
+standalone page-count expectation to 16.
+
+Current validated status:
+
+- Hard-negative appendix table reports bad-aware hybrid `104/150` versus
+  state-action positive-NN top40 `91/150`.
+- Claim-number validator passes and checks the hard-negative per-split and
+  aggregate counts.
+- Structure validator passes with required table labels
+  `tab:main-results`, `tab:bad-label-controls`, and `tab:hard-negative-can`.
+- Artifact-reference validator checks `82` unique local references.
+- `make -C paper validate` passes.
+- Standalone PDF is 16 pages.
+- ICLR PDF is 14 pages.
+- `git diff --check` is clean.
+
+## 2026-06-25: Can coverage-shift support audit and split-101 endpoint check
+
+Implemented Experiment Group C2 as a generated scarce-positive coverage-shift
+Can diagnostic. Labeled positives come from one compact initial-object-pose
+cluster, hidden positives come from the other successful clusters, and bad demos
+are spread across all pose clusters.
+
+New artifacts:
+
+- `scripts/summarize_can_coverage_shift_audit.py`
+- `results/final_paper/ablations/can_coverage_shift_construction.csv`
+- `results/final_paper/ablations/can_coverage_shift_support_per_split.csv`
+- `results/final_paper/ablations/can_coverage_shift_summary.csv`
+- `results/final_paper/ablations/can_coverage_shift_REPORT.md`
+- `results/final_paper/ablations/can_coverage_shift_splits/`
+- `results/final_paper/ablations/can_coverage_shift_endpoint_smoke/split101/REPORT.md`
+- `results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split101/REPORT.md`
+
+Three-split support audit:
+
+| candidate | hidden-positive selected | hidden-bad selected | hidden-positive recall | hidden-bad admission | purity |
+|---|---:|---:|---:|---:|---:|
+| state-action positive-NN top40 | 105/120 | 15/240 | 0.875 | 0.062 | 0.875 |
+| bad-aware proxy top40 | 120/120 | 0/240 | 1.000 | 0.000 | 1.000 |
+| bad-aware-heavy hybrid top40 | 118/120 | 2/240 | 0.983 | 0.008 | 0.983 |
+
+Endpoint results on split 101:
+
+| budget | candidate | selected pos/bad | success |
+|---|---|---:|---:|
+| 50 epochs, 10 eval starts | state-action positive-NN top40 | 34/6 | 0/10 |
+| 50 epochs, 10 eval starts | bad-aware proxy top40 | 40/0 | 2/10 |
+| 50 epochs, 10 eval starts | bad-aware-heavy hybrid top40 | 39/1 | 4/10 |
+| 200 epochs, 50 eval starts | state-action positive-NN top40 | 34/6 | 35/50 |
+| 200 epochs, 50 eval starts | bad-aware-heavy hybrid top40 | 39/1 | 39/50 |
+
+Interpretation:
+
+- This is a second targeted robotics diagnostic, distinct from C1
+  action-conflict hard negatives.
+- The support signal is very strong and the split-101 endpoint result is
+  directionally positive, but the 200-epoch endpoint effect is modest
+  (`+4/50`) and currently single-split.
+- Do not promote this to a primary paper-table claim yet. The next
+  evidence step is split seeds `202` and `303` at the same 200-epoch /
+  50-evaluation-start endpoint budget for positive-NN top40 versus the
+  bad-aware-heavy hybrid.
+
+Validation:
+
+```bash
+python -m compileall -q scripts/summarize_can_coverage_shift_audit.py scripts/prepare_hard_negative_can_endpoint_configs.py scripts/summarize_hard_negative_can_endpoint_smoke.py
+python scripts/summarize_can_coverage_shift_audit.py
+conda run -n tri-piql python scripts/prepare_hard_negative_can_endpoint_configs.py --split-root results/final_paper/ablations/can_coverage_shift_splits --audit-csv results/final_paper/ablations/can_coverage_shift_support_per_split.csv --out-root results/final_paper/ablations/can_coverage_shift_endpoint_smoke --mask-prefix cov_can --experiment-prefix cov_can --report-title 'Can Coverage-Shift Endpoint Setup' --split-seed 101 --num-epochs 50 --epoch-steps 100 --save-every-epochs 25 --candidate state_action_positive_nn_top40 --candidate bad_aware_proxy_top40 --candidate hybrid_rank_fusion_badaware_heavy_top40
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/can_coverage_shift_endpoint_smoke/split101/sapn40/setup/config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/can_coverage_shift_endpoint_smoke/split101/bap40/setup/config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/can_coverage_shift_endpoint_smoke/split101/hrfbh40/setup/config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_official_policy.py --split-path results/final_paper/ablations/can_coverage_shift_splits/split101/split_indices.json --out-dir results/final_paper/ablations/can_coverage_shift_endpoint_smoke/split101/eval_smoke_all --checkpoint-glob 'results/final_paper/ablations/can_coverage_shift_endpoint_smoke/split101/*/train/**/models/model_epoch_50.pth' --eval-episodes 10 --eval-horizon 400 --eval-init-mode valid_positive_states --device cuda --seed 0
+python scripts/summarize_hard_negative_can_endpoint_smoke.py --root results/final_paper/ablations/can_coverage_shift_endpoint_smoke/split101 --diagnostic-name 'Can Coverage-Shift' --diagnostic-description 'generated scarce-positive coverage-shift Can diagnostic' --mechanism-sentence 'The endpoint effect is directionally consistent with the support audit: the hybrid keeps almost all hidden-positive coverage while removing most hidden-bad contamination under initial-pose coverage shift.' --claim-scope-sentence 'This is targeted coverage-shift diagnostic evidence; keep it separate from the primary Robomimic benchmark rows until the frozen-budget multi-split check is run.' --followup-path results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split101/REPORT.md
+conda run -n tri-piql python scripts/prepare_hard_negative_can_endpoint_configs.py --split-root results/final_paper/ablations/can_coverage_shift_splits --audit-csv results/final_paper/ablations/can_coverage_shift_support_per_split.csv --out-root results/final_paper/ablations/can_coverage_shift_endpoint_200ep --mask-prefix cov_can200 --experiment-prefix cov_can200 --report-title 'Can Coverage-Shift Endpoint Setup' --split-seed 101 --num-epochs 200 --epoch-steps 100 --save-every-epochs 50 --candidate state_action_positive_nn_top40 --candidate hybrid_rank_fusion_badaware_heavy_top40
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split101/sapn40/setup/config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split101/hrfbh40/setup/config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_official_policy.py --split-path results/final_paper/ablations/can_coverage_shift_splits/split101/split_indices.json --out-dir results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split101/eval_50ep --checkpoint-glob 'results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split101/*/train/**/models/model_epoch_200.pth' --eval-episodes 50 --eval-horizon 400 --eval-init-mode valid_positive_states --device cuda --seed 0
+python scripts/summarize_hard_negative_can_endpoint_smoke.py --root results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split101 --eval-subdir eval_50ep --summary-name endpoint_200ep_summary.csv --report-name REPORT.md --diagnostic-name 'Can Coverage-Shift' --diagnostic-description 'generated scarce-positive coverage-shift Can diagnostic' --mechanism-sentence 'The endpoint effect is consistent with the support audit: the hybrid keeps nearly all hidden-positive coverage while reducing hidden-bad contamination under initial-pose coverage shift.' --claim-scope-sentence 'This is targeted coverage-shift diagnostic evidence; keep it separate from the primary Robomimic benchmark rows until the multi-split check is run.' --followup-path results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split101/REPORT.md
+git diff --check
+```
+
+## 2026-06-25: Can coverage-shift three-split endpoint check
+
+Finished the split seeds `202` and `303` endpoint checks for Experiment Group
+C2, using the same official Robomimic BC-RNN-GMM budget as split `101`: 200
+epochs, 100 gradient steps per epoch, and 50 valid-positive evaluation starts
+per split.
+
+Aggregate endpoint result:
+
+| candidate | selected hidden pos/bad | support purity | success |
+|---|---:|---:|---:|
+| bad-aware-heavy hybrid top40 | 118/2 | 0.983 | 120/150 |
+| state-action positive-NN top40 | 105/15 | 0.875 | 103/150 |
+
+Per-split endpoint result:
+
+| split | hybrid | positive-NN |
+|---:|---:|---:|
+| 101 | 39/50 | 35/50 |
+| 202 | 41/50 | 29/50 |
+| 303 | 40/50 | 39/50 |
+
+Interpretation:
+
+- The three-split endpoint result is directionally consistent with the support
+  audit: the hybrid keeps nearly all hidden-positive coverage while reducing
+  hidden-bad contamination under initial-pose coverage shift.
+- This is useful as targeted generated-diagnostic evidence that explicit bad
+  labels can matter beyond the C1 action-conflict construction.
+- Keep it separate from the primary Robomimic benchmark table unless the paper
+  explicitly frames the row as generated diagnostic evidence.
+
+New/updated artifacts:
+
+- `results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split202/REPORT.md`
+- `results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split303/REPORT.md`
+- `results/final_paper/ablations/can_coverage_shift_endpoint_200ep/REPORT.md`
+- `results/final_paper/ablations/can_coverage_shift_endpoint_200ep/endpoint_200ep_3split_summary.csv`
+
+Validation:
+
+```bash
+conda run -n tri-piql python scripts/prepare_hard_negative_can_endpoint_configs.py --split-root results/final_paper/ablations/can_coverage_shift_splits --audit-csv results/final_paper/ablations/can_coverage_shift_support_per_split.csv --out-root results/final_paper/ablations/can_coverage_shift_endpoint_200ep --mask-prefix cov_can200 --experiment-prefix cov_can200 --report-title 'Can Coverage-Shift Endpoint Setup' --split-seed 202 --num-epochs 200 --epoch-steps 100 --save-every-epochs 50 --candidate state_action_positive_nn_top40 --candidate hybrid_rank_fusion_badaware_heavy_top40
+conda run -n tri-piql python scripts/prepare_hard_negative_can_endpoint_configs.py --split-root results/final_paper/ablations/can_coverage_shift_splits --audit-csv results/final_paper/ablations/can_coverage_shift_support_per_split.csv --out-root results/final_paper/ablations/can_coverage_shift_endpoint_200ep --mask-prefix cov_can200 --experiment-prefix cov_can200 --report-title 'Can Coverage-Shift Endpoint Setup' --split-seed 303 --num-epochs 200 --epoch-steps 100 --save-every-epochs 50 --candidate state_action_positive_nn_top40 --candidate hybrid_rank_fusion_badaware_heavy_top40
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split202/sapn40/setup/config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split202/hrfbh40/setup/config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_official_policy.py --split-path results/final_paper/ablations/can_coverage_shift_splits/split202/split_indices.json --out-dir results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split202/eval_50ep --checkpoint-glob 'results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split202/*/train/**/models/model_epoch_200.pth' --eval-episodes 50 --eval-horizon 400 --eval-init-mode valid_positive_states --device cuda --seed 0
+python scripts/summarize_hard_negative_can_endpoint_smoke.py --root results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split202 --eval-subdir eval_50ep --summary-name endpoint_200ep_summary.csv --report-name REPORT.md --diagnostic-name 'Can Coverage-Shift' --diagnostic-description 'generated scarce-positive coverage-shift Can diagnostic' --mechanism-sentence 'The endpoint effect is consistent with the support audit: the hybrid keeps nearly all hidden-positive coverage while reducing hidden-bad contamination under initial-pose coverage shift.' --claim-scope-sentence 'This is targeted coverage-shift diagnostic evidence; keep it separate from the primary Robomimic benchmark rows until the multi-split check is run.' --followup-path results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split202/REPORT.md
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split303/sapn40/setup/config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split303/hrfbh40/setup/config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_official_policy.py --split-path results/final_paper/ablations/can_coverage_shift_splits/split303/split_indices.json --out-dir results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split303/eval_50ep --checkpoint-glob 'results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split303/*/train/**/models/model_epoch_200.pth' --eval-episodes 50 --eval-horizon 400 --eval-init-mode valid_positive_states --device cuda --seed 0
+python scripts/summarize_hard_negative_can_endpoint_smoke.py --root results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split303 --eval-subdir eval_50ep --summary-name endpoint_200ep_summary.csv --report-name REPORT.md --diagnostic-name 'Can Coverage-Shift' --diagnostic-description 'generated scarce-positive coverage-shift Can diagnostic' --mechanism-sentence 'The endpoint effect is consistent with the support audit: the hybrid keeps nearly all hidden-positive coverage while reducing hidden-bad contamination under initial-pose coverage shift.' --claim-scope-sentence 'This is targeted coverage-shift diagnostic evidence; keep it separate from the primary Robomimic benchmark rows until the multi-split check is run.' --followup-path results/final_paper/ablations/can_coverage_shift_endpoint_200ep/split303/REPORT.md
+python scripts/summarize_hard_negative_can_endpoint_smoke.py --root results/final_paper/ablations/can_coverage_shift_endpoint_200ep --eval-subdir eval_50ep --summary-name endpoint_200ep_3split_summary.csv --report-name REPORT.md --aggregate-splits --diagnostic-name 'Can Coverage-Shift' --diagnostic-description 'generated scarce-positive coverage-shift Can diagnostic' --mechanism-sentence 'The endpoint effect is consistent with the support audit: the hybrid keeps nearly all hidden-positive coverage while reducing hidden-bad contamination under initial-pose coverage shift.' --claim-scope-sentence 'This is targeted coverage-shift diagnostic evidence; keep it separate from the primary Robomimic benchmark rows unless the manuscript explicitly frames it as generated diagnostic evidence.' --followup-path results/final_paper/ablations/can_coverage_shift_endpoint_200ep/REPORT.md
+```
+
+## 2026-06-25: Promoted coverage-shift diagnostic into the paper gate
+
+Integrated the completed C2 coverage-shift diagnostic into the manuscript and
+validation package. The standalone and ICLR LaTeX sources now include
+`tab:coverage-shift-can`, and the Markdown draft has the matching prose/table.
+
+Paper-facing claim now checked by validators:
+
+- Bad-aware-heavy hybrid top40: `120/150` endpoint successes, `118` hidden
+  positives selected, `2` hidden bad selected.
+- State-action positive-NN top40: `103/150` endpoint successes, `105` hidden
+  positives selected, `15` hidden bad selected.
+- Per-split endpoint pairs: `39/50` vs `35/50`, `41/50` vs `29/50`, and
+  `40/50` vs `39/50`.
+
+Updated files:
+
+- `paper/triage_bc_paper.tex`
+- `paper/iclr2026/main.tex`
+- `paper/triage_bc_draft.md`
+- `paper/MANUSCRIPT_CHECKLIST.md`
+- `paper/REPRODUCE_PAPER.md`
+- `paper/Makefile`
+- `scripts/validate_paper_claim_numbers.py`
+- `scripts/validate_paper_structure.py`
+- `triage_bc_high_impact_completion_plan.md`
+
+Validation:
+
+```bash
+python -m py_compile scripts/validate_paper_claim_numbers.py scripts/validate_paper_structure.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_structure.py
+python scripts/validate_paper_artifact_refs.py
+make -C paper validate
+git diff --check
+```
+
+## 2026-06-25: v0.2 proxy endpoint validation diagnostic
+
+Implemented Experiment D2 as a cheap artifact-only diagnostic over the existing
+candidate-family audit. This tests whether the current hidden-label-free
+coverage-only proxy predicts endpoint success well enough to justify freezing a
+v0.2 branch selector.
+
+New artifacts:
+
+- `scripts/plot_proxy_endpoint_validation.py`
+- `results/final_paper/tables/proxy_endpoint_validation.csv`
+- `results/final_paper/tables/proxy_endpoint_validation_correlations.csv`
+- `results/final_paper/tables/proxy_endpoint_validation_winners.csv`
+- `results/final_paper/tables/proxy_endpoint_validation_REPORT.md`
+- `results/final_paper/figures/proxy_endpoint_validation.png`
+- `results/final_paper/figures/proxy_endpoint_validation.pdf`
+
+Key result:
+
+| setting | endpoint winner | coverage-proxy winner | match |
+|---|---|---|---|
+| Can 40p/80b | positive-only NN top40 `108/150` | weighted BC full pool `90/150` | false |
+| Lift MG | weighted BC `93/150` | weighted BC `93/150` | true |
+| Can 20p/80b | positive-only NN top20 `54/100` | weighted BC full pool `18/50` | false |
+| Can 80p/80b | positive-only NN top80 `49/50` | positive-only NN top80 `49/50` | true |
+
+Correlation summary:
+
+| analysis set | rows | coverage Pearson | coverage Spearman | audit Pearson | audit Spearman |
+|---|---:|---:|---:|---:|---:|
+| all endpoint-evaluated support rows | 12 | -0.023 | 0.190 | 0.395 | 0.317 |
+| primary complete rows | 7 | 0.472 | 0.600 | 0.131 | 0.306 |
+| Can 40p/80b rows | 3 | -0.972 | -1.000 | 0.972 | 1.000 |
+| Lift MG rows | 4 | 0.847 | 0.632 | -0.966 | -1.000 |
+
+Interpretation:
+
+- Coverage-only selection explains Lift MG but fails Can-style contamination by
+  choosing too-broad weighted support.
+- Audit-only precision-risk scores explain Can but fail Lift, where high-purity
+  hard support under-covers the policy learner.
+- Do not freeze v0.2 around the current coverage-only proxy. The next method
+  step should add hidden-label-free bad-risk and action-conflict features before
+  spending fresh endpoint GPU budget.
+
+Validation:
+
+```bash
+python scripts/plot_proxy_endpoint_validation.py
+python -m py_compile scripts/plot_proxy_endpoint_validation.py
+git diff --check
+```
+
+## 2026-06-25: v0.2 support-side proxy feature screen
+
+Screened simple hidden-label-free proxy features over the existing hybrid
+candidate support audit before spending any endpoint GPU budget. The screen
+uses selected-support size and mean classifier score as deployable proxy
+features, with hidden labels used only for audit.
+
+New artifacts:
+
+- `scripts/summarize_v02_proxy_feature_screen.py`
+- `results/final_paper/tables/v02_proxy_feature_screen.csv`
+- `results/final_paper/tables/v02_proxy_feature_screen_winners.csv`
+- `results/final_paper/tables/v02_proxy_feature_screen_REPORT.md`
+
+Key result:
+
+- Across four settings and seven deployable coverage/classifier-score proxy
+  formulas, proxy winners match the audit-support winner in only `1/28`
+  setting-proxy cases.
+- Proxy winners strictly dominate the positive-NN baseline on hidden support
+  metrics in only `2/28` setting-proxy cases.
+
+Best audit-support rows are setting-specific:
+
+| setting | audit-support winner | support audit |
+|---|---|---|
+| Can 40p/80b | positive-NN top40 | recall `0.883`, bad admission `0.058` |
+| Lift MG | classifier top320 | recall `0.859`, bad admission `0.073` |
+| Can 20p/80b | hybrid filter mid mean fill classifier to20 | recall `0.833`, bad admission `0.042` |
+| Can 80p/80b | hybrid intersection pos80 classifier160 | recall `0.917`, bad admission `0.083` |
+
+Interpretation:
+
+- Coverage-only proxies over-select broad supports.
+- Classifier-score-only proxies under-cover.
+- Simple coverage/classifier combinations do not recover the audit frontier.
+- Do not endpoint-train a new branch from these features. The next useful v0.2
+  feature should explicitly estimate action-conflict or bad-neighbor risk.
+
+Validation:
+
+```bash
+python scripts/summarize_v02_proxy_feature_screen.py
+python -m py_compile scripts/summarize_v02_proxy_feature_screen.py
+git diff --check
+```
+
+## 2026-06-25: v0.2 action-risk proxy feature screen
+
+Screened explicit hidden-label-free action-conflict and bad-neighbor risk
+features over the existing hybrid candidate support audit before spending any
+endpoint GPU budget. Per-demo risk scores use only labeled positives, labeled
+negatives, and unlabeled support features; hidden labels are used only for audit
+columns and winner checks.
+
+New artifacts:
+
+- `scripts/summarize_v02_action_risk_feature_screen.py`
+- `results/final_paper/tables/v02_action_risk_feature_screen_per_split.csv`
+- `results/final_paper/tables/v02_action_risk_feature_screen.csv`
+- `results/final_paper/tables/v02_action_risk_feature_screen_winners.csv`
+- `results/final_paper/tables/v02_action_risk_feature_screen_REPORT.md`
+
+Key result:
+
+- Across four settings and eight deployable action-risk proxy formulas, proxy
+  winners match the audit-support winner in only `1/32` setting-proxy cases.
+- Proxy winners strictly dominate the setting-specific positive-NN baseline on
+  hidden support metrics in only `2/32` setting-proxy cases.
+
+Best audit-support rows remain setting-specific:
+
+| setting | audit-support winner | support audit |
+|---|---|---|
+| Can 40p/80b | positive-NN top40 | recall `0.883`, bad admission `0.058` |
+| Lift MG | classifier top320 | recall `0.859`, bad admission `0.073` |
+| Can 20p/80b | tied hybrid top20 / fill variants | recall `0.833`, bad admission `0.042` |
+| Can 80p/80b | positive-NN top80 / intersection frontier | recall `0.917`, bad admission `0.083` |
+
+Interpretation:
+
+- The action-conflict and bad-neighbor features are useful diagnostics, but they
+  do not produce a reliable selector over the current stale candidate family.
+- Do not endpoint-train a new v0.2 branch from this candidate family. The next
+  useful method step is either a new candidate generator that optimizes these
+  risks directly, or an honest abstention/router freeze.
+
+Validation:
+
+```bash
+python scripts/summarize_v02_action_risk_feature_screen.py
+python -m py_compile scripts/summarize_v02_action_risk_feature_screen.py
+git diff --check
+```
+
+## 2026-06-25: v0.2 direct action-risk candidates and Can40 endpoint gate
+
+Built candidates directly from hidden-label-free action-conflict and
+bad-neighbor risk rankings, then ran a bounded endpoint gate on the strongest
+Can 40p/80b split-11 support candidate.
+
+New support artifacts:
+
+- `scripts/summarize_v02_action_risk_candidate_audit.py`
+- `results/final_paper/tables/v02_action_risk_candidate_support_per_split.csv`
+- `results/final_paper/tables/v02_action_risk_candidate_support_summary.csv`
+- `results/final_paper/tables/v02_action_risk_candidate_support_decision.csv`
+- `results/final_paper/tables/v02_action_risk_candidate_support_REPORT.md`
+- `scripts/summarize_v02_policy_coverage_diagnostic.py`
+- `results/final_paper/tables/v02_policy_coverage_diagnostic.csv`
+- `results/final_paper/tables/v02_policy_coverage_diagnostic_per_initial.csv`
+- `results/final_paper/tables/v02_policy_coverage_diagnostic_REPORT.md`
+- `results/final_paper/tables/v02_policy_coverage_diagnostic_split22.csv`
+- `results/final_paper/tables/v02_policy_coverage_diagnostic_split22_per_initial.csv`
+- `results/final_paper/tables/v02_policy_coverage_diagnostic_split22_REPORT.md`
+
+Support result:
+
+- Direct risk-generated candidates strictly dominate the setting-specific
+  positive-NN support baseline in `4/4` audited settings.
+- On Can 40p/80b split 11, `bad_neighbor_safe_top40` selects `40/40` hidden
+  positives and `0/80` hidden bad demos, versus positive-NN top40 selecting
+  `36/40` hidden positives and `4/80` hidden bad demos.
+- The less distribution-shifting `positive_nn_risk_fusion_top40` variant
+  selects `39/40` hidden positives and `1/80` hidden bad demo.
+- On Can 40p/80b split 22, `positive_nn_risk_fusion_top40` has perfect support
+  audit, selecting `40/40` hidden positives and `0/80` hidden bad demos, versus
+  positive-NN top40 selecting `37/40` hidden positives and `3/80` hidden bad
+  demos.
+
+Endpoint artifacts:
+
+- Setup helper patch: `scripts/prepare_hard_negative_can_endpoint_configs.py`
+  now accepts `--split-path`, has shorter tags for action-risk candidates, and
+  disambiguates repeated audit candidate IDs by matching the audit `source` to
+  the exact split path.
+- 50-epoch smoke report:
+  `results/final_paper/ablations/v02_action_risk_endpoint_smoke_can40/REPORT.md`
+- 200-epoch endpoint gate:
+  `results/final_paper/ablations/v02_action_risk_endpoint_200ep_can40/REPORT.md`
+
+Can 40p/80b split-11 endpoint results:
+
+| candidate / method | protocol | success |
+|---|---|---:|
+| `bad_neighbor_safe_top40` | 50 epochs, 10 rollouts | `1/10` |
+| `positive_nn_risk_fusion_top40` | 50 epochs, 10 rollouts | `2/10` |
+| `positive_nn_top40` | 50 epochs, 10 rollouts | `4/10` |
+| `bad_neighbor_safe_top40` | 200 epochs, 50 rollouts | `0.720` |
+| `positive_nn_risk_fusion_top40` | 200 epochs, 50 rollouts | `0.820` |
+| existing positive-NN top40 | 200 epochs, 50 rollouts | `0.840` |
+| existing TRIAGE-BC | 20k checkpoint, 50 rollouts | `0.760` |
+| existing weighted BC | 20k checkpoint, 50 rollouts | `0.720` |
+| split-22 `positive_nn_risk_fusion_top40` | 200 epochs, 50 rollouts | `0.640` |
+| split-22 existing positive-NN top40 | 200 epochs, 50 rollouts | `0.760` |
+| split-22 existing TRIAGE-BC | 200 epochs, 50 rollouts | `0.520` |
+| split-22 existing weighted BC | 200 epochs, 50 rollouts | `0.440` |
+
+Interpretation:
+
+- The direct risk candidate is a strong support-label result but not a stronger
+  endpoint policy on the first primary gate.
+- The risk-hybrid narrows the endpoint gap and beats TRIAGE-BC on this split,
+  but it still trails the strongest same-split positive-NN baseline.
+- The split-22 confirmation rejects the current risk-hybrid as a v0.2 method:
+  even with perfect hidden support, it trails positive-NN by `0.120`.
+- This is important negative evidence: maximizing hidden-label support purity
+  can shift the behavior distribution enough to hurt BC-RNN-GMM.
+- Initial-state and transition-level policy-coverage diagnostics do not rescue
+  the proxy: coverage distances are too similar across positive-NN and
+  risk-hybrid candidates to explain endpoint rank reliably.
+- Do not promote either action-risk candidate as v0.2, and do not spend
+  split-33 endpoint compute on this unchanged candidate family. A next v0.2
+  attempt needs a different policy-quality proxy or a candidate generator that
+  preserves policy-learning coverage, not only hidden-label purity.
+
+Validation:
+
+```bash
+python scripts/summarize_v02_action_risk_candidate_audit.py
+conda run -n tri-piql python scripts/prepare_hard_negative_can_endpoint_configs.py --split-seed 11 --split-path results/final_paper/splits/can_paired_pos40_bad80_split11/split_indices.json --audit-csv results/final_paper/tables/v02_action_risk_candidate_support_per_split.csv --out-root results/final_paper/ablations/v02_action_risk_endpoint_200ep_can40 --mask-prefix v02risk200_can40 --experiment-prefix v02risk200_can40 --report-title 'v0.2 Action-Risk Can40 200ep Endpoint Setup' --eval-horizon 400 --num-epochs 200 --epoch-steps 100 --save-every-epochs 200 --candidate bad_neighbor_safe_top40 --candidate positive_nn_risk_fusion_top40
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/v02_action_risk_endpoint_200ep_can40/split11/bns40/setup/config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_official_policy.py --split-path results/final_paper/splits/can_paired_pos40_bad80_split11/split_indices.json --out-dir results/final_paper/ablations/v02_action_risk_endpoint_200ep_can40/split11/bns40/eval --checkpoint results/final_paper/ablations/v02_action_risk_endpoint_200ep_can40/split11/bns40/train/v02risk200_can40_s11_bns40_seed0_bc_rnn_e200/20260625052835/models/model_epoch_200.pth --eval-episodes 50 --eval-horizon 400 --eval-init-mode valid_positive_states --device cuda --seed 0
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/v02_action_risk_endpoint_200ep_can40/split11/pnrf40/setup/config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_official_policy.py --split-path results/final_paper/splits/can_paired_pos40_bad80_split11/split_indices.json --out-dir results/final_paper/ablations/v02_action_risk_endpoint_200ep_can40/split11/pnrf40/eval --checkpoint results/final_paper/ablations/v02_action_risk_endpoint_200ep_can40/split11/pnrf40/train/v02risk200_can40_s11_pnrf40_seed0_bc_rnn_e200/20260625054130/models/model_epoch_200.pth --eval-episodes 50 --eval-horizon 400 --eval-init-mode valid_positive_states --device cuda --seed 0
+python scripts/summarize_v02_policy_coverage_diagnostic.py
+conda run -n tri-piql python scripts/prepare_hard_negative_can_endpoint_configs.py --split-seed 22 --split-path results/final_paper/splits/can_paired_pos40_bad80_split22/split_indices.json --audit-csv results/final_paper/tables/v02_action_risk_candidate_support_per_split.csv --out-root results/final_paper/ablations/v02_action_risk_endpoint_200ep_can40 --mask-prefix v02risk200_can40 --experiment-prefix v02risk200_can40 --report-title 'v0.2 Action-Risk Can40 200ep Endpoint Setup' --eval-horizon 400 --num-epochs 200 --epoch-steps 100 --save-every-epochs 200 --candidate positive_nn_risk_fusion_top40
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/v02_action_risk_endpoint_200ep_can40/split22/pnrf40/setup/config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_official_policy.py --split-path results/final_paper/splits/can_paired_pos40_bad80_split22/split_indices.json --out-dir results/final_paper/ablations/v02_action_risk_endpoint_200ep_can40/split22/pnrf40/eval --checkpoint results/final_paper/ablations/v02_action_risk_endpoint_200ep_can40/split22/pnrf40/train/v02risk200_can40_s22_pnrf40_seed0_bc_rnn_e200/20260625060043/models/model_epoch_200.pth --eval-episodes 50 --eval-horizon 400 --eval-init-mode valid_positive_states --device cuda --seed 0
+python scripts/summarize_v02_policy_coverage_diagnostic.py --split-path results/final_paper/splits/can_paired_pos40_bad80_split22/split_indices.json --risk-endpoint-root results/final_paper/ablations/v02_action_risk_endpoint_200ep_can40/split22 --out-prefix results/final_paper/tables/v02_policy_coverage_diagnostic_split22
+```
+
+## 2026-06-25: Can prefix-positive support and endpoint gate
+
+Built the controlled C3 Robomimic diagnostic where labeled positives are only
+early prefixes from successful Can demos, labeled negatives are failed demos,
+and the unlabeled pool contains full successful and failed trajectories.
+
+New artifacts:
+
+- `scripts/summarize_can_prefix_positive_audit.py`
+- `scripts/summarize_can_prefix_positive_endpoint.py`
+- `results/final_paper/ablations/can_prefix_positive_REPORT.md`
+- `results/final_paper/ablations/can_prefix_positive_construction.csv`
+- `results/final_paper/ablations/can_prefix_positive_support_per_split.csv`
+- `results/final_paper/ablations/can_prefix_positive_summary.csv`
+- `results/final_paper/ablations/can_prefix_positive_splits/split*/split_indices.json`
+- `results/final_paper/ablations/can_prefix_positive_endpoint_200ep/REPORT.md`
+- `results/final_paper/ablations/can_prefix_positive_endpoint_200ep/endpoint_200ep_aggregate_summary.csv`
+- `results/final_paper/ablations/can_prefix_positive_endpoint_200ep/split*/REPORT.md`
+- `results/final_paper/ablations/can_prefix_positive_endpoint_200ep/split*/endpoint_200ep_summary.csv`
+
+Support gate:
+
+| candidate | selected | hidden-positive selected | hidden-bad selected | purity |
+|---|---:|---:|---:|---:|
+| `prefix_bad_aware_state_top80` | 240 | 195 | 45 | 0.812 |
+| `prefix_state_action_nn_top80` | 240 | 37 | 203 | 0.154 |
+
+Endpoint gate over split seeds `101`, `202`, and `303`:
+
+| candidate | hidden-positive selected | hidden-bad selected | success |
+|---|---:|---:|---:|
+| `prefix_bad_aware_state_top80` | 195 | 45 | 119/150 |
+| `prefix_state_action_nn_top80` | 37 | 203 | 6/150 |
+
+Per-split endpoint rows:
+
+| split | bad-aware success | prefix-NN success |
+|---:|---:|---:|
+| 101 | 26/50 | 1/50 |
+| 202 | 43/50 | 2/50 |
+| 303 | 50/50 | 3/50 |
+
+Interpretation:
+
+- This is the first strong Robomimic transfer of the PointNav
+  prefix-positive mechanism.
+- The result is much stronger than the failed action-risk v0.2 branch because
+  the support advantage translates into endpoint behavior across the full
+  three-split 200-epoch / 50-rollout gate.
+- This is now strong controlled robotics evidence, but not a primary benchmark
+  row because the split construction changes the default Robomimic setting.
+
+Commands:
+
+```bash
+python scripts/summarize_can_prefix_positive_audit.py
+conda run -n tri-piql python scripts/prepare_hard_negative_can_endpoint_configs.py --split-seed 202 --split-root results/final_paper/ablations/can_prefix_positive_splits --audit-csv results/final_paper/ablations/can_prefix_positive_support_per_split.csv --out-root results/final_paper/ablations/can_prefix_positive_endpoint_200ep --mask-prefix prefix_can200 --experiment-prefix prefix_can --report-title 'Can Prefix-Positive Endpoint Setup' --num-epochs 200 --epoch-steps 100 --save-every-epochs 100 --candidate prefix_state_action_nn_top80 --candidate prefix_bad_aware_state_top80
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/can_prefix_positive_endpoint_200ep/split202/prefix_bad_aware_state_top80/setup/config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python -m robomimic.scripts.train --config results/final_paper/ablations/can_prefix_positive_endpoint_200ep/split202/prefix_state_action_nn_top80/setup/config.json
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_official_policy.py --split-path results/final_paper/ablations/can_prefix_positive_splits/split202/split_indices.json --out-dir results/final_paper/ablations/can_prefix_positive_endpoint_200ep/split202/prefix_bad_aware_state_top80/eval_50ep --checkpoint results/final_paper/ablations/can_prefix_positive_endpoint_200ep/split202/prefix_bad_aware_state_top80/train/prefix_can_s202_prefix_bad_aware_state_top80_seed0_bc_rnn_e200/20260625061722/models/model_epoch_200.pth --eval-episodes 50 --eval-horizon 400 --eval-init-mode valid_positive_states --device cuda --seed 0
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_official_policy.py --split-path results/final_paper/ablations/can_prefix_positive_splits/split202/split_indices.json --out-dir results/final_paper/ablations/can_prefix_positive_endpoint_200ep/split202/prefix_state_action_nn_top80/eval_50ep --checkpoint results/final_paper/ablations/can_prefix_positive_endpoint_200ep/split202/prefix_state_action_nn_top80/train/prefix_can_s202_prefix_state_action_nn_top80_seed0_bc_rnn_e200/20260625062142/models/model_epoch_200.pth --eval-episodes 50 --eval-horizon 400 --eval-init-mode valid_positive_states --device cuda --seed 0
+python scripts/summarize_can_prefix_positive_endpoint.py
+```
+
+Continuation:
+
+- Repeated the same prepare/train/evaluate protocol for split seeds `101` and
+  `303`.
+- Exact checkpoint paths and per-split metrics are captured in
+  `results/final_paper/ablations/can_prefix_positive_endpoint_200ep/split*/REPORT.md`.
+- Regenerated the aggregate with `python scripts/summarize_can_prefix_positive_endpoint.py`.
+
+Validation:
+
+```bash
+python -m py_compile scripts/summarize_can_prefix_positive_audit.py scripts/summarize_can_prefix_positive_endpoint.py scripts/prepare_hard_negative_can_endpoint_configs.py
+git diff --check
+pgrep -af 'run_final_matrix|robomimic.scripts.train|train_robomimic_official_weighted_sampler|evaluate_robomimic_official_policy'
+```
+
+## 2026-06-25: Paper-facing prefix-positive diagnostic integration
+
+Converted the completed Can prefix-positive endpoint gate into a paper-facing
+diagnostic artifact and wired it into the manuscript/checklist/repro path
+without promoting it to a primary benchmark row.
+
+New / refreshed artifacts:
+
+- `scripts/plot_can_prefix_positive_diagnostic.py`
+- `results/final_paper/tables/can_prefix_positive_diagnostic.csv`
+- `results/final_paper/tables/can_prefix_positive_diagnostic_REPORT.md`
+- `results/final_paper/figures/can_prefix_positive_diagnostic.png`
+- `results/final_paper/figures/can_prefix_positive_diagnostic.pdf`
+- refreshed `results/final_paper/ablations/can_prefix_positive_endpoint_200ep/REPORT.md`
+
+Manuscript integration:
+
+- Added the prefix-positive Can result as an appendix diagnostic in
+  `paper/triage_bc_paper.tex`, `paper/iclr2026/main.tex`, and
+  `paper/triage_bc_draft.md`.
+- Kept the claim scoped as generated diagnostic evidence: prefix bad-aware
+  state top80 reaches `119/150` and selects `195` hidden positives with `45`
+  hidden bad demos, while prefix state-action positive-NN top80 reaches
+  `6/150` and selects `37` hidden positives with `203` hidden bad demos.
+- Added the artifact to `paper/MANUSCRIPT_CHECKLIST.md`,
+  `paper/REPRODUCE_PAPER.md`, `paper/README.md`,
+  `results/final_paper/README.md`, and the paper validators.
+
+Validation:
+
+```bash
+python scripts/summarize_can_prefix_positive_endpoint.py
+python scripts/plot_can_prefix_positive_diagnostic.py
+python -m py_compile scripts/plot_can_prefix_positive_diagnostic.py scripts/summarize_can_prefix_positive_endpoint.py scripts/validate_paper_claim_numbers.py scripts/validate_paper_structure.py scripts/validate_paper_artifact_refs.py
+latexmk -pdf -interaction=nonstopmode -halt-on-error triage_bc_paper.tex
+latexmk -pdf -cd -interaction=nonstopmode -halt-on-error iclr2026/main.tex
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_structure.py
+python scripts/validate_paper_artifact_refs.py
+git diff --check
+rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
+rg -n "undefined|Undefined|LaTeX Warning|Package natbib Warning|Overfull" paper/iclr2026/main.log
+```
+
+All validators passed. The rebuilt standalone PDF remains 16 pages and the
+ICLR-format PDF remains 14 pages; references still begin on page 10 and the
+appendix starts on page 11 under `scripts/validate_paper_structure.py`.
+
+## 2026-06-25: Prefix-positive appendix figure visibility gate
+
+Made the C3 prefix-positive result visible in the compiled appendix rather than
+only listing it in artifact maps.
+
+Changes:
+
+- Added `fig:prefix-positive-can` to `paper/triage_bc_paper.tex` and
+  `paper/iclr2026/main.tex`.
+- Included `results/final_paper/figures/can_prefix_positive_diagnostic.pdf`
+  as an appendix figure after the paired endpoint-delta figure.
+- Updated `scripts/validate_paper_structure.py` to require the new figure label
+  and to expect the intentional appendix page-count change.
+- Updated current-status page-count docs in `paper/MANUSCRIPT_CHECKLIST.md`,
+  `paper/README.md`, `PAPER_DRAFT_OUTLINE.md`, and
+  `tri_piql_paper_completion_plan.md`.
+
+Validation:
+
+```bash
+make -C paper validate
+```
+
+Result:
+
+- Full paper validation passed.
+- Standalone PDF is now 17 pages.
+- ICLR-format PDF is now 15 pages.
+- The main-text boundary is unchanged: conclusion on page 9, references on page
+  10, and appendix starts on page 11.
+
+## 2026-06-25: Cautious diagnostic-paper framing adoption
+
+Aligned the manuscript front matter with the evidence level in the high-impact
+plan. The paper now uses the cautious diagnostic title:
+
+`When Do Bad Demonstrations Help Offline Imitation? A Precision-Coverage Study`
+
+Changes:
+
+- Updated the title, abstract, and contribution list in
+  `paper/triage_bc_paper.tex`, `paper/iclr2026/main.tex`, and
+  `paper/triage_bc_draft.md`.
+- Updated the working-title surfaces in `PAPER_DRAFT_OUTLINE.md` and
+  `tri_piql_paper_completion_plan.md`.
+- Added a status note in `triage_bc_high_impact_completion_plan.md`.
+
+Rationale:
+
+- The current evidence is strong for a precision/coverage phenomenon paper, not
+  a universal method-dominance paper.
+- The new abstract explicitly includes the controlled PointNav and generated
+  Robomimic Can diagnostics as positive mechanisms.
+- It also preserves the primary Robomimic caveats: positive-only retrieval is
+  stronger on Can 40p/80b and weighted BC is strongest on Lift MG.
+
+Validation:
+
+```bash
+make -C paper validate
+```
+
+The full paper gate passed after the rewrite. The compiled page layout remains
+17 pages for the standalone PDF and 15 pages for the ICLR-format PDF, with
+conclusion on page 9, references on page 10, and appendix starting on page 11.
+
+## 2026-06-25: Paper validation documentation synchronization
+
+Synchronized the paper-facing validation docs with the current post-prefix-
+positive artifact package.
+
+Updated documentation:
+
+- `paper/MANUSCRIPT_CHECKLIST.md`
+- `paper/README.md`
+- `paper/REPRODUCE_PAPER.md`
+
+Main fixes:
+
+- Updated the expected artifact-reference validator count to `90` unique
+  references.
+- Added the prefix-positive endpoint and diagnostic plotting scripts to the
+  submission-check compile commands.
+- Made the LaTeX log-scan contract precise: the standalone draft still has no
+  warning, underfull, or overfull matches, while the ICLR shell uses the
+  Makefile pattern that tolerates underfull layout messages but fails on
+  undefined-reference, warning, natbib-warning, or overfull matches.
+- Documented the current PDF sizes as 17 standalone pages and 15 ICLR-format
+  pages.
+- Expanded the reproduction guide's cheap/manual commands to include the
+  coverage-shift endpoint summaries and prefix-positive diagnostic artifacts.
+
+Validation:
+
+```bash
+make -C paper validate
+git diff --check
+```
+
+Results:
+
+- `make -C paper validate` passed.
+- Claim-number, structure, and artifact-reference validators passed; the
+  artifact validator reports `checked 90 unique artifact references`.
+- The standalone PDF rebuilt at 17 pages.
+- The ICLR-format PDF rebuilt at 15 pages, with references on page 10 and
+  appendix material starting on page 11.
+- `git diff --check` passed.
+- The stale-count and stale-warning-text search over the three paper docs
+  returned no matches.
+
+## 2026-06-25: Claim package synchronized with diagnostic framing
+
+Updated `results/PAPER_CLAIM_PACKAGE.md` so the paper-facing claim package now
+matches the cautious diagnostic title and the newest generated Can diagnostics.
+
+Changes:
+
+- Updated the evidence-package date to 2026-06-25.
+- Replaced the old TRIAGE-BC method-title surface with
+  `When Do Bad Demonstrations Help Offline Imitation? A Precision-Coverage Study`.
+- Added the hard-negative, coverage-shift, and prefix-positive Can diagnostics
+  as generated mechanism evidence, not primary benchmark rows.
+- Added a supported-diagnostic claim row for generated Can settings where
+  explicit bad labels beat matched positive-only retrieval:
+  hard-negative `104/150` versus `91/150`, coverage-shift `120/150` versus
+  `103/150`, and prefix-positive `119/150` versus `6/150`.
+- Added the relevant generated-diagnostic reports to the artifact narrative.
+
+Validation:
+
+```bash
+python scripts/validate_paper_artifact_refs.py
+python scripts/validate_paper_claim_numbers.py
+git diff --check
+```
+
+Results:
+
+- Artifact-reference validator passed with `checked 90 unique artifact
+  references`.
+- Claim-number validator passed.
+- `git diff --check` passed.
+
+## 2026-06-25: Precision/coverage marginal-support proposition
+
+Strengthened the diagnostic/theory path after re-checking the v0.2 candidate
+reports. The current candidate-family audit still shows that the endpoint
+oracle can only match the strongest baseline by selecting that baseline, and
+the existing coverage proxy does not justify more endpoint GPU budget for the
+current candidate family. I therefore improved the paper's precision/coverage
+analysis rather than launching another long run.
+
+Changes:
+
+- Added a compact marginal support criterion to
+  `paper/triage_bc_paper.tex`, `paper/iclr2026/main.tex`, and
+  `paper/triage_bc_draft.md`.
+- The criterion states when adding one more unlabeled trajectory should reduce
+  the schematic hard-support risk bound: expected coverage gain must exceed
+  the normalized increase in bad-action mass.
+- The wording keeps the scope as an organizing decomposition for nonlinear
+  sequence BC, not a formal performance guarantee.
+
+Validation:
+
+```bash
+make -C paper validate
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_structure.py
+git diff --check
+```
+
+Results:
+
+- Full paper validation passed.
+- Standalone PDF remains 17 pages.
+- ICLR-format PDF remains 15 pages.
+- Claim-number and structure validators passed.
+- `git diff --check` passed.
+
+## 2026-06-25: Action-risk v0.2 no-go made paper-visible
+
+Made the failed action-risk v0.2 endpoint gate visible in the manuscript
+appendix and claim validator. This addresses a reviewer-facing risk: support
+audits alone can look like a promising method result, but the endpoint gate
+shows that improved hidden-label support purity did not beat the strongest
+positive-only endpoint baseline.
+
+Changes:
+
+- Added an appendix diagnostic bullet to `paper/triage_bc_paper.tex` and
+  `paper/iclr2026/main.tex`.
+- Added the matching row to `paper/triage_bc_draft.md`.
+- Added artifact-map/checklist references in `paper/REPRODUCE_PAPER.md` and
+  `paper/MANUSCRIPT_CHECKLIST.md`.
+- Extended `scripts/validate_paper_claim_numbers.py` to check the split-11 and
+  split-22 action-risk endpoint/support counts from staged CSVs.
+
+Key checked numbers:
+
+- Split 11: positive-NN/risk fusion selects 39 hidden positives and 1 hidden
+  bad demo, but reaches `0.820` versus positive-only NN `0.840`.
+- Split 22: positive-NN/risk fusion selects 40 hidden positives and 0 hidden
+  bad demos, but reaches `0.640` versus positive-only NN `0.760`.
+- Current artifact-reference validator count is now `93` unique references.
+
+Validation:
+
+```bash
+make -C paper validate
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_structure.py
+python scripts/validate_paper_artifact_refs.py
+git diff --check
+```
+
+Results:
+
+- Full paper validation passed.
+- Claim-number, structure, and artifact-reference validators passed.
+- Standalone PDF is now 18 pages.
+- ICLR-format PDF remains 15 pages, with the main-text boundary unchanged.
+- `git diff --check` passed.
+
+## 2026-06-25: Claim package readiness snapshot added
+
+Made the v0.2 no-go state explicit in the claim package and high-impact plan.
+The action-risk endpoint gate is now represented as a supported no-go claim:
+support purity can improve without beating the endpoint baseline.
+
+Changes:
+
+- Added a main claim-package row for the action-risk v0.2 endpoint no-go.
+- Added v0.2 development artifact pointers to `results/PAPER_CLAIM_PACKAGE.md`.
+- Added a submission-readiness snapshot separating green diagnostic evidence
+  from red methods-paper gates.
+- Added a current go/no-go status table to
+  `triage_bc_high_impact_completion_plan.md`.
+- Updated `tri_piql_paper_completion_plan.md` so its executive diagnosis and
+  bottom-line next steps reflect the action-risk v0.2 no-go.
+
+Validation:
+
+```bash
+make -C paper validate
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_artifact_refs.py
+git diff --check
+```
+
+Results:
+
+- Full paper validation passed.
+- Claim-number and artifact-reference validators passed.
+- Artifact-reference count remains `93` unique references.
+- Standalone PDF remains 18 pages.
+- ICLR-format PDF remains 15 pages.
+- `git diff --check` passed.
+
+## 2026-06-25: Can 40 v0.2 union candidate endpoint gate
+
+Tested a less aggressive follow-up to the failed action-risk replacement
+candidate. Instead of replacing positive-only support with risk-ranked support,
+the new candidate keeps positive-only NN top40 and unions in demos selected by
+positive-NN/risk-fusion top40.
+
+Artifacts:
+
+- `scripts/summarize_v02_union_candidate_audit.py`
+- `scripts/summarize_v02_union_endpoint.py`
+- `scripts/summarize_v02_union_endpoint_aggregate.py`
+- `results/final_paper/tables/v02_union_candidate_support_REPORT.md`
+- `results/final_paper/ablations/v02_union_endpoint_200ep_can40/REPORT.md`
+
+Support audit:
+
+- Across Can 40p/80b split seeds `11`, `22`, and `33`, the union selects
+  `119/120` hidden-positive demos and `16/240` hidden-bad demos.
+- Per split: split 11 selects `40/40` hidden positives and `5/80` hidden bad;
+  split 22 selects `40/40` and `3/80`; split 33 selects `39/40` and `8/80`.
+
+Endpoint gate:
+
+- Official Robomimic BC-RNN-GMM, 200 epochs, 50 valid-positive-start rollouts
+  per split.
+- Union reaches `116/150` pooled success (`0.773`): split 11 `0.760`, split 22
+  `0.780`, split 33 `0.780`.
+- Existing frozen rows on the same Can 40p/80b matrix: positive-only NN
+  `108/150`, TRIAGE-BC v0.1 `99/150`, weighted BC `90/150`, and all-demo BC
+  `81/150`.
+
+Interpretation:
+
+- This is the first Can 40p/80b development candidate that beats the strong
+  positive-only NN row in the pooled frozen endpoint matrix.
+- It should not be promoted as TRIAGE-BC v0.2 yet: it loses split 11 to
+  positive-only NN (`0.760` versus `0.840`), has not been frozen on fresh
+  splits, and does not address Lift MG or Can MG.
+
+## 2026-06-25: v0.2 candidate-family refresh and portfolio-router audit
+
+Folded the Can 40 union branch into the main v0.2 candidate-family and proxy
+reports, then built a cheap hidden-label-free portfolio-router audit over
+existing endpoint artifacts.
+
+Updated / added scripts:
+
+- `scripts/summarize_candidate_family_audit.py`
+- `scripts/plot_proxy_endpoint_validation.py`
+- `scripts/summarize_v02_portfolio_router_audit.py`
+
+Generated artifacts:
+
+- `results/final_paper/tables/candidate_family_oracle_proxy_REPORT.md`
+- `results/final_paper/tables/proxy_endpoint_validation_REPORT.md`
+- `results/final_paper/figures/proxy_endpoint_validation.{png,pdf}`
+- `results/final_paper/tables/v02_portfolio_router_REPORT.md`
+- `results/final_paper/tables/v02_portfolio_router_decisions.csv`
+- `results/final_paper/tables/v02_portfolio_router_summary.csv`
+
+Candidate-family result:
+
+- Can 40p/80b now contains an endpoint-evaluated bad-aware branch above the
+  strongest baseline: union `116/150` versus positive-only NN `108/150`.
+- Lift MG still only matches the strongest baseline by selecting weighted BC:
+  weighted `93/150` versus TRIAGE-BC v0.1 `74/150`.
+- Coverage-only proxy remains insufficient: it still selects weighted BC on
+  Can 40, where weighted reaches only `90/150`.
+
+Portfolio-router rule audited:
+
+- Abstain if estimated positive mass is at least `800` and the count above the
+  labeled-positive minimum is at least `400`.
+- Otherwise choose soft weighted BC if estimated positive mass is at least
+  `200` and count above the labeled-positive minimum is at least `80`.
+- Otherwise choose hard positive-NN/risk union support.
+
+Development endpoint result:
+
+- Can 40p/80b: router chooses union, `116/150`.
+- Lift MG: router chooses weighted BC, `93/150`.
+- Pooled primary development result: `209/300`, versus strongest pre-union
+  per-task baselines `201/300`, v0.1 `173/300`, and all-positive oracle
+  `252/300`.
+
+Interpretation:
+
+- This is the first plausible cross-task v0.2 shape: hard union for Can-like
+  low-mass contamination, weighted support for Lift-like coverage, and
+  abstention on Can MG-style large ambiguous pools.
+- It is still post-hoc development evidence. The rule was written after the
+  Can union endpoint gate, Lift is solved by selecting a baseline branch, Can
+  20/80 union rows are support-only, and fresh split validation is required
+  before this can become a paper method.
+
+### v0.2 development freeze draft
+
+Drafted the fresh-split validation contract for the portfolio router:
+
+- `METHOD_FREEZE_V02.md`
+- `configs/final_method_v02.yaml`
+- `configs/final_eval_v02.yaml`
+
+The freeze is explicit that this is not a final paper method yet. It
+predeclares split seeds `101`, `202`, and `303` for Can 40p/80b and Lift MG,
+policy seed `0`, official Robomimic BC-RNN-GMM at 200 epochs, 50 endpoint
+rollouts, and the mass/count router rule:
+
+- high ambiguous mass/count: abstain,
+- moderate mass/count: soft weighted BC,
+- otherwise: hard positive-NN/risk union support.
+
+The YAML configs parse successfully with `yaml.safe_load`.
+
+## 2026-06-25: First fresh v0.2 Can 40 endpoint split
+
+Ran the first predeclared fresh-split endpoint gate for the frozen v0.2
+portfolio router on Can 40p/80b split seed `101`.
+
+New / updated scripts:
+
+- `scripts/summarize_v02_fresh_router_support_audit.py`
+- `scripts/summarize_v02_fresh_can_endpoint.py`
+- `scripts/train_robomimic_official_weighted_sampler.py`
+
+Generated artifacts:
+
+- `results/final_paper_v02/tables/v02_fresh_router_support_REPORT.md`
+- `results/final_paper_v02/tables/v02_fresh_can_endpoint_REPORT.md`
+- `results/final_paper_v02/ablations/v02_fresh_endpoint_200ep_can40/split101/positive_nn_risk_union_top40/eval_50ep/REPORT.md`
+- `results/final_paper_v02/per_seed/can_paired_pos40_bad80_split101_positive_only_nn_policy0/eval/REPORT.md`
+- `results/final_paper_v02/per_seed/can_paired_pos40_bad80_split101_weighted_bc_policy0/eval/REPORT.md`
+
+Support/router preflight:
+
+- Can 40p/80b split `101`: frozen router chooses hard
+  `positive_nn_risk_union_top40`.
+- Union support selects `49` unlabeled demos: `40/40` hidden positives and
+  `9/80` hidden bad demos.
+- Positive-only NN top40 selects `31/40` hidden positives and `9/80` hidden bad
+  demos.
+- Risk-fusion top40 alone is support-clean on this split (`40/40` positives and
+  `0/80` bad), but the frozen method remains the predeclared union branch.
+
+Endpoint results, official Robomimic BC-RNN-GMM, 200 epochs, 50 valid-positive
+starts:
+
+- v0.2 selected union: `45/50` success (`0.900`).
+- Positive-only NN baseline: `19/50` success (`0.380`).
+- Weighted BC baseline: `37/50` success (`0.740`).
+
+Interpretation:
+
+- This is a clean first fresh Can split for the frozen v0.2 router: the selected
+  union row beats both completed strong same-backbone baselines by `+8/50`
+  versus weighted BC and `+26/50` versus positive-only NN.
+- It is still only one fresh Can split. The v0.2 claim remains unresolved until
+  Can split seeds `202` and `303` and the Lift selected weighted rows are run
+  under the same frozen protocol.
+- During this run, an accidental plain Robomimic train was started for weighted
+  BC and stopped before any epoch checkpoint. The completed weighted baseline
+  used `scripts/train_robomimic_official_weighted_sampler.py` with explicit demo
+  weights. The trainer now supports `--experiment-name` and absolute
+  `--output-dir` overrides to avoid future output collisions.
+
+## 2026-06-25: Second fresh v0.2 Can 40 endpoint split
+
+Ran the second predeclared fresh Can 40p/80b v0.2 gate on split seed `202`.
+
+Updated artifacts:
+
+- `results/final_paper_v02/tables/v02_fresh_router_support_REPORT.md`
+- `results/final_paper_v02/tables/v02_fresh_can_endpoint_REPORT.md`
+- `results/final_paper_v02/README.md`
+- `results/final_paper_v02/ablations/v02_fresh_endpoint_200ep_can40/split202/positive_nn_risk_union_top40/eval_50ep/REPORT.md`
+- `results/final_paper_v02/per_seed/can_paired_pos40_bad80_split202_positive_only_nn_policy0/eval/REPORT.md`
+- `results/final_paper_v02/per_seed/can_paired_pos40_bad80_split202_weighted_bc_policy0/eval/REPORT.md`
+
+Support/router preflight:
+
+- Can 40p/80b split `202`: frozen router again chooses hard
+  `positive_nn_risk_union_top40`.
+- Union support selects `44` unlabeled demos: `39/40` hidden positives and
+  `5/80` hidden bad demos.
+- Positive-only NN top40 selects `35/40` hidden positives and `5/80` hidden bad
+  demos.
+- Risk-fusion top40 selects `38/40` hidden positives and `2/80` hidden bad
+  demos.
+
+Endpoint results, official Robomimic BC-RNN-GMM, 200 epochs, 50 valid-positive
+starts:
+
+- v0.2 selected union: `45/50` success (`0.900`).
+- Positive-only NN baseline: `40/50` success (`0.800`).
+- Weighted BC baseline: `33/50` success (`0.660`).
+
+Current completed fresh Can summary:
+
+- Split `101`: union `45/50`, weighted BC `37/50`, positive-only NN `19/50`.
+- Split `202`: union `45/50`, positive-only NN `40/50`, weighted BC `33/50`.
+- Pooled completed fresh Can rows: v0.2 union `90/100` versus best completed
+  per-split non-oracle baselines `77/100`.
+
+Interpretation:
+
+- The first fresh Can result replicated: the frozen v0.2 union branch is best
+  non-oracle on both completed fresh Can splits.
+- This is now meaningful Can evidence, but still not a full v0.2 methods gate:
+  Can seed `303` and the fresh Lift selected weighted rows remain required.
+
+## 2026-06-25: Third fresh v0.2 Can 40 endpoint split and completed Can gate
+
+Completed the third predeclared fresh Can 40p/80b v0.2 gate on split seed
+`303`, including the selected union branch and the two strongest same-backbone
+baselines.
+
+Updated artifacts:
+
+- `results/final_paper_v02/tables/v02_fresh_router_support_REPORT.md`
+- `results/final_paper_v02/tables/v02_fresh_can_endpoint_REPORT.md`
+- `results/final_paper_v02/README.md`
+- `results/final_paper_v02/ablations/v02_fresh_endpoint_200ep_can40/split303/positive_nn_risk_union_top40/eval_50ep/REPORT.md`
+- `results/final_paper_v02/per_seed/can_paired_pos40_bad80_split303_positive_only_nn_policy0/eval/REPORT.md`
+- `results/final_paper_v02/per_seed/can_paired_pos40_bad80_split303_weighted_bc_policy0/eval/REPORT.md`
+
+Support/router preflight:
+
+- Can 40p/80b split `303`: frozen router again chooses hard
+  `positive_nn_risk_union_top40`.
+- Union support selects `45` unlabeled demos: `40/40` hidden positives and
+  `5/80` hidden bad demos.
+- Across the three fresh Can splits, union support selects `119/120` hidden
+  positives and `19/240` hidden bad demos.
+
+Endpoint results, official Robomimic BC-RNN-GMM, 200 epochs, 50 valid-positive
+starts:
+
+- v0.2 selected union: `39/50` success (`0.780`).
+- Positive-only NN baseline: `36/50` success (`0.720`).
+- Weighted BC baseline: `25/50` success (`0.500`).
+
+Completed fresh Can 40p/80b gate:
+
+- Split `101`: union `45/50`, weighted BC `37/50`, positive-only NN `19/50`.
+- Split `202`: union `45/50`, positive-only NN `40/50`, weighted BC `33/50`.
+- Split `303`: union `39/50`, positive-only NN `36/50`, weighted BC `25/50`.
+- Pooled selected v0.2 union: `129/150`.
+- Best completed non-oracle baseline per split: `113/150`.
+
+Interpretation:
+
+- The frozen v0.2 hard-union branch is best non-oracle on all three fresh Can
+  splits, with margins `+8/50`, `+5/50`, and `+3/50`.
+- This clears the Can branch of the v0.2 fresh gate. It still does not by
+  itself clear the high-impact methods-paper gate because the fresh Lift
+  selected weighted rows remain required.
+
+## 2026-06-25: Fresh v0.2 Lift MG endpoint gate
+
+Completed the predeclared fresh Lift MG v0.2 gate on split seeds `101`, `202`,
+and `303`, using the frozen router branch and the strongest completed
+same-backbone baseline.
+
+Updated artifacts:
+
+- `results/final_paper_v02/tables/v02_fresh_router_support_REPORT.md`
+- `results/final_paper_v02/tables/v02_fresh_lift_endpoint_REPORT.md`
+- `results/final_paper_v02/tables/v02_fresh_gate_REPORT.md`
+- `results/final_paper_v02/README.md`
+- `results/final_paper_v02/per_seed/lift_mg_mg_sparse_split101_weighted_bc_policy0/eval/REPORT.md`
+- `results/final_paper_v02/per_seed/lift_mg_mg_sparse_split101_positive_only_nn_policy0/eval/REPORT.md`
+- `results/final_paper_v02/per_seed/lift_mg_mg_sparse_split202_weighted_bc_policy0/eval/REPORT.md`
+- `results/final_paper_v02/per_seed/lift_mg_mg_sparse_split202_positive_only_nn_policy0/eval/REPORT.md`
+- `results/final_paper_v02/per_seed/lift_mg_mg_sparse_split303_weighted_bc_policy0/eval/REPORT.md`
+- `results/final_paper_v02/per_seed/lift_mg_mg_sparse_split303_positive_only_nn_policy0/eval/REPORT.md`
+
+Support/router preflight:
+
+- Lift MG split `101`: frozen router chooses soft `weighted_bc`.
+- Lift MG split `202`: frozen router chooses soft `weighted_bc`.
+- Lift MG split `303`: frozen router chooses soft `weighted_bc`.
+- Across the three fresh Lift splits, weighted support includes all `828/828`
+  hidden-positive unlabeled demos and all `3432/3432` hidden-bad unlabeled
+  demos. This is expected for the soft branch and should be interpreted as
+  coverage, not purity.
+
+Endpoint results, official Robomimic BC-RNN-GMM, 200 epochs, 50 valid-positive
+starts:
+
+- Split `101`: selected weighted BC `31/50`, positive-only NN top160 `28/50`.
+- Split `202`: selected weighted BC `30/50`, positive-only NN top160 `25/50`.
+- Split `303`: selected weighted BC `19/50`, positive-only NN top160 `21/50`.
+
+Completed fresh Lift MG gate:
+
+- Pooled selected v0.2 weighted branch: `80/150`.
+- Best completed non-oracle baseline per split: `74/150`.
+- Per-split margins are `+3/50`, `+5/50`, and `-2/50`.
+- Combined with the completed fresh Can 40p/80b gate, v0.2 selected branches
+  reach `209/300` versus `187/300` for the best completed non-oracle baseline
+  per split.
+
+Interpretation:
+
+- The frozen v0.2 router correctly moves away from hard support on Lift-like
+  broad-coverage rows, and the selected weighted branch is modestly better in
+  aggregate than positive-only NN top160.
+- This is not a decisive algorithmic win. The Lift branch is essentially
+  router-selected weighted BC, and split `303` favors positive-only NN. The
+  paper should present this as precision/coverage branch-selection evidence,
+  with Can carrying the cleaner hard-union improvement.
+
+## 2026-06-25: v0.2 fresh gate integrated into manuscript
+
+Promoted the completed frozen v0.2 fresh Can+Lift gate into the standalone,
+ICLR-format, and Markdown manuscript drafts with cautious framing.
+
+Updated artifacts:
+
+- `paper/triage_bc_paper.tex`
+- `paper/iclr2026/main.tex`
+- `paper/triage_bc_draft.md`
+- `paper/MANUSCRIPT_CHECKLIST.md`
+- `paper/REPRODUCE_PAPER.md`
+- `paper/README.md`
+- `scripts/validate_paper_claim_numbers.py`
+- `scripts/validate_paper_structure.py`
+- `paper/triage_bc_paper.pdf`
+- `paper/iclr2026/main.pdf`
+
+Main manuscript changes:
+
+- Added a frozen v0.2 portfolio-router method subsection and a main-result
+  table for the fresh endpoint gate.
+- Added the fresh gate numbers: Can `129/150` versus `113/150`, Lift `80/150`
+  versus `74/150`, and combined selected branches `209/300` versus `187/300`.
+- Kept the language conservative: Can is the cleaner hard-union improvement;
+  Lift is a modest branch-selection result where the selected branch is
+  weighted BC and split `303` loses to positive-only NN.
+- Restored explicit guardrail wording that positive-only NN is strongest on the
+  original Can caveat rows and weighted BC is strongest on the original Lift
+  matrix.
+
+Validation:
+
+```bash
+make -C paper validate
+```
+
+The full paper gate passed. It regenerated the staged reports and figures,
+rebuilt both PDFs, validated claim numbers, validated structure and page
+boundaries, checked 103 unique artifact references, and ran the configured
+LaTeX log scans. The standalone PDF is now 17 pages. The ICLR-format PDF is 15
+pages, with conclusion on page 9, references on page 10, and appendix material
+starting on page 11.
+
+## 2026-06-25: v0.2 fresh gate paired-start uncertainty audit
+
+Added a cheap uncertainty audit for the completed frozen v0.2 fresh Can+Lift
+gate using existing endpoint `episode_metrics.csv` files. The audit groups
+repeated rollouts by `initial_demo_id`, compares the router-selected branch
+against the best completed non-oracle baseline within each split, and bootstraps
+split units plus paired validation initial states.
+
+Generated artifacts:
+
+- `scripts/summarize_v02_fresh_gate_uncertainty.py`
+- `results/final_paper_v02/tables/v02_fresh_gate_uncertainty.csv`
+- `results/final_paper_v02/tables/v02_fresh_gate_paired_initial_deltas.csv`
+- `results/final_paper_v02/tables/v02_fresh_gate_uncertainty_per_split.csv`
+- `results/final_paper_v02/tables/v02_fresh_gate_uncertainty_REPORT.md`
+
+Main audit read:
+
+- Can 40p/80b: selected hard union `129/150` versus best baselines `113/150`;
+  pooled delta `+0.107`; paired-bootstrap interval `[-0.033, 0.260]`; split
+  signs `+++`.
+- Lift MG: selected weighted branch `80/150` versus best baselines `74/150`;
+  pooled delta `+0.040`; paired-bootstrap interval `[-0.083, 0.178]`; split
+  signs `++-`.
+- Combined Can+Lift: selected branches `209/300` versus best baselines
+  `187/300`; pooled delta `+0.073`; paired-bootstrap interval
+  `[-0.022, 0.179]`; split signs `+++++-`.
+
+Interpretation:
+
+- The intervals all cross zero, so the v0.2 gate remains directional,
+  branch-selection evidence rather than a formal significance claim.
+- Can remains the clean hard-union improvement. Lift remains a modest
+  branch-selection result where the selected branch is weighted BC and one split
+  still favors positive-only NN.
+- Manuscript wording, the checklist, reproduction docs, and claim validators now
+  include this caution explicitly.
+
+Validation:
+
+```bash
+make -C paper validate
+```
+
+The full paper gate passed after regenerating all paper-facing reports and
+figures, rebuilding the standalone and ICLR PDFs, validating claim numbers,
+validating structure and page boundaries, checking 105 unique artifact
+references, and running the configured LaTeX log scans. The standalone PDF is
+17 pages. The ICLR-format PDF is 15 pages, with conclusion on page 9,
+references on page 10, and appendix material starting on page 11.

@@ -1,0 +1,2 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/final_paper/ablations/can_prefix_positive_endpoint_200ep/split202/prefix_bad_aware_state_top80/train/prefix_can_s202_prefix_bad_aware_state_top80_seed0_bc_rnn_e200/20260625061722/models/model_epoch_200.pth,model_epoch_200,0.86,0.86,150.92,50

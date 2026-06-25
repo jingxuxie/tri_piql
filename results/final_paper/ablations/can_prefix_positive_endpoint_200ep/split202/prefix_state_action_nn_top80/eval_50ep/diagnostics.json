@@ -1,0 +1,26 @@
+{
+  "split_path": "results/final_paper/ablations/can_prefix_positive_splits/split202/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "env_name": "PickPlaceCan",
+  "env_version": "1.5.1",
+  "eval_init_mode": "valid_positive_states",
+  "eval_initial_ids": [
+    "demo_23",
+    "demo_25",
+    "demo_47",
+    "demo_53",
+    "demo_91",
+    "demo_105",
+    "demo_109",
+    "demo_135",
+    "demo_151",
+    "demo_157"
+  ],
+  "eval_episodes": 50,
+  "eval_horizon": 400,
+  "seed": 0,
+  "device": "cuda",
+  "checkpoints": [
+    "/home/eston/tri-piql/results/final_paper/ablations/can_prefix_positive_endpoint_200ep/split202/prefix_state_action_nn_top80/train/prefix_can_s202_prefix_state_action_nn_top80_seed0_bc_rnn_e200/20260625062142/models/model_epoch_200.pth"
+  ]
+}

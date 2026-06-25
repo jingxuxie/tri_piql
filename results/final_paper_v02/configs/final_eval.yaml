@@ -1,0 +1,68 @@
+evaluation:
+  device: cuda
+  eval_init_mode: valid_positive_states
+  eval_episodes: 50
+  rollout_seed: 0
+  checkpoints:
+    - model_epoch_50.pth
+    - model_epoch_100.pth
+    - model_epoch_150.pth
+    - model_epoch_200.pth
+  fixed_budget_steps:
+    model_epoch_50.pth: 5000
+    model_epoch_100.pth: 10000
+    model_epoch_150.pth: 15000
+    model_epoch_200.pth: 20000
+  main_endpoint_checkpoint: model_epoch_200.pth
+  report_oracle_best_as_main: false
+
+task_horizons:
+  robomimic_can_paired: 400
+  robomimic_can_mg: 400
+  robomimic_lift_mg: 150
+  robomimic_square_policy_smoke: 500
+
+uncertainty:
+  primary_units:
+    - split_seed
+    - initial_state
+  report:
+    - mean
+    - standard_deviation
+    - paired_per_initial_state_difference
+    - pooled_binomial_interval_transparency
+    - bootstrap_confidence_interval_when_available
+  note: repeated_rollouts_from_same_initial_state_are_not_fully_independent
+
+final_test_protocol:
+  split_seeds:
+    - 11
+    - 22
+    - 33
+  primary_policy_seeds:
+    - 0
+  optional_policy_seed_extension:
+    - 1
+    - 2
+  use_same_valid_positive_initials_across_methods: true
+  use_same_rollout_seed_across_methods: true
+
+artifacts:
+  root: results/final_paper
+  required_per_run:
+    - config_json_or_yaml
+    - split_path
+    - split_seed
+    - policy_seed
+    - classifier_seed
+    - selected_demo_ids_or_demo_weights
+    - score_csv
+    - support_audit_csv
+    - hidden_label_audit_csv
+    - training_log
+    - checkpoint_paths
+    - rollout_metrics_csv
+    - per_episode_csv
+    - per_initial_state_csv
+    - report_markdown
+
