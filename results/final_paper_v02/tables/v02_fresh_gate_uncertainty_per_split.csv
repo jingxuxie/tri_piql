@@ -2,6 +2,10 @@ setting_label,split_seed,selected_method,selected_success,selected_episodes,best
 Can 40p/80b,101,positive_nn_risk_union_top40,45,50,weighted_bc,37,50,+0.160,+0.160
 Can 40p/80b,202,positive_nn_risk_union_top40,45,50,positive_only_nn,40,50,+0.100,+0.100
 Can 40p/80b,303,positive_nn_risk_union_top40,39,50,positive_only_nn,36,50,+0.060,+0.060
-Lift MG,101,weighted_bc,31,50,positive_only_nn,28,50,+0.060,+0.083
-Lift MG,202,weighted_bc,30,50,positive_only_nn,25,50,+0.100,+0.083
+Can 40p/80b,404,positive_nn_risk_union_top40,27,50,positive_only_nn,39,50,-0.240,-0.240
+Can 40p/80b,505,positive_nn_risk_union_top40,41,50,positive_only_nn,40,50,+0.020,+0.020
+Lift MG,101,weighted_bc,31,50,triage_bc,36,50,-0.100,+0.150
+Lift MG,202,weighted_bc,30,50,triage_bc,34,50,-0.080,-0.083
 Lift MG,303,weighted_bc,19,50,positive_only_nn,21,50,-0.040,-0.033
+Lift MG,404,weighted_bc,30,50,triage_bc,29,50,+0.020,-0.017
+Lift MG,505,weighted_bc,33,50,positive_only_nn,26,50,+0.140,+0.133

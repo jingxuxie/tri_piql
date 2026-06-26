@@ -35,45 +35,44 @@
 \maketitle
 
 \begin{abstract}
-Offline imitation datasets often mix scarce trusted successes, scarce known failures, and larger unlabeled logs. We study when failure demonstrations help as a score-to-support conversion problem: failures can calibrate a desirability score, but policy quality depends on converting scores into behavior-cloning support. \method{} learns a tri-signal state-action score, estimates hidden positive mass, and routes unlabeled data into hard support, soft weighting, or abstention. Controlled PointNav and targeted generated Robomimic Can diagnostics show explicit failures help when positives are incomplete, trusted positives under-cover the state distribution, or bad demos are action-conflicting near-neighbors. A frozen v0.2 portfolio reaches 209/300 fresh Can+Lift successes versus 187/300 for best per-split non-oracle baselines by choosing hard union on Can and weighted coverage on Lift. The evidence supports a focused conclusion: bad labels can calibrate useful support, but hidden-label-free conversion from scores to policy-training data remains the bottleneck, and strong positive-only and weighted baselines must remain first-class controls.
+Offline imitation datasets often mix scarce trusted successes, known failures, and larger unlabeled logs. We study failure demonstrations as a score-to-support conversion problem: labels can calibrate scores, but policy quality depends on converting scores into behavior-cloning support. \method{} learns tri-signal state-action scores and routes unlabeled data through hard support, soft weighting, or abstention. PointNav and generated Robomimic Can diagnostics show failures help under incomplete positives, coverage shift, and action-conflicting bad demos. On fresh Can+Lift, frozen v0.2 is barely positive overall: Can 197/250 versus 192/250, Lift 143/250 versus 146/250, combined 340/500 versus 338/500. The evidence points to support calibration as the bottleneck and keeps positive-only and weighted baselines first-class.
 \end{abstract}
 
 \section{Introduction}
 
-Offline imitation learning is often presented as a problem of cloning desirable demonstrations. In many practical settings, however, the available data is not a clean demonstration set. A user may have a handful of trusted successes, a handful of known failures, and a much larger log whose behavior is unlabeled and mixed. Some of that log may contain useful recoveries, alternate strategies, or broader state coverage; some may contain shortcuts, failed attempts, or actions that conflict with the desired behavior.
+Offline imitation learning is often presented as cloning desirable demonstrations, but practical logs are rarely clean. A user may have a few trusted successes, a few known failures, and a larger unlabeled mixed log. That log may contain useful recoveries and broader coverage, but also shortcuts, failed attempts, or actions that conflict with the desired behavior.
 
-The simplest responses are unsatisfactory. Cloning all available trajectories can reproduce harmful behavior. Cloning only the scarce successes can be high precision but low coverage. Softly weighting unlabeled trajectories by a learned desirability score can preserve coverage, but it can also keep too much action-conflicting bad behavior in the policy-training distribution. Hard filtering can remove bad trajectories, but it can also discard coverage that a sequence policy needs to solve the task.
+The simplest responses are unsatisfactory. Cloning all trajectories can reproduce harmful behavior. Cloning only trusted successes can be high precision but low coverage. Soft weighting can preserve coverage while retaining action-conflicting behavior; hard filtering can remove failures while discarding coverage a sequence policy needs.
 
-This paper studies the conversion step between score learning and policy learning. Given scarce successes, scarce failures, and a mixed unlabeled log, the central question is not merely whether a classifier can separate good from bad transitions. The central question is how its scores should become a policy-training distribution.
+We study the conversion step between score learning and policy learning: how should scores from scarce successes, scarce failures, and a mixed unlabeled log become a policy-training distribution?
 
-We propose \method{}, a score-calibrated behavior cloning framework. \method{} trains a state-action desirability classifier from labeled successes and failures, aggregates classifier probabilities into trajectory scores, estimates positive mass in the unlabeled log from labeled score anchors, and then routes the unlabeled data through a hidden-label-free support converter. The frozen v0.1 method uses hard adaptive mass-capped support, positive-minimum threshold support, and abstention for ambiguous high-mass score shapes. The frozen v0.2 portfolio adds an explicit hard-risk-union branch, a soft weighted branch, and stress abstention, chosen by score-derived mass and coverage features.
+\method{} trains a state-action desirability classifier from labeled successes and failures, aggregates probabilities into trajectory scores, estimates positive mass from labeled score anchors, and routes unlabeled data through a hidden-label-free support converter. Frozen v0.1 uses hard adaptive mass-capped support, positive-minimum threshold support, and abstention; frozen v0.2 adds hard-risk-union, soft weighted, and stress-abstention branches chosen by score-derived mass and coverage features.
 
-Our results support a narrower story than a full inverse-reward or inverse-Q claim. In controlled PointNav, where positive labels are only route prefixes and the unlabeled log contains hidden full routes mixed with trap shortcuts, adaptive score-gap support recovers useful hidden support and reaches perfect success under heavy contamination. In Robomimic \cite{mandlekar2021robomimic}, v0.1 reveals the precision/coverage failure modes: positive-only retrieval is strongest on the original Can 40p/80b matrix, while weighted BC is strongest on the original Lift MG matrix. The frozen v0.2 router then passes a fresh Can+Lift gate, reaching 209/300 selected-branch successes versus 187/300 for the best per-split non-oracle baselines. Can carries the cleaner improvement; Lift is a modest branch-selection result because v0.2 selects weighted BC and loses one split.
+The results are narrower than a full inverse-reward or inverse-Q claim. In PointNav, adaptive score-gap support recovers hidden full routes from prefix positives and trap shortcuts. In Robomimic \cite{mandlekar2021robomimic}, v0.1 exposes precision/coverage failures: positive-only retrieval is strongest on original Can 40p/80b, while weighted BC is strongest on original Lift MG. Frozen v0.2 remains barely positive on a five-split fresh Can+Lift gate, reaching 340/500 selected-branch successes versus 338/500 for best per-split non-oracle baselines. Can carries the cleaner hard-union result but has a severe split-404 reversal; Lift is negative against the completed per-split oracle.
 
 The contributions are:
 \begin{enumerate}[leftmargin=*]
-  \item We formalize offline imitation from scarce successes, scarce failures, and a contaminated unlabeled log as a score-to-support conversion problem.
-  \item We introduce \method{} v0.1, a hidden-label-free tri-signal support calibration baseline, and a frozen v0.2 portfolio router over hard union, soft weighting, and abstention.
-  \item We provide controlled PointNav and generated Robomimic Can diagnostics showing when explicit failures help: incomplete positives, action-conflicting near-neighbor failures, and scarce-positive coverage shift.
-  \item We report frozen Robomimic endpoint evidence and caveats: Can 40p/80b favors hard selected support, Lift MG favors weighted coverage, positive-only retrieval remains strong, and all claims are checked against artifact maps.
+  \item We formalize offline imitation from scarce successes, scarce failures, and a contaminated unlabeled log as score-to-support conversion.
+  \item We introduce \method{} v0.1 and a frozen v0.2 router over hard union, soft weighting, and abstention.
+  \item We provide PointNav and Robomimic diagnostics showing when failures help, and report frozen endpoint caveats checked against artifact maps.
 \end{enumerate}
 
 \section{Related Work}
 
 \paragraph{Imitation learning.}
-Behavior cloning is the standard supervised-learning baseline for imitation learning, but sequential prediction suffers when the learned policy visits states not represented in the demonstrations. Interactive methods such as DAgger address this by querying an expert on learner-induced states \cite{ross2011dagger}, while broader surveys emphasize the role of dataset coverage and distribution shift in imitation learning \cite{osa2018algorithmic}. \method{} remains offline: it assumes no expert queries, no online data collection, and no online reward optimization.
+Behavior cloning is the standard supervised baseline for imitation learning, but sequential prediction suffers when the policy visits states outside the demonstrations. Interactive methods such as DAgger query experts on learner-induced states \cite{ross2011dagger}, while broader surveys emphasize coverage and distribution shift \cite{osa2018algorithmic}. \method{} remains offline: no expert queries, online collection, or online reward optimization.
 
 \paragraph{Inverse reinforcement learning and adversarial imitation.}
-Classical inverse reinforcement learning infers a reward that explains expert behavior \cite{ng2000irl}, with apprenticeship learning and maximum-entropy variants providing influential formulations \cite{abbeel2004apprenticeship,ziebart2008maxent}. Adversarial imitation methods such as GAIL instead match expert occupancy through an adversarial objective \cite{ho2016gail}. These approaches usually use the inferred reward, discriminator, or occupancy objective to extract a policy through additional optimization. The current paper should not be read as validating a full inverse-Q robotics method. The robotics evidence uses a score-calibrated data converter followed by official Robomimic BC-RNN-GMM policy learning.
+Classical IRL infers rewards explaining expert behavior \cite{ng2000irl}, including apprenticeship and maximum-entropy variants \cite{abbeel2004apprenticeship,ziebart2008maxent}; GAIL instead matches expert occupancy adversarially \cite{ho2016gail}. Those methods usually extract a policy through additional optimization. This paper does not validate a full inverse-Q robotics method: the robotics evidence uses a score-calibrated data converter followed by official Robomimic BC-RNN-GMM policy learning.
 
 \paragraph{Offline RL and advantage-weighted imitation.}
-Offline RL benchmarks and algorithms study policy improvement from static datasets with no environment interaction \cite{fu2020d4rl}. Conservative Q-learning regularizes value estimates to avoid unsupported action overestimation \cite{kumar2020cql}. IQL extracts policies through advantage-weighted behavior cloning after value learning \cite{kostrikov2022iql}; AWR and AWAC also use weighted maximum-likelihood policy updates over off-policy data \cite{peng2019awr,nair2020awac}. \method{} differs in its supervision: it uses scarce positive and negative demonstration labels to calibrate support from a mixed log, rather than using task rewards to estimate advantages.
+Offline RL studies policy improvement from static datasets \cite{fu2020d4rl}; CQL regularizes unsupported values \cite{kumar2020cql}, while IQL, AWR, and AWAC extract policies through weighted cloning-style updates \cite{kostrikov2022iql,peng2019awr,nair2020awac}. \method{} instead uses scarce positive and negative labels to calibrate support from a mixed log, rather than task rewards to estimate advantages.
 
 \paragraph{Positive-unlabeled and data-selection views.}
-The problem is related to positive-unlabeled learning, where classifiers are learned from trusted positives and a mixed unlabeled pool \cite{elkan2008positive}. Our setting adds explicit negative demonstrations and a downstream policy-learning objective. Recent work on data quality in imitation learning also shows that which demonstrations are included can matter as much as the cloning objective itself \cite{belkhale2023dataquality}. The key empirical lesson here is more specific: classification quality is insufficient by itself because a selected support set must also contain the coverage needed by the policy learner.
+The setting is related to positive-unlabeled learning from trusted positives and a mixed unlabeled pool \cite{elkan2008positive}, but adds scarce negatives and a downstream policy objective. Data-quality work in imitation learning shows that which demonstrations are included can matter as much as the cloning objective \cite{belkhale2023dataquality}. Here, classification quality is insufficient unless selected support also covers the policy learner's needed states.
 
 \paragraph{Robotics demonstration quality and sequence backbones.}
-Robomimic studies offline robot manipulation from human demonstrations and emphasizes controlled data, architectures, and evaluation protocols for sequence imitation \cite{mandlekar2021robomimic}. Our robotics experiments inherit this lesson by using the same official BC-RNN-GMM backbone across methods and by fixing endpoint checkpoints. The contribution is therefore not a new robot policy architecture. It is the calibrated conversion of scarce positive and failure labels into the support used by a standard sequence cloning policy, with positive-only retrieval and all-positive oracles included as necessary controls.
+Robomimic emphasizes controlled data, architectures, and evaluation protocols for sequence imitation \cite{mandlekar2021robomimic}. We use the same official BC-RNN-GMM backbone and fixed endpoint checkpoints across methods; the contribution is not a new robot architecture, but calibrated conversion of scarce positive and failure labels into policy-training support, with positive-only retrieval and all-positive oracles as controls.
 
 \section{Problem Setting}
 
@@ -164,7 +163,7 @@ The router does not choose weighted BC as the main method branch in v0.1. Weight
 
 \subsection{Frozen v0.2 Portfolio Router}
 
-After the v0.1 diagnostics, we froze a small v0.2 portfolio router before fresh Can 40p/80b and Lift MG split seeds 101, 202, and 303. It reuses the score model and routes by two unlabeled score-shape features: estimated positive mass $\hat{m}$ and the count above the labeled-positive minimum score. Very large mass and count trigger stress abstention; moderate mass/count selects classifier-probability weighted BC with weights clipped below by 0.05; otherwise the router selects hard positive-NN/risk-union support. The hard branch unions positive-only nearest-neighbor support with a rank-fusion support set combining positive-neighbor rank and bad-aware action-risk rank. Branch selection uses no hidden unlabeled labels, and the result is a portfolio converter rather than a claim that one fixed threshold is universally best.
+After the v0.1 diagnostics, we froze a small v0.2 portfolio router before fresh Can 40p/80b and Lift MG split seeds 101, 202, 303, 404, and 505. It reuses the score model and routes by two unlabeled score-shape features: estimated positive mass $\hat{m}$ and the count above the labeled-positive minimum score. Very large mass and count trigger stress abstention; moderate mass/count selects classifier-probability weighted BC with weights clipped below by 0.05; otherwise the router selects hard positive-NN/risk-union support. The hard branch unions positive-only nearest-neighbor support with a rank-fusion support set combining positive-neighbor rank and bad-aware action-risk rank. Branch selection uses no hidden unlabeled labels, and the result is a portfolio converter rather than a claim that one fixed threshold is universally best.
 
 \subsection{Algorithmic Summary}
 
@@ -202,7 +201,7 @@ The strongest controlled setting uses only two positive prefixes and two bad sho
 
 \subsection{Robomimic Frozen Endpoint Matrix}
 
-Robomimic experiments use low-dimensional official BC-RNN-GMM policies trained under the frozen method contract. Final endpoint evaluation uses 50 held-out validation-positive rollouts per split and fixed epoch-200 checkpoints. The v0.1 primary frozen rows are Can 40p/80b and Lift MG, each over split seeds 11, 22, and 33. The v0.2 fresh gate uses split seeds 101, 202, and 303 for Can 40p/80b and Lift MG. Can 20p/80b, Can 80p/80b, and Can MG are diagnostic rows rather than complete main claims.
+Robomimic experiments use low-dimensional official BC-RNN-GMM policies trained under the frozen method contract. Final endpoint evaluation uses 50 held-out validation-positive rollouts per split and fixed epoch-200 checkpoints. The v0.1 primary frozen rows are Can 40p/80b and Lift MG, each over split seeds 11, 22, and 33. The v0.2 fresh gate uses split seeds 101, 202, 303, 404, and 505 for Can 40p/80b and Lift MG. Can 20p/80b, Can 80p/80b, and Can MG are diagnostic rows rather than complete main claims.
 
 The key baselines are all-demo BC, classifier-probability weighted BC, positive-only NN, all-positive oracle, and classifier top-k support sweeps. Weighted BC is treated as a strong baseline, not as a strawman. Positive-only NN is also a strong baseline and is often the best non-oracle method on Can.
 
@@ -260,24 +259,47 @@ The primary endpoint uncertainty summary reinforces this cautious interpretation
 
 \subsection{Fresh v0.2 Portfolio Gate}
 
-Table~\ref{tab:v02-gate} summarizes the frozen v0.2 fresh-split gate. The router chooses hard positive-NN/risk-union support on Can 40p/80b and wins all three fresh splits; it chooses soft weighted BC on Lift MG and wins two of three, losing split 303 to positive-only NN. The combined gate is 209/300 selected-branch successes versus 187/300 for the best completed non-oracle baseline per split, so the interpretation is branch selection rather than universal hard-support dominance.
+Table~\ref{tab:v02-gate} summarizes the frozen v0.2 fresh-split gate. The router chooses hard positive-NN/risk-union support on Can and wins four of five splits, with a large split-404 loss. It chooses weighted BC on Lift and wins two of five comparisons; completed v0.1 hard support ties weighted in aggregate, but the per-split Lift oracle is higher. Combined, v0.2 reaches 340/500 successes versus 338/500 for the best completed non-oracle baseline per split, so the interpretation is branch selection rather than universal hard-support dominance.
 
 \begin{table}[t]
   \centering
   \caption{Frozen v0.2 fresh endpoint gate. Counts are successes over 50 endpoint rollouts per split at epoch 200.}
   \label{tab:v02-gate}
+  \resizebox{\linewidth}{!}{%
   \begin{tabular}{lccc}
     \toprule
     Setting & v0.2 selected branch & Best baseline per split & Split margins \\
     \midrule
-    Can 40p/80b & 129/150 & 113/150 & +8/50, +5/50, +3/50 \\
-    Lift MG & 80/150 & 74/150 & +3/50, +5/50, -2/50 \\
-    Combined & 209/300 & 187/300 & 5 wins / 1 loss \\
+    Can 40p/80b & 197/250 & 192/250 & +8/50, +5/50, +3/50, -12/50, +1/50 \\
+    Lift MG & 143/250 & 146/250 & -5/50, -4/50, -2/50, +1/50, +7/50 \\
+    Combined & 340/500 & 338/500 & 6 wins / 4 losses \\
     \bottomrule
-  \end{tabular}
+  \end{tabular}%
+  }
 \end{table}
 
-Paired initial-state bootstraps remain descriptive and cross zero for Can ($[-0.033,0.260]$), Lift ($[-0.083,0.178]$), and the combined gate ($[-0.022,0.179]$). The result is therefore a cautious fresh-gate result: Can provides the hard-union improvement, while Lift mainly shows the router selecting broad weighted coverage when hard support is coverage-limited.
+Paired initial-state bootstraps cross zero for Can ($[-0.144,0.168]$), Lift ($[-0.083,0.140]$), and combined ($[-0.074,0.120]$). This is not a formal significance claim: Can provides a hard-union improvement with one severe reversal, while Lift shows weighted coverage and hard support tied in aggregate but neither dominates per split.
+
+Table~\ref{tab:regime-probes} summarizes the generated Can regime probes. These rows are not default Robomimic benchmark rows; they are controlled split constructions that isolate when explicit failures add information beyond matched positive-only retrieval. Hidden labels are used to construct and audit the split, not to select support inside the bad-aware or positive-only rules.
+
+\begin{table}[t]
+  \centering
+  \scriptsize
+  \setlength{\tabcolsep}{3pt}
+  \caption{Generated Can regime-probe summary. Counts are 50 endpoint rollouts per split over seeds 101/202/303; support entries are selected hidden-positive/hidden-bad demos for bad-aware versus matched positive-only retrieval.}
+  \label{tab:regime-probes}
+  \resizebox{\linewidth}{!}{%
+  \begin{tabular}{lcccc}
+    \toprule
+    Probe & Bad-aware endpoint & Positive-only endpoint & Delta & Support selected (pos/bad) \\
+    \midrule
+    Hard-negative Can & 104/150 & 91/150 & +13/150 & 113/7 vs 70/50 \\
+    Coverage-shift Can & 120/150 & 103/150 & +17/150 & 118/2 vs 105/15 \\
+    Prefix-positive Can & 119/150 & 6/150 & +113/150 & 195/45 vs 37/203 \\
+    \bottomrule
+  \end{tabular}%
+  }
+\end{table}
 
 \subsection{Precision/Coverage Tradeoff}
 
@@ -313,15 +335,15 @@ The results can be summarized by two audit-only quantities: hidden-positive reca
 
 The main empirical lesson is that tri-signal labels are useful, but their value is mediated by support conversion. A classifier score is not the policy. A high-purity selected set is not always enough. A broad weighted set is not always safe. Different tasks occupy different parts of the precision/coverage landscape.
 
-The strongest positive result is not universal dominance. It is that hard selected support can improve over weighted BC and all-demo cloning on Can contamination, and that a frozen v0.2 portfolio can choose hard union on fresh Can while switching to weighted coverage on fresh Lift. Controlled PointNav and generated Can diagnostics explain why scarce bad labels can be mechanistically valuable; the limitation is that positive-only NN is often stronger on Can and weighted BC remains the right branch on Lift-like broad-coverage rows.
+The strongest positive result is not universal dominance. It is a conditional pattern: hard selected support can improve over weighted BC and all-demo cloning on Can contamination and generated action-conflict or coverage-shift probes, while frozen v0.2 is only barely positive overall by choosing hard union on fresh Can and weighted coverage on fresh Lift. Controlled PointNav and generated Can diagnostics explain why scarce bad labels can be mechanistically valuable; the limitation is that positive-only NN is often stronger on Can, weighted BC remains the right branch on Lift-like broad-coverage rows, and generated split constructions are not intended to replace default benchmark rows.
 
-TRIAGE-BC is a score-calibrated imitation method using a strong BC-RNN-GMM backbone, not a validated inverse-Q robotics method. Positive-only NN is the strongest non-oracle row on the original Can 40p/80b matrix and completed Can 20p/80b diagnostic; Weighted BC is strongest on the original Lift MG matrix and selected by v0.2 on fresh Lift. Can MG remains a stress diagnostic where abstention is more honest than claiming success on ambiguous high-score plateaus.
+TRIAGE-BC is a score-calibrated imitation method using a strong BC-RNN-GMM backbone, not a validated inverse-Q robotics method. Positive-only NN is the strongest non-oracle row on the original Can 40p/80b matrix and completed Can 20p/80b diagnostic; Weighted BC is strongest on the original Lift MG matrix and selected by v0.2 on fresh Lift. The fresh v0.2 gate is a selected-vs-strong-baseline/v0.1 audit; optional fresh all-demo/all-positive diagnostic rows remain unrun and are not part of the claimed fresh leaderboard. Can MG remains a stress diagnostic where abstention is more honest than claiming success on ambiguous high-score plateaus.
 
 The evaluation uses 50 endpoint rollouts per split. This is stronger than earlier 10-episode screens, but repeated rollouts from the same validation-positive start pool are not fully independent. Claims should report split-level and endpoint-count context.
 
 \section{Conclusion}
 
-\method{} reframes offline imitation from scarce successes, scarce failures, and mixed logs as a score-to-support conversion problem. The results show that tri-signal scores can recover useful hidden support, that hard support can beat soft weighting in some contaminated settings, and that a frozen portfolio router can improve a fresh Can+Lift gate by selecting different support conversions in different regimes. They also show that strong no-bad-label retrieval and broad weighted coverage are essential baselines. The central claim is therefore precise: support calibration is the bottleneck, and reliable hidden-label-free conversion from scores to policy-training data is the next algorithmic step.
+\method{} reframes offline imitation from scarce successes, scarce failures, and mixed logs as a score-to-support conversion problem. The results show that tri-signal scores can recover useful hidden support, that hard support can beat soft weighting in some contaminated settings, and that a frozen portfolio router is barely positive on a fresh Can+Lift gate by selecting different support conversions in different regimes. They also show that strong no-bad-label retrieval and broad weighted coverage are essential baselines. The central claim is therefore precise: support calibration is the bottleneck, and reliable hidden-label-free conversion from scores to policy-training data is the next algorithmic step.
 
 \clearpage
 \bibliographystyle{iclr2026_conference}
@@ -353,8 +375,8 @@ A schematic excess-risk decomposition for behavior cloning on $\Dpos\cup S_t$ is
 \end{equation}
 for task-dependent constants $A$ and $C$. The first term favors larger selected support when useful state-action coverage is scarce. The second term favors more selective support when admitted bad trajectories contain actions that conflict with the desired behavior. The optimal support threshold is therefore not necessarily the purest threshold: when the coverage term dominates, admitting additional imperfect trajectories can still improve policy learning.
 
-\paragraph{Marginal support criterion.}
-The decomposition also gives a simple one-step test for whether adding another unlabeled trajectory should help. Let $m_t=|S_t|$, $g_t=r_tN_g$, and $b_t=f_tN_b$. Suppose a candidate trajectory is useful with probability $q$ under the score model and harmful with probability $1-q$. Under Eq.~\ref{eq:hard-risk-view}, adding it decreases the bound whenever
+\paragraph{Proposition 1 (coverage-contamination criterion).}
+Under the mixture model above, adding an unlabeled trajectory should improve the hard-selector bound exactly when its marginal coverage gain exceeds its normalized marginal contamination cost. Let $m_t=|S_t|$, $g_t=r_tN_g$, and $b_t=f_tN_b$. If a candidate trajectory is useful with score-implied probability $q$ and harmful with probability $1-q$, then Eq.~\ref{eq:hard-risk-view} decreases whenever
 \begin{equation}
   A\left(
   \frac{1}{\sqrt{n_+ + g_t}} -
@@ -367,7 +389,7 @@ The decomposition also gives a simple one-step test for whether adding another u
   \right).
   \label{eq:marginal-support}
 \end{equation}
-The left side is the expected coverage gain; the right side is the expected increase in bad-action mass after normalizing by the enlarged training set. This inequality makes the empirical reversals concrete. A pure but tiny support can be suboptimal when the left side remains large for moderately risky coverage trajectories. Conversely, hard filtering wins when extra trajectories mostly increase the right side because they are action-conflicting failures.
+The left side is the expected coverage gain; the right side is the expected increase in bad-action mass after normalizing by the enlarged training set. This proposition makes the empirical reversals concrete. A pure but tiny support can be suboptimal when the left side remains large for moderately risky coverage trajectories. Conversely, hard filtering wins when extra trajectories mostly increase the right side because they are action-conflicting failures.
 
 For a weighted sampler with trajectory weights $w(\tau)$, the analogous view replaces selected count with effective sample size and bad count with bad weight mass:
 \begin{equation}
@@ -477,21 +499,22 @@ The appendix diagnostics are:
   \item \textbf{Controlled PointNav label efficiency.} With only 2 positive route-prefix demos and 2 bad shortcut demos, gap-demo BC reaches 1.000 success at 50/75/90/95\% bad unlabeled data. With 5 positives and 1/2/5 labeled bad shortcuts, the selected support has 1.000 demo purity, 1.000 transition purity, and 0 hidden-bad demos in every row. The 1 labeled bad shortcut and 5 labeled bad shortcut settings both reach 1.000 gap-demo success at every tested contamination level; the 2-bad setting remains near-perfect but dips to 0.973 and 0.993 at 90\% and 95\% bad data. This supports label efficiency for the controlled mechanism, not a claim that bad labels are necessary on Can.
   \item \textbf{Can 20p/80b.} The three-split support audit plus two completed endpoint splits show positive-only NN at 54/100 endpoint successes, \method{} at 46/100, and weighted BC at 18/50 on split 11. \method{} recovers more hidden positives than positive-only NN, 54/60 versus 49/60, but admits many more hidden bad demos, 69/240 versus 11/240.
   \item \textbf{Can 80p/80b.} The three-split support audit plus split-33 endpoint show positive-only NN at 49/50 and \method{} at 43/50. Even when \method{} selects purer split-33 support, positive-only retrieval keeps better coverage and wins the endpoint.
-  \item \textbf{Can MG.} The branch-proxy diagnostic shows that original Can MG is rollout-best with weighted BC at 0.333, while simple positive and negative likelihood proxies choose all-positive support at 0.200. These proxies do not replace abstention because they miss coverage-sensitive rollout quality.
+  \item \textbf{Can MG.} The branch-proxy diagnostic shows that original Can MG is rollout-best with weighted BC at 0.333, while simple positive and negative likelihood proxies choose all-positive support at 0.200. The active-abstention audit marks original/shuffled MG as stress-abstain with mass/count 1947.9/1025.7 and 1466.3/515.7; assigned rows average 0.700, while abstained rows top out at 0.333. These proxies do not replace abstention because they miss coverage-sensitive rollout quality.
+  \item \textbf{Policy-quality proxy no-go.} The consolidated proxy table tests positive likelihood, positive-minus-negative likelihood, negative rejection, support purity, hidden-positive recall, coverage, and initial/transition coverage against endpoint winners. Deployable proxy attempts match endpoint winners in only 2/11 rows, while audit-only support rows match 3/6. This motivates treating policy-quality prediction as the open problem rather than promoting any single support score.
+  \item \textbf{Hard-union component ablation.} On Can 40p/80b, positive-only NN top40 reaches 108/150, risk-fusion top40 reaches 73/100 on its two evaluated splits, and the positive-NN/risk union selects 119/120 hidden positives with 16/240 hidden bad demos and reaches 116/150. Classifier-only top40 is support-only and dominated by positive-only support, weighted BC reaches 90/150, and v0.1 adaptive masscap reaches 99/150. The union helps by preserving the positive-only anchor while adding risk-derived coverage; its pooled gain comes from splits 22 and 33, while split 11 still favors positive-only NN.
+  \item \textbf{Failure-mode initial-state audit.} Three paired Can 40p/80b initial states compare positive-only NN, weighted BC, hard union, and all-demo BC. The audit shows a union rescue on split 33 / demo 105 (union 5/5 versus positive-only 0/5), a positive-anchor regression on split 11 / demo 39 (positive-only 5/5 versus union 0/5), and a soft-pool rescue on split 33 / demo 99 (weighted 5/5 versus union 1/5). Grasp and loop/miss fields are success and horizon-length proxies, not video annotations.
   \item \textbf{Hard-negative Can.} A generated three-split action-conflict diagnostic reverses the positive-only caveat: the bad-aware hybrid reaches 104/150 endpoint successes and selects 113 hidden positives with only 7 hidden bad demos, while state-action positive-NN top40 reaches 91/150 and selects 70 hidden positives with 50 hidden bad demos. This supports explicit bad-label utility under near-neighbor action conflict, not a claim of primary benchmark dominance.
+  \item \textbf{Hard-negative Lift.} A generated three-split non-Can action-conflict diagnostic is directionally consistent but low-success: bad-aware proxy top40 reaches 15/150 and selects 82/120 hidden positives with 38/240 hidden bad demos, while state-action positive-NN top40 reaches 5/150 and selects 12/120 hidden positives with 108/240 hidden bad demos. Aggregate: 82 hidden positives and 38 hidden bad versus 12 hidden positives and 108 hidden bad. This supports mechanism transfer beyond Can, but remains exploratory rather than a primary benchmark endpoint claim.
   \item \textbf{Coverage-shift Can.} A generated three-split scarce-positive coverage-shift diagnostic gives the bad-aware-heavy hybrid 120/150 endpoint successes and selects 118 hidden positives with only 2 hidden bad demos, while state-action positive-NN top40 reaches 103/150 and selects 105 hidden positives with 15 hidden bad demos. This supports explicit bad-label utility when trusted positives under-cover initial conditions, not a primary benchmark dominance claim.
   \item \textbf{Prefix-positive Can.} In a generated three-split diagnostic where trusted positives are early successful-demo prefixes and full demos are unlabeled, prefix bad-aware state top80 reaches 119/150 and selects 195 hidden positives with 45 hidden bad, versus prefix state-action positive-NN top80 at 6/150 with 37 hidden positives and 203 hidden bad. This mirrors PointNav and is diagnostic only.
+  \item \textbf{Prefix-length robustness.} A support-only sweep varies the generated Can prefix-positive label length. At fixed top80 support, bad-aware state support clears matched prefix positive-NN for short/default/long prefixes, with hidden-positive recall deltas +0.400/+0.658/+0.737 and hidden-bad admission deltas -0.400/-0.658/-0.737. This strengthens the generated-probe mechanism story but is not a new endpoint result.
   \item \textbf{Action-risk v0.2 no-go.} A support-side action-risk family can dominate positive-only support labels, but endpoint checks show that support purity alone is still not a policy-quality proxy. On Can 40p/80b split 11, positive-NN/risk fusion selects 39 hidden positives and 1 hidden bad demo but reaches 0.820 success, below positive-only NN at 0.840. On split 22, it selects 40 hidden positives and 0 hidden bad demos but reaches 0.640, below positive-only NN at 0.760. This rejects the current action-risk candidate as \method{} v0.2 and motivates abstention or stronger policy-quality prediction.
   \item \textbf{Lift MG classifier top160.} The fixed classifier-score top160 ablation reaches 68/150 pooled successes, below \method{} at 74/150, positive-only NN at 82/150, and weighted BC at 93/150. A broader high-purity classifier top-k rule does not rescue Lift; policy quality needs more than support purity.
 \end{itemize}
 
-The diagnostic rows are consistent with the main claim. Bad labels can improve score calibration and hard support can beat soft weighting on the completed Can 40p/80b matrix, but the current converter is not on the best Can precision/coverage frontier. Positive-only retrieval is cleaner on Can 20p/80b and stronger on the Can 80p/80b endpoint diagnostic. The generated hard-negative, coverage-shift, and prefix-positive diagnostics show settings where explicit failures help beyond positive-only retrieval, while Can MG shows that simple branch-quality proxies are inadequate and Lift MG shows that high-purity support can still under-cover the policy learner.
+The diagnostic rows are consistent with the main claim. Bad labels can improve score calibration and hard support can beat soft weighting on the completed Can 40p/80b matrix, but the current converter is not on the best Can precision/coverage frontier. Positive-only retrieval is cleaner on Can 20p/80b and stronger on the Can 80p/80b endpoint diagnostic. The generated hard-negative, coverage-shift, and prefix-positive diagnostics show settings where explicit failures help beyond positive-only retrieval; the Lift hard-negative extension shows directional non-Can transfer but with low absolute success. Can MG shows that simple branch-quality proxies are inadequate, and Lift MG shows that high-purity support can still under-cover the policy learner.
 
 \section{Reproducibility and Artifact Map}
-
-This ICLR-format source uses the official ICLR 2026 style as a provisional
-submission shell. Refresh the style files when the target-year ICLR template is
-published.
 
 The paper-facing method contract is fixed in \path{../../METHOD_FREEZE.md}, with
 run and evaluation settings in \path{../../configs/final_method.yaml} and
@@ -501,10 +524,10 @@ Primary Robomimic rows use split seeds 11, 22, and 33, policy seed 0, fixed
 epoch-200 checkpoints, and 50 held-out validation-positive endpoint rollouts per
 split. Key report paths are:
 \begingroup
-\footnotesize
+\scriptsize
 \sloppy
 \raggedright
-  \begin{itemize}[leftmargin=*]
+  \begin{itemize}[leftmargin=*,nosep]
   \item Mechanism and primary matrix:
         \path{../../results/final_paper/tables/pointnav_controlled_mechanism_REPORT.md};
         \path{../../results/final_paper/tables/robotics_primary_endpoint_matrix_REPORT.md}.
@@ -519,7 +542,13 @@ split. Key report paths are:
         \path{../../results/final_paper/tables/bad_label_control_summary_REPORT.md};
         \path{../../results/final_paper/ablations/hard_negative_can_endpoint_200ep/REPORT.md};
         \path{../../results/final_paper/ablations/can_coverage_shift_endpoint_200ep/REPORT.md};
-        \path{../../results/final_paper/tables/can_prefix_positive_diagnostic_REPORT.md}.
+        \path{../../results/final_paper/tables/can_prefix_positive_diagnostic_REPORT.md};
+        \path{../../results/final_paper/tables/policy_quality_proxy_no_go_REPORT.md};
+        \path{../../results/final_paper/tables/hard_union_component_ablation_REPORT.md};
+        \path{../../results/final_paper/tables/failure_mode_initial_states_REPORT.md};
+        \path{../../results/final_paper/tables/can_prefix_length_robustness_REPORT.md};
+        \path{../../results/final_paper/ablations/lift_hard_negative_endpoint_200ep/REPORT.md};
+        \path{../../results/final_paper/ablations/lift_hard_negative_action_conflict_REPORT.md}.
 \end{itemize}
 \endgroup
 

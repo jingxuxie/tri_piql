@@ -5,7 +5,7 @@
   "split_seed": 101,
   "method": "triage_bc",
   "policy_seed": 0,
-  "stage": "prepare",
+  "stage": "all",
   "dataset_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
   "split_path": "results/final_paper_v02/splits/can_paired_pos40_bad80_split101/split_indices.json",
   "score_dir": "results/final_paper_v02/score_diagnostics/can_paired_pos40_bad80_split101_policy0",

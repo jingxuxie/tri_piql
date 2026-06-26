@@ -1,0 +1,3 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/final_paper/ablations/lift_hard_negative_endpoint_smoke/split101/bap40/train/lift_hn_s101_bap40_seed0_bc_rnn_e50/20260625185045/models/model_epoch_50.pth,model_epoch_50,0.2,0.2,127.8,10
+/home/eston/tri-piql/results/final_paper/ablations/lift_hard_negative_endpoint_smoke/split101/sapn40/train/lift_hn_s101_sapn40_seed0_bc_rnn_e50/20260625184921/models/model_epoch_50.pth,model_epoch_50,0.1,0.1,141.4,10

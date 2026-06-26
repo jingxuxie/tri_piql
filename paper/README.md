@@ -19,6 +19,8 @@ Current files:
   the current paper package from staged evidence.
 - `../paper/MANUSCRIPT_CHECKLIST.md`: claim, figure, appendix, validation, and
   open-decision checklist for template conversion.
+- `../paper/REVIEWER_CLAIM_SUMMARY.md`: one-page reviewer-facing claim,
+  evidence, and limitation summary.
 - `../scripts/validate_paper_artifact_refs.py`: checks that draft artifact
   references resolve to local files.
 - `../scripts/validate_paper_claim_numbers.py`: checks quoted manuscript
@@ -26,6 +28,8 @@ Current files:
   caveats.
 - `../scripts/validate_paper_structure.py`: checks figure-label order,
   figure-map rows, PDF page counts, and ICLR page-boundary markers.
+- `../scripts/validate_method_freeze_v02.py`: checks that `METHOD_FREEZE_V02.md`
+  matches the v0.2 router implementation and staged router-support artifacts.
 - `../scripts/summarize_primary_endpoint_paired_bootstrap.py`: regenerates the
   paired initial-state bootstrap audit for the primary endpoint matrix.
 - `../scripts/plot_primary_endpoint_paired_deltas.py`: regenerates the paired
@@ -56,10 +60,17 @@ Current files:
   Can+Lift endpoint gate and router support audit.
 - `../scripts/summarize_v02_fresh_gate_uncertainty.py`: regenerates the paired
   initial-state uncertainty audit for the frozen v0.2 fresh gate.
+- `../scripts/summarize_v02_fresh_baseline_coverage.py`: regenerates the
+  evidence-accounting audit that separates required fresh-gate rows from
+  optional all-demo/all-positive diagnostics.
+- `../scripts/summarize_submission_readiness_audit.py`: regenerates the
+  acceptance-readiness audit from staged paper artifacts.
 
 Authoritative supporting files:
 
 - `../PAPER_DRAFT_OUTLINE.md`: section plan, figure map, and main numbers.
+- `../FINAL_CLAIM_CONTRACT.md`: final claim boundary for the current paper
+  package.
 - `../METHOD_FREEZE.md`: frozen TRIAGE-BC v0.1 method contract.
 - `../METHOD_FREEZE_V02.md`: frozen TRIAGE-BC v0.2 portfolio-router contract.
 - `../results/PAPER_CLAIM_PACKAGE.md`: current claim package and caveats.
@@ -75,7 +86,7 @@ Status:
   submission-format shell; refresh these files if the target venue or target
   year changes. The ICLR author guide used for this provisional shell is
   https://iclr.cc/Conferences/2026/AuthorGuide.
-- The current standalone compile is 17 pages.
+- The current standalone compile is 18 pages.
 - The current ICLR compile is 15 pages total. References begin on page 10 and
   the appendix begins on page 11, so the main text fits the ICLR 2026 9-page
   submission main-text budget.
@@ -94,14 +105,16 @@ make -C paper validate
 regenerates the paired-bootstrap audit, master evidence tables,
 candidate-family audit, hybrid support audit, hard-negative Can support
 diagnostic, hard-negative endpoint-check summaries, coverage-shift diagnostics,
-prefix-positive diagnostic artifacts, the v0.2 fresh Can+Lift gate, and the
-v0.2 fresh-gate uncertainty audit, runs the Python validators, and fails if the
+  prefix-positive diagnostic artifacts, the v0.2 fresh Can+Lift gate, the v0.2
+  fresh-gate uncertainty audit, the v0.2 router-regret table, and the
+  submission-readiness audit, runs the
+Python validators including the v0.2 method-freeze check, and fails if the
 configured LaTeX log scans find matches.
 
 The expanded manual command sequence is:
 
 ```bash
-python -m py_compile scripts/validate_paper_artifact_refs.py scripts/validate_paper_claim_numbers.py scripts/validate_paper_structure.py scripts/summarize_primary_endpoint_paired_bootstrap.py scripts/plot_primary_endpoint_paired_deltas.py scripts/summarize_bad_label_control_table.py scripts/summarize_master_evidence_tables.py scripts/summarize_candidate_family_audit.py scripts/summarize_hybrid_candidate_support_audit.py scripts/summarize_hard_negative_can_action_conflict_audit.py scripts/summarize_can_coverage_shift_audit.py scripts/summarize_hard_negative_can_endpoint_smoke.py scripts/summarize_can_prefix_positive_endpoint.py scripts/plot_can_prefix_positive_diagnostic.py scripts/summarize_v02_fresh_can_endpoint.py scripts/summarize_v02_fresh_lift_endpoint.py scripts/summarize_v02_fresh_router_support_audit.py scripts/summarize_v02_fresh_gate.py scripts/summarize_v02_fresh_gate_uncertainty.py
+python -m py_compile scripts/validate_paper_artifact_refs.py scripts/validate_paper_claim_numbers.py scripts/validate_paper_structure.py scripts/validate_method_freeze_v02.py scripts/summarize_primary_endpoint_paired_bootstrap.py scripts/plot_primary_endpoint_paired_deltas.py scripts/summarize_bad_label_control_table.py scripts/summarize_master_evidence_tables.py scripts/summarize_candidate_family_audit.py scripts/summarize_hybrid_candidate_support_audit.py scripts/summarize_hard_negative_can_action_conflict_audit.py scripts/summarize_can_coverage_shift_audit.py scripts/summarize_hard_negative_can_endpoint_smoke.py scripts/summarize_can_prefix_positive_endpoint.py scripts/plot_can_prefix_positive_diagnostic.py scripts/summarize_v02_fresh_can_endpoint.py scripts/summarize_v02_fresh_lift_endpoint.py scripts/summarize_v02_fresh_router_support_audit.py scripts/summarize_v02_fresh_gate.py scripts/summarize_v02_fresh_gate_uncertainty.py scripts/summarize_v02_fresh_baseline_coverage.py scripts/summarize_v02_router_regret_table.py scripts/summarize_submission_readiness_audit.py
 python scripts/summarize_primary_endpoint_paired_bootstrap.py
 python scripts/plot_primary_endpoint_paired_deltas.py
 python scripts/summarize_bad_label_control_table.py
@@ -116,16 +129,20 @@ python scripts/summarize_hard_negative_can_endpoint_smoke.py --root results/fina
 python scripts/summarize_hard_negative_can_endpoint_smoke.py --root results/final_paper/ablations/hard_negative_can_endpoint_200ep --eval-subdir eval_50ep --summary-name endpoint_200ep_3split_summary.csv --report-name REPORT.md --aggregate-splits
 python scripts/summarize_can_prefix_positive_endpoint.py
 python scripts/plot_can_prefix_positive_diagnostic.py
-python scripts/summarize_v02_fresh_can_endpoint.py --root results/final_paper_v02 --split-seeds 101 202 303
-python scripts/summarize_v02_fresh_lift_endpoint.py --root results/final_paper_v02 --split-seeds 101 202 303
-python scripts/summarize_v02_fresh_router_support_audit.py --root results/final_paper_v02 --out-dir results/final_paper_v02/tables --split-seeds 101 202 303 --tasks can40 lift_mg
+python scripts/summarize_v02_fresh_can_endpoint.py --root results/final_paper_v02 --split-seeds 101 202 303 404 505
+python scripts/summarize_v02_fresh_lift_endpoint.py --root results/final_paper_v02 --split-seeds 101 202 303 404 505
+python scripts/summarize_v02_fresh_router_support_audit.py --root results/final_paper_v02 --out-dir results/final_paper_v02/tables --split-seeds 101 202 303 404 505 --tasks can40 lift_mg
 python scripts/summarize_v02_fresh_gate.py --root results/final_paper_v02
 python scripts/summarize_v02_fresh_gate_uncertainty.py --root results/final_paper_v02
+python scripts/summarize_v02_fresh_baseline_coverage.py --root results/final_paper_v02 --split-seeds 101 202 303 404 505
+python scripts/summarize_v02_router_regret_table.py --root results/final_paper_v02 --out-dir results/final_paper_v02/tables
+python scripts/summarize_submission_readiness_audit.py
 latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/triage_bc_paper.tex
 latexmk -pdf -cd -interaction=nonstopmode -halt-on-error paper/iclr2026/main.tex
 python scripts/validate_paper_claim_numbers.py
 python scripts/validate_paper_structure.py
 python scripts/validate_paper_artifact_refs.py
+python scripts/validate_method_freeze_v02.py
 rg -n "undefined|Undefined|LaTeX Warning|Package .*Warning|Overfull|Underfull" paper/triage_bc_paper.log
 rg -n "undefined|Undefined|LaTeX Warning|Package natbib Warning|Overfull" paper/iclr2026/main.log
 ```

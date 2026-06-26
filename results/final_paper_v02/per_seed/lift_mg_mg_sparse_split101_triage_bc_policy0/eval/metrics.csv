@@ -1,0 +1,5 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/final_paper_v02/per_seed/lift_mg_mg_sparse_split101_triage_bc_policy0/train/lift_mg_mg_sparse_split101_triage_bc_policy0_official_bc_rnn/20260625155730/models/model_epoch_50.pth,model_epoch_50,0.28,0.28,120.16,50
+/home/eston/tri-piql/results/final_paper_v02/per_seed/lift_mg_mg_sparse_split101_triage_bc_policy0/train/lift_mg_mg_sparse_split101_triage_bc_policy0_official_bc_rnn/20260625155730/models/model_epoch_100.pth,model_epoch_100,0.3,0.3,125.26,50
+/home/eston/tri-piql/results/final_paper_v02/per_seed/lift_mg_mg_sparse_split101_triage_bc_policy0/train/lift_mg_mg_sparse_split101_triage_bc_policy0_official_bc_rnn/20260625155730/models/model_epoch_150.pth,model_epoch_150,0.62,0.62,86.36,50
+/home/eston/tri-piql/results/final_paper_v02/per_seed/lift_mg_mg_sparse_split101_triage_bc_policy0/train/lift_mg_mg_sparse_split101_triage_bc_policy0_official_bc_rnn/20260625155730/models/model_epoch_200.pth,model_epoch_200,0.72,0.72,67.18,50

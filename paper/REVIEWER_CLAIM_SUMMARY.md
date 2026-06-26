@@ -1,0 +1,54 @@
+# Reviewer-Facing Claim Summary
+
+This is the compact claim contract for the current TRIAGE-BC paper package. It is meant to help a reviewer separate the main empirical claim from diagnostics, negative results, and future work.
+
+## Central Claim
+
+Offline imitation with scarce trusted successes, scarce known failures, and a large mixed log is a score-to-support conversion problem. Failure demonstrations can help when they improve the precision/coverage frontier of the policy-training support, but they are not automatically better than positive-only retrieval or broad weighted coverage.
+
+The current paper should be read as a precision/coverage study with a frozen portfolio-router method component. It is not a validated inverse-Q robotics method and it is not a universal dominance claim.
+
+## Evidence Map
+
+| Evidence block | What it supports | Key numbers | Boundary |
+|---|---|---|---|
+| Controlled PointNav | Scarce bad labels can calibrate hidden-good support when positives are incomplete prefixes. | With `n_+=n_-=2`, score-gap support reaches `1.000` success at all reported bad fractions. | Mechanism evidence, not robotics endpoint evidence. |
+| Primary Robomimic Can/Lift matrix | Default benchmark rows show a precision/coverage tradeoff, not one universal winner. | Can 40p/80b: TRIAGE-BC `99/150`, weighted BC `90/150`, positive-only NN `108/150`. Lift MG: weighted BC `93/150`, TRIAGE-BC `74/150`, positive-only NN `82/150`. | Positive-only NN is the strongest non-oracle Can row; Weighted BC is strongest on Lift MG. |
+| Generated Can regime probes | Bad-aware support helps in targeted action-conflict, coverage-shift, and prefix-positive regimes. | Hard-negative `104/150` vs `91/150`; coverage-shift `120/150` vs `103/150`; prefix-positive `119/150` vs `6/150`. | Generated split constructions, not default benchmark rows. |
+| v0.2 fresh Can+Lift gate | A frozen hidden-label-free portfolio router is plausible but barely positive overall. | Selected branches `340/500` vs `338/500` best per-split baselines; Can `197/250` vs `192/250`; Lift `143/250` vs `146/250`. | Paired-bootstrap intervals cross zero; this is not a formal significance claim, rollout starts are not fully independent, and optional fresh all-demo/all-positive diagnostics remain unrun. |
+| Router regret | Portfolio framing is more defensible than a single hard-support story. | v0.2 regret is `23/500` versus `64/500` for always positive-only NN and `62/500` for always weighted BC on completed Can+Lift rows. | Current table is a cautious completed-row regret audit, not a complete SOTA leaderboard. |
+| Abstention and proxy no-go | Policy-quality prediction remains open; abstention is a risk-control branch. | Can MG original proxies match best success in `0/6` cases; assigned router rows average `0.700`, while abstained rows top out at `0.333`. | Can MG is a stress diagnostic, not a main success row. |
+| Non-Can Lift hard-negative probe | Bad-aware support transfers at the support-audit level, but endpoint evidence is weak. | Support audit: `82/120` hidden positives and `38/240` hidden bad versus `12/120` and `108/240`; split-101/202/303 endpoint `15/150` vs `5/150`, selecting 82 hidden positives and 38 hidden bad versus 12 hidden positives and 108 hidden bad. | Completed exploratory C1 evidence only; absolute success is too low for a primary non-Can endpoint claim. |
+
+## Claims To Make
+
+- The central bottleneck is score-to-support conversion under a precision/coverage tradeoff.
+- Bad labels help in identifiable regimes where they add information beyond scarce positives.
+- Strong positive-only retrieval and broad weighted coverage are first-class baselines.
+- TRIAGE-BC v0.2 is best framed as a frozen portfolio router with barely positive fresh-split evidence, explicit abstention, and no claim to a complete fresh SOTA leaderboard.
+
+## Claims To Avoid
+
+- Do not claim bad labels are required.
+- Do not claim TRIAGE-BC uniformly beats weighted BC.
+- Do not claim TRIAGE-BC uniformly beats positive-only retrieval.
+- Do not claim support purity alone predicts endpoint policy quality.
+- Do not claim the full inverse-Q / Tri-PIQL actor-extraction objective is validated on Robomimic.
+- Do not claim best-checkpoint selection proves the method.
+
+## Reviewer Objections And Direct Answers
+
+| Objection | Direct answer |
+|---|---|
+| "Is this just a router over baselines?" | The paper should embrace the portfolio framing. The contribution is identifying when hard support, soft weighting, positive-only retrieval, and abstention are appropriate under scarce labels and mixed logs. |
+| "Why not just positive-only NN?" | Positive-only NN is the strongest Can 40p/80b baseline, but generated hard-negative, coverage-shift, and prefix-positive probes show regimes where failure labels add information beyond positive-only retrieval. |
+| "Why not just weighted BC?" | Weighted BC is strongest on Lift MG and useful when broad weighted coverage dominates, but it trails hard support in the Can 40p/80b primary row and in generated action-conflict regimes. |
+| "Are the generated probes cherry-picked?" | They are presented as generated regime probes with explicit construction rules and allowed claims in `../REGIME_PROBE_SUITE.md`, not as default Robomimic benchmark rows. |
+| "Is the v0.2 result statistically decisive?" | No. The correct claim is barely positive branch-selection evidence with split-level counts and paired-bootstrap context, not significance. |
+| "Are fresh all-demo and all-positive oracle rows complete?" | No. The fresh v0.2 gate is a selected-vs-strong-baseline/v0.1 audit; optional fresh all-demo/all-positive diagnostics remain unrun and should not be implied as completed leaderboard evidence. |
+
+## Paper Positioning
+
+Submit this as a careful empirical study with a method component:
+
+> Failure labels are valuable when they improve policy-training support under a precision/coverage tradeoff, but they should be evaluated against strong positive-only retrieval, soft weighted coverage, and abstention rather than treated as a one-size-fits-all advantage.

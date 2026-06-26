@@ -1,5 +1,1064 @@
 # Tri-PIQL Iteration Log
 
+## 2026-06-26: ICLR claim wording and layout sync
+
+Implemented:
+
+- Updated `paper/iclr2026/main.tex` so the provisional ICLR abstract states the
+  fresh v0.2 gate as barely positive overall: Can `197/250` versus `192/250`,
+  Lift `143/250` versus `146/250`, and combined `340/500` versus `338/500`.
+- Tightened the ICLR introduction and fresh-gate paragraph to mention the
+  severe split-404 Can reversal and to frame the result as branch selection,
+  not universal hard-support dominance.
+- Compressed ICLR-only related-work prose after validation showed the first
+  wording pass pushed the provisional ICLR PDF from 15 to 16 pages.
+
+Validation:
+
+- The first `make -C paper validate` run correctly failed on ICLR layout:
+  `main.pdf` became 16 pages and the references/appendix page-boundary checks
+  moved.
+- After compression, `make -C paper validate` passed, rebuilding both PDFs,
+  restoring the ICLR PDF to 15 pages, checking `134` unique artifact references,
+  and validating `METHOD_FREEZE_V02`.
+- `python scripts/validate_paper_claim_numbers.py` and `git diff --check`
+  passed before the full validation rerun.
+
+Interpretation:
+
+- The provisional venue source now carries the same cautious fresh-gate
+  semantics as the standalone paper while preserving the validated ICLR layout
+  envelope.
+
+## 2026-06-26: Can hard-support claim-boundary tightening
+
+Implemented:
+
+- Tightened the standalone manuscript, Markdown scaffold, and outline so the
+  Can 40p/80b contribution says hard selected support beats weighted and
+  all-demo controls, while positive-only retrieval remains stronger on Can.
+- Added a stale-claim guard to `scripts/validate_paper_claim_numbers.py` so the
+  older unqualified phrase "Can 40p/80b favors hard selected support" fails the
+  current claim validator.
+
+Validation:
+
+- `python scripts/validate_paper_claim_numbers.py` passed after adding the new
+  stale-claim guard.
+- `make -C paper validate` passed, rebuilding the standalone and ICLR PDFs,
+  checking `134` unique artifact references, and validating
+  `METHOD_FREEZE_V02`.
+- `git diff --check` passed.
+
+Interpretation:
+
+- The contribution wording now matches the final claim contract more closely:
+  the Can evidence supports a hard-over-weighted/control result, not a broad
+  claim that hard support is the best Can converter against positive-only
+  retrieval.
+
+## 2026-06-26: Reproduction command scope sync
+
+Implemented:
+
+- Updated `paper/REPRODUCE_PAPER.md` so the documented coverage-shift per-split
+  regeneration commands use the completed-diagnostic wording already used by
+  `paper/Makefile`.
+- Added `paper/REPRODUCE_PAPER.md` to the guarded document set in
+  `scripts/validate_paper_claim_numbers.py`, so stale reproduction-command
+  wording such as "until the multi-split check is run" now fails the claim
+  validator.
+
+Validation:
+
+- `python scripts/validate_paper_claim_numbers.py` passed with the reproduction
+  checklist included in the guarded surface.
+- `make -C paper validate` passed, rebuilding the standalone and ICLR PDFs,
+  checking `134` unique artifact references, and validating `METHOD_FREEZE_V02`.
+- A focused stale scan over the reproduction checklist, Makefile, claim package,
+  outline, manuscript, checklist, final claim contract, reviewer summary, and
+  top-tier plan found no old coverage-shift or fresh-gate overclaim wording.
+- `git diff --check` passed, and no Robomimic train/eval jobs were running.
+
+Interpretation:
+
+- The documented reproduction path now matches the current completed
+  coverage-shift diagnostic evidence, reducing the risk that users regenerate
+  old-scope reports during submission prep.
+
+## 2026-06-26: Claim-package non-Can C1 refresh
+
+Implemented:
+
+- Updated `results/PAPER_CLAIM_PACKAGE.md` from the stale split-101-only Lift
+  hard-negative endpoint note to the completed split-101/202/303 aggregate:
+  bad-aware proxy top40 `15/150` versus state-action positive-NN top40 `5/150`,
+  with 82 hidden positives and 38 hidden bad selected versus 12 hidden positives
+  and 108 hidden bad.
+- Reframed the claim package bottom line so frozen v0.2 is a barely positive
+  selected-vs-baseline Can+Lift gate that ties the completed always-hard-support
+  branch, not a dominance result.
+- Tightened `PAPER_DRAFT_OUTLINE.md` so the contribution sentence says fresh
+  v0.2 branch selection is barely positive rather than unqualified improvement.
+- Updated `paper/Makefile` report-generation commands so per-split Lift
+  hard-negative and Can coverage-shift reports regenerate with completed
+  diagnostic framing instead of stale "remaining splits" language.
+- Extended `scripts/validate_paper_claim_numbers.py` to include
+  `results/PAPER_CLAIM_PACKAGE.md` and `paper/Makefile` in the stale-claim
+  surface, rejecting old C1 split-101-only and unqualified fresh-gate wording.
+
+Validation:
+
+- `python scripts/validate_paper_claim_numbers.py` passed with the claim package
+  and Makefile included in the guarded document set.
+- `make -C paper validate` passed after regenerating the affected reports,
+  rebuilding the standalone and ICLR PDFs, checking `134` unique artifact
+  references, and validating `METHOD_FREEZE_V02`.
+- A focused stale scan over the claim package, outline, Makefile, generated
+  Lift hard-negative reports, generated coverage-shift reports, manuscript, and
+  reviewer handoff surfaces found no old split-101-only or unqualified
+  fresh-gate wording.
+- `git diff --check` passed, and no Robomimic train/eval jobs were running.
+
+Interpretation:
+
+- The durable claim package now matches the current evidence: non-Can C1 is
+  completed but low-success exploratory mechanism evidence, while the submission
+  spine remains a careful precision/coverage empirical study.
+
+## 2026-06-26: Top-tier plan five-split refresh
+
+Implemented:
+
+- Refreshed `triage_bc_top_tier_completion_plan.md` so the strategic plan
+  reflects the completed five-split v0.2 fresh gate rather than the earlier
+  three-split weakness.
+- Tightened the plan's method-evidence language: v0.2 is now described as
+  barely positive branch-selection evidence that reduces regret versus
+  positive-only and weighted fixed branches, ties the completed always-hard
+  branch on Can+Lift, and should not be framed as fixed-branch dominance.
+- Updated the A1 and Week-2 sections to mark the fresh-gate extension complete
+  and to route any further GPU budget toward optional all-demo/all-positive
+  diagnostics, stronger non-Can endpoint evidence, or better policy-quality
+  proxies.
+- Extended `scripts/validate_paper_claim_numbers.py` so it validates the
+  top-tier plan alongside the manuscript/checklist/handoff docs and rejects
+  stale plan wording about "only three split seeds" or v0.2 beating the best
+  fixed branch.
+
+Validation:
+
+- `python scripts/validate_paper_claim_numbers.py` passed with the top-tier
+  plan included in the guarded document set.
+- `make -C paper validate` passed, rebuilding the standalone and ICLR PDFs,
+  checking `134` unique artifact references, and validating `METHOD_FREEZE_V02`.
+- A focused stale-plan scan found no remaining old three-split or unqualified
+  fresh-gate improvement wording in the current paper-facing surfaces.
+
+Interpretation:
+
+- The plan now matches the current submission decision: the project is ready to
+  pursue a careful top-tier empirical-study submission, but not a methods/SOTA
+  dominance claim without new evidence.
+
+## 2026-06-26: Reviewer claim handoff tightening
+
+Implemented:
+
+- Tightened `paper/REVIEWER_CLAIM_SUMMARY.md` and `FINAL_CLAIM_CONTRACT.md`
+  so the handoff docs match the manuscript caveats: v0.2 is barely positive,
+  the fresh gate is a selected-vs-strong-baseline/v0.1 audit, optional fresh
+  all-demo/all-positive diagnostics remain unrun, and no complete fresh SOTA
+  leaderboard is implied.
+- Added validator checks in `scripts/validate_paper_claim_numbers.py` requiring
+  the reviewer summary and final claim contract to include the "barely
+  positive" and "fresh all-demo/all-positive diagnostic" caveats.
+
+Validation:
+
+- `python scripts/validate_paper_claim_numbers.py` passed.
+- `make -C paper validate` passed, rebuilding the standalone and ICLR PDFs,
+  checking `134` unique artifact references, and validating `METHOD_FREEZE_V02`.
+- A stale-claim scan over the manuscript and reviewer handoff surfaces found no
+  old fresh-gate/Lift-overclaim wording.
+- `git diff --check` passed, and no Robomimic train/eval jobs were running.
+
+Interpretation:
+
+- This aligns the one-page reviewer handoff and final claim contract with the
+  manuscript, reducing risk that submission prep overstates the v0.2 gate.
+
+## 2026-06-26: Router-regret reproduction coverage
+
+Implemented:
+
+- Promoted the v0.2 router-regret table to a first-class reproduction artifact
+  in `paper/REPRODUCE_PAPER.md`.
+- Added `scripts/summarize_v02_router_regret_table.py` to the cheap
+  regeneration and expanded manual command lists in `paper/REPRODUCE_PAPER.md`
+  and `paper/README.md`.
+- Added the `v02_router_regret_REPORT.md` artifact-map row to
+  `scripts/validate_paper_structure.py` so the reproduction map now guards the
+  router-regret report alongside the fresh-gate, uncertainty, baseline
+  coverage, and router-support reports.
+- Updated the current expected artifact-reference count in
+  `paper/REPRODUCE_PAPER.md` and `paper/MANUSCRIPT_CHECKLIST.md` from `133` to
+  `134`.
+
+Validation:
+
+- `python scripts/validate_paper_structure.py` passed.
+- `python scripts/validate_paper_artifact_refs.py` passed with `134` unique
+  artifact references.
+- `make -C paper validate` passed, regenerating the router-regret table and
+  preserving the paper claim, structure, artifact-reference, and
+  method-freeze gates.
+
+Interpretation:
+
+- This closes a reproducibility gap around the A2 portfolio-regret evidence:
+  readers can now regenerate the central router-regret artifact through the
+  documented cheap path, and the validator will catch future omissions.
+
+## 2026-06-26: Manuscript reviewer-scope tightening
+
+Implemented:
+
+- Tightened the Discussion/Limitations and Conclusion text in
+  `paper/triage_bc_paper.tex`, `paper/iclr2026/main.tex`, and
+  `paper/triage_bc_draft.md`.
+- Reframed the final v0.2 wording from an unqualified fresh-gate improvement
+  to a barely positive portfolio result: Can is positive, Lift is negative
+  against the completed per-split baseline, and combined Can+Lift is only
+  `340/500` versus `338/500`.
+- Added explicit reviewer-facing caveats that generated split constructions
+  are not intended to replace default benchmark rows and that optional fresh
+  all-demo/all-positive diagnostics remain unrun.
+- Extended `scripts/validate_paper_claim_numbers.py` to reject unqualified
+  "portfolio router can improve a fresh Can+Lift gate" wording and to require
+  the barely-positive, generated-probe-boundary, and optional-diagnostics
+  caveats in the manuscript surfaces.
+
+Validation:
+
+- `python scripts/validate_paper_claim_numbers.py` passed after the new
+  validator guards.
+- `make -C paper validate` passed, rebuilding the standalone and ICLR PDFs,
+  preserving the 18-page standalone and 15-page ICLR layouts, checking 133
+  unique artifact references, and validating `METHOD_FREEZE_V02`.
+
+Interpretation:
+
+- This pass improves top-tier reviewer posture without adding a new experiment:
+  the manuscript now makes the empirical-study framing harder to misread as a
+  methods/SOTA dominance claim.
+
+## 2026-06-26: Fresh v0.2 claim-tightening guard
+
+Implemented:
+
+- Tightened the paper abstract wording in `paper/triage_bc_paper.tex`,
+  `paper/iclr2026/main.tex`, and `paper/triage_bc_draft.md` so fresh v0.2 is
+  described as Can-positive but Lift-negative against the completed per-split
+  baseline, not as a Lift improvement.
+- Updated `results/final_paper_v02/README.md` to include the completed fresh
+  Lift v0.1 hard-support audit rows and to report the current Lift baseline
+  total `146/250` and combined fresh-gate baseline total `338/500`.
+- Added stale-claim guards to `scripts/validate_paper_claim_numbers.py` for
+  the old `340/500` versus `317/500` fresh-gate wording, the stale `125/250`
+  Lift baseline total, and Lift-improvement phrases.
+- Refreshed the documented artifact-reference count from `131` to `133` in
+  the paper checklist and reproduction notes.
+
+Result:
+
+- The current claim boundary is now more explicit: fresh v0.2 selected rows
+  are `340/500` versus `338/500` overall, with Can positive at `197/250`
+  versus `192/250` and Lift negative at `143/250` versus `146/250`.
+- The validator now fails if current paper-facing docs reintroduce the stale
+  three-split fresh-gate baseline or claim that fresh Lift improved.
+
+Validation:
+
+- `python scripts/validate_paper_claim_numbers.py` passed.
+- `make -C paper validate` passed, rebuilding both PDFs, checking claim
+  numbers, checking 133 unique artifact references, validating paper structure,
+  and validating `METHOD_FREEZE_V02` against the router code and staged
+  artifacts.
+
+## 2026-06-26: Fresh v0.2 baseline coverage audit
+
+Implemented:
+
+- Added `scripts/summarize_v02_fresh_baseline_coverage.py`.
+- Generated
+  `results/final_paper_v02/tables/v02_fresh_baseline_coverage.csv` and
+  `results/final_paper_v02/tables/v02_fresh_baseline_coverage_REPORT.md`.
+- Wired the new generator into `make -C paper validate`, `paper/README.md`,
+  `paper/REPRODUCE_PAPER.md`, `paper/MANUSCRIPT_CHECKLIST.md`, and
+  `scripts/validate_paper_structure.py`.
+- Fixed stale v0.2 fresh-gate numbers in `results/final_paper/README.md`
+  from the old three-split gate to the current five-split gate.
+- Updated `results/final_paper_v02/README.md` and
+  `triage_bc_top_tier_completion_plan.md` to point to the coverage audit.
+
+Result:
+
+- Required fresh-gate branch-selection rows are now explicitly audited as
+  `7/7` complete: Can selected hard union, Can positive-only NN, Can weighted
+  BC, Can v0.1 TRIAGE-BC, Lift selected weighted BC, Lift positive-only NN,
+  and Lift v0.1 TRIAGE-BC.
+- Optional fresh-gate diagnostic rows are explicitly audited as `0/4` run:
+  Can all-demo, Can all-positive oracle, Lift all-demo, and Lift all-positive
+  oracle.
+- This supports the current claim boundary: the fresh v0.2 artifact is a
+  complete selected-vs-strong-baseline/v0.1 branch-selection audit, not a full
+  SOTA leaderboard with every diagnostic control.
+
+Validation:
+
+- `make -C paper validate` passed after regenerating the v0.2 Can, Lift, gate,
+  uncertainty, baseline-coverage, router-regret, and readiness artifacts.
+- The validation rebuilt both PDFs, checked paper claim numbers, checked 133
+  unique artifact references, validated structure, and validated
+  `METHOD_FREEZE_V02` against the v0.2 router code and staged artifacts.
+
+Interpretation:
+
+- This was the highest-return no-GPU follow-up after closing A3: it prevents
+  the paper package from over-implying completed all-demo/all-positive fresh
+  diagnostics while making the completed branch-selection evidence easier to
+  defend to reviewers.
+
+## 2026-06-26: A3 fresh Can v0.1 split404/505 completion
+
+Environment:
+
+- Used the `tri-piql` conda environment with GPU/MuJoCo flags:
+  `XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl`.
+- Ran each remaining split as train first, then epoch-200-only evaluation on
+  50 validation-positive Can starts.
+
+Commands:
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/run_final_matrix.py \
+  --out-dir results/final_paper_v02 \
+  --task can_paired \
+  --split-type pos40_bad80 \
+  --split-seed 404 \
+  --method triage_bc \
+  --policy-seed 0 \
+  --stage train \
+  --device cuda
+```
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/run_final_matrix.py \
+  --out-dir results/final_paper_v02 \
+  --task can_paired \
+  --split-type pos40_bad80 \
+  --split-seed 404 \
+  --method triage_bc \
+  --policy-seed 0 \
+  --stage eval \
+  --eval-episodes 50 \
+  --device cuda \
+  --checkpoint results/final_paper_v02/per_seed/can_paired_pos40_bad80_split404_triage_bc_policy0/train/can_paired_pos40_bad80_split404_triage_bc_policy0_official_bc_rnn/20260625213341/models/model_epoch_200.pth
+```
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/run_final_matrix.py \
+  --out-dir results/final_paper_v02 \
+  --task can_paired \
+  --split-type pos40_bad80 \
+  --split-seed 505 \
+  --method triage_bc \
+  --policy-seed 0 \
+  --stage train \
+  --device cuda
+```
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/run_final_matrix.py \
+  --out-dir results/final_paper_v02 \
+  --task can_paired \
+  --split-type pos40_bad80 \
+  --split-seed 505 \
+  --method triage_bc \
+  --policy-seed 0 \
+  --stage eval \
+  --eval-episodes 50 \
+  --device cuda \
+  --checkpoint results/final_paper_v02/per_seed/can_paired_pos40_bad80_split505_triage_bc_policy0/train/can_paired_pos40_bad80_split505_triage_bc_policy0_official_bc_rnn/20260625214146/models/model_epoch_200.pth
+```
+
+Implemented:
+
+- Completed the final two A3 fresh Can v0.1 TRIAGE-BC endpoint cells.
+- Trained splits `404` and `505` official Robomimic BC-RNN-GMM policies for
+  200 epochs each.
+- Evaluated only `model_epoch_200.pth` for each split on 50
+  validation-positive Can starts.
+- Regenerated `results/final_paper_v02/tables/v02_fresh_can_endpoint_REPORT.md`
+  and `results/final_paper_v02/tables/v02_router_regret_REPORT.md`.
+- Fixed `scripts/summarize_v02_router_regret_table.py` so the generated report
+  says fresh Can v0.1 is complete when all current split seeds are present.
+- Updated `results/final_paper_v02/README.md` and
+  `triage_bc_top_tier_completion_plan.md` to move fresh Can v0.1 from partial
+  to complete.
+
+Result:
+
+- Split `404` v0.1 TRIAGE-BC epoch-200 endpoint: `36/50` success, average
+  length `190.8`.
+- Split `505` v0.1 TRIAGE-BC epoch-200 endpoint: `36/50` success, average
+  length `185.8`.
+- Fresh Can v0.1 is now complete across splits `101/202/303/404/505`:
+  `28/50`, `36/50`, `35/50`, `36/50`, and `36/50`, for `171/250`.
+- On completed Can rows, v0.1 is below v0.2 hard union `197/250` and
+  positive-only NN `174/250`, but above weighted BC `158/250`.
+- Router-regret now records v0.1 Can as a complete row with regret `38/250`;
+  combined completed v0.1 Can/Lift cells are `314/500` with regret `49/500`.
+
+Validation:
+
+- `make -C paper validate` passed after regenerating the v0.2 Can, gate,
+  uncertainty, router-regret, and readiness artifacts.
+- The validation rebuilt both PDFs, checked paper claim numbers, checked 131
+  unique artifact references, validated structure, and validated
+  `METHOD_FREEZE_V02` against the v0.2 router code and staged artifacts.
+- `results/final_paper_v02/tables/v02_router_regret_REPORT.md` now records
+  fresh Can v0.1 as a complete five-split row.
+
+Interpretation:
+
+- Completing A3 removes the reviewer objection that the v0.1 Can fixed branch
+  was missing from the fresh five-split comparison.
+- The completed row supports the current framing: v0.2 is the stronger Can
+  hard-support branch overall, while v0.1 is not a hidden stronger baseline.
+  Split `404` remains the main caveat because v0.1 beats the v0.2 selected row
+  there (`36/50` versus `27/50`) but still trails positive-only NN (`39/50`).
+
+## 2026-06-26: A3 fresh Can v0.1 split303 endpoint
+
+Environment:
+
+- Used the `tri-piql` conda environment with GPU/MuJoCo flags:
+  `XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl`.
+- Continued the bounded A3 pattern: train only, then evaluate only the
+  epoch-200 checkpoint on 50 validation-positive Can starts.
+
+Commands:
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/run_final_matrix.py \
+  --out-dir results/final_paper_v02 \
+  --task can_paired \
+  --split-type pos40_bad80 \
+  --split-seed 303 \
+  --method triage_bc \
+  --policy-seed 0 \
+  --stage train \
+  --device cuda
+```
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/run_final_matrix.py \
+  --out-dir results/final_paper_v02 \
+  --task can_paired \
+  --split-type pos40_bad80 \
+  --split-seed 303 \
+  --method triage_bc \
+  --policy-seed 0 \
+  --stage eval \
+  --eval-episodes 50 \
+  --device cuda \
+  --checkpoint results/final_paper_v02/per_seed/can_paired_pos40_bad80_split303_triage_bc_policy0/train/can_paired_pos40_bad80_split303_triage_bc_policy0_official_bc_rnn/20260625212246/models/model_epoch_200.pth
+```
+
+Implemented:
+
+- Completed the third A3 fresh Can v0.1 TRIAGE-BC endpoint cell.
+- Trained split `303` official Robomimic BC-RNN-GMM for 200 epochs.
+- Evaluated only `model_epoch_200.pth` on 50 validation-positive Can starts.
+- Regenerated `results/final_paper_v02/tables/v02_fresh_can_endpoint_REPORT.md`
+  and `results/final_paper_v02/tables/v02_router_regret_REPORT.md`.
+- Updated `results/final_paper_v02/README.md` and
+  `triage_bc_top_tier_completion_plan.md` so A2/A3 now report fresh Can v0.1
+  as split `101/202/303` partial.
+
+Result:
+
+- Split `303` v0.1 TRIAGE-BC epoch-200 endpoint: `35/50` success, average
+  length `192.9`.
+- This is below split-303 v0.2 hard union `39/50` and positive-only NN `36/50`,
+  but above weighted BC `25/50`.
+- At the time of this split-303 entry, router-regret recorded the fresh Can
+  v0.1 partial row as `99/150` with regret `30/150`; combined completed v0.1
+  Can/Lift cells were `242/400` with regret `41/400`. The split-404/505
+  completion entry above supersedes this partial aggregate.
+- At the time of this entry, remaining A3 fresh Can v0.1 endpoint gaps were
+  split seeds `404` and `505`; the newest completion entry above closes them.
+
+Validation:
+
+- `make -C paper validate` passed after regenerating the v0.2 Can, gate,
+  uncertainty, router-regret, and readiness artifacts.
+- The validation rebuilt both PDFs, checked paper claim numbers, checked 131
+  unique artifact references, validated structure, and validated
+  `METHOD_FREEZE_V02` against the v0.2 router code and staged artifacts.
+- At the time of this entry,
+  `results/final_paper_v02/tables/v02_router_regret_REPORT.md` recorded fresh
+  Can v0.1 as split `101/202/303` partial and pointed to split `404/505` as
+  the remaining A3 gaps. The newest completion entry above supersedes that
+  partial report.
+
+Interpretation:
+
+- Split `303` is close to positive-only NN but still loses by `1/50`; v0.2 hard
+  union remains the best completed split-303 row.
+- At this point in the audit, the three completed Can v0.1 splits reinforced
+  the paper framing that v0.2 improves the hard-support branch over the older
+  v0.1 converter on Can. The split-404/505 completion above gives the current
+  five-split read.
+
+## 2026-06-26: A3 fresh Can v0.1 split202 endpoint
+
+Environment:
+
+- Used the `tri-piql` conda environment with GPU/MuJoCo flags:
+  `XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl`.
+- Ran the job as train first, then epoch-200-only evaluation to avoid the
+  unnecessary four-checkpoint sweep used by the split-101 run.
+
+Commands:
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/run_final_matrix.py \
+  --out-dir results/final_paper_v02 \
+  --task can_paired \
+  --split-type pos40_bad80 \
+  --split-seed 202 \
+  --method triage_bc \
+  --policy-seed 0 \
+  --stage train \
+  --device cuda
+```
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/run_final_matrix.py \
+  --out-dir results/final_paper_v02 \
+  --task can_paired \
+  --split-type pos40_bad80 \
+  --split-seed 202 \
+  --method triage_bc \
+  --policy-seed 0 \
+  --stage eval \
+  --eval-episodes 50 \
+  --device cuda \
+  --checkpoint results/final_paper_v02/per_seed/can_paired_pos40_bad80_split202_triage_bc_policy0/train/can_paired_pos40_bad80_split202_triage_bc_policy0_official_bc_rnn/20260625211012/models/model_epoch_200.pth
+```
+
+Implemented:
+
+- Completed the second missing A3 fresh Can v0.1 TRIAGE-BC endpoint cell.
+- Trained split `202` official Robomimic BC-RNN-GMM for 200 epochs.
+- Evaluated only `model_epoch_200.pth` on 50 validation-positive Can starts.
+- Regenerated `results/final_paper_v02/tables/v02_fresh_can_endpoint_REPORT.md`
+  and `results/final_paper_v02/tables/v02_router_regret_REPORT.md`.
+- Updated `results/final_paper_v02/README.md` and
+  `triage_bc_top_tier_completion_plan.md` so A2/A3 now report fresh Can v0.1
+  as split `101/202` partial rather than split `101` only.
+
+Result:
+
+- Split `202` v0.1 TRIAGE-BC epoch-200 endpoint: `36/50` success, average
+  length `190.9`.
+- This is below split-202 positive-only NN `40/50` and v0.2 hard union `45/50`,
+  but above weighted BC `33/50`.
+- Router-regret now records the fresh Can v0.1 partial row as `64/100` with
+  regret `26/100`; combined completed v0.1 Can/Lift cells are `207/350` with
+  regret `37/350`.
+- Remaining A3 fresh Can v0.1 endpoint gaps are split seeds `303`, `404`, and
+  `505`.
+
+Validation:
+
+- `make -C paper validate` passed after regenerating the v0.2 Can, gate,
+  uncertainty, router-regret, and readiness artifacts.
+- The validation rebuilt both PDFs, checked paper claim numbers, checked 131
+  unique artifact references, validated structure, and validated
+  `METHOD_FREEZE_V02` against the v0.2 router code and staged artifacts.
+- `results/final_paper_v02/tables/v02_router_regret_REPORT.md` now records
+  fresh Can v0.1 as split `101/202` partial and points to split `303/404/505`
+  as the remaining A3 gaps.
+
+Interpretation:
+
+- Split `202` is less unfavorable to v0.1 than split `101`, but v0.2 hard union
+  still has the best completed split-202 endpoint row.
+- The partial A3 trend remains consistent with the current paper framing:
+  v0.2 improves the Can hard-support branch over the older v0.1 converter, but
+  the fixed-branch leaderboard remains incomplete until splits `303`, `404`,
+  and `505` are run.
+
+## 2026-06-26: A3 fresh Can v0.1 split101 endpoint
+
+Environment:
+
+- Used the `tri-piql` conda environment with GPU/MuJoCo flags:
+  `XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl`.
+- No other matching Robomimic training/evaluation processes were active before
+  launching the run.
+
+Command:
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/run_final_matrix.py \
+  --out-dir results/final_paper_v02 \
+  --task can_paired \
+  --split-type pos40_bad80 \
+  --split-seed 101 \
+  --method triage_bc \
+  --policy-seed 0 \
+  --stage all \
+  --eval-episodes 50 \
+  --device cuda
+```
+
+Implemented:
+
+- Completed the first missing A3 fresh Can v0.1 TRIAGE-BC endpoint cell.
+- Reused the prepared split-101 setup under
+  `results/final_paper_v02/per_seed/can_paired_pos40_bad80_split101_triage_bc_policy0`.
+- Trained official Robomimic BC-RNN-GMM for 200 epochs and evaluated the saved
+  epoch 50/100/150/200 checkpoints on 50 validation-positive Can starts.
+- Regenerated `results/final_paper_v02/tables/v02_fresh_can_endpoint_REPORT.md`
+  and `results/final_paper_v02/tables/v02_router_regret_REPORT.md`.
+- Updated `results/final_paper_v02/README.md`,
+  `scripts/summarize_v02_router_regret_table.py`, and
+  `triage_bc_top_tier_completion_plan.md` so the A2/A3 handoff reports fresh
+  Can v0.1 as partial rather than not run.
+
+Result:
+
+- Split `101` v0.1 TRIAGE-BC endpoint checkpoint sweep:
+  epoch 50 `6/50`, epoch 100 `29/50`, epoch 150 `28/50`, epoch 200 `28/50`.
+- The final-matrix epoch-200 row is `28/50`, below split-101 weighted BC
+  `37/50` and v0.2 hard union `45/50`.
+- At the time of this split-101 entry, router-regret recorded v0.1 TRIAGE-BC as
+  a partial Can row: `28/50` with regret `17/50`; combined completed v0.1
+  Can/Lift cells were `171/300`, with 28/300 regret. The split-202 entry above
+  supersedes this partial aggregate.
+- At the time of this entry, remaining A3 fresh Can v0.1 endpoint gaps were
+  split seeds `202`, `303`, `404`, and `505`; the current remaining gaps are
+  tracked by the newest A3 entry above.
+
+Validation:
+
+- `make -C paper validate` passed after regenerating the v0.2 Can, gate,
+  uncertainty, router-regret, and readiness artifacts.
+- `results/final_paper_v02/tables/v02_router_regret_REPORT.md` now states that
+  fresh Can v0.1 is partial and points to the per-regime CSV for missing seeds.
+- No active `run_final_matrix`, Robomimic training, weighted-sampler training,
+  or official-policy evaluation processes remained after the run.
+
+Interpretation:
+
+- This strengthens the fixed-branch audit by replacing one `not_run` v0.1 Can
+  cell with endpoint evidence.
+- The result is not favorable to v0.1 hard support on split `101`; it supports
+  the paper's current story that v0.2's hard union is an improvement over the
+  older v0.1 converter on Can, while the A3 leaderboard is still incomplete.
+
+## 2026-06-26: Lift hard-negative manuscript synchronization
+
+Environment:
+
+- No GPU or training used.
+- This was a paper-package synchronization pass after the completed Lift
+  hard-negative split-303 endpoint run.
+
+Implemented:
+
+- Updated `paper/triage_bc_paper.tex`, `paper/iclr2026/main.tex`, and
+  `paper/triage_bc_draft.md` so the appendix no longer calls Hard-negative Lift
+  a support-only diagnostic.
+- The manuscript now reports the completed three-split endpoint read:
+  `15/150` for bad-aware proxy top40 versus `5/150` for state-action
+  positive-NN top40.
+- Added the Lift endpoint report path to the manuscript artifact maps:
+  `results/final_paper/ablations/lift_hard_negative_endpoint_200ep/REPORT.md`.
+- Compacted the ICLR artifact map and Lift endpoint wording so
+  `paper/iclr2026/main.pdf` stays at the expected 15 pages while retaining both
+  denominator-qualified and aggregate Lift support counts.
+- Strengthened `scripts/validate_paper_claim_numbers.py` so the Lift
+  hard-negative endpoint numbers are checked against the LaTeX sources,
+  ICLR source, markdown draft, checklist, outline, reviewer summary, and final
+  claim contract.
+
+Validation:
+
+- `make -C paper validate` passed, including PDF rebuilds, claim-number checks,
+  structure/page-count checks, artifact reference checks, and method-freeze
+  checks.
+- `python scripts/validate_paper_claim_numbers.py` passed.
+- `python scripts/validate_paper_structure.py` passed.
+- `python scripts/validate_paper_artifact_refs.py` checked 131 unique artifact
+  references.
+- `python scripts/validate_method_freeze_v02.py` passed.
+- `git diff --check` passed.
+- No active `run_final_matrix`, Robomimic training, weighted-sampler training,
+  or official-policy evaluation processes were found.
+
+Interpretation:
+
+- This does not add new endpoint evidence; it closes a paper-facing consistency
+  gap. The submitted manuscript now matches the completed non-Can Lift endpoint
+  artifact while preserving the low-success exploratory framing.
+
+## 2026-06-25: Lift hard-negative split303 endpoint completion
+
+Environment:
+
+- Used the `tri-piql` conda environment with GPU/MuJoCo flags:
+  `XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl`.
+- Robomimic official BC-RNN-GMM endpoint budget: 200 epochs, 100 gradient steps
+  per epoch, 50 valid-positive Lift starts, horizon 150.
+
+Implemented:
+
+- Trained split `303` `state_action_positive_nn_top40` and
+  `bad_aware_proxy_top40` to `model_epoch_200.pth`.
+- Evaluated both split `303` checkpoints with
+  `scripts/evaluate_robomimic_official_policy.py`.
+- Regenerated split `303` and parent three-split Lift hard-negative endpoint
+  reports under `results/final_paper/ablations/lift_hard_negative_endpoint_200ep`.
+- Updated the C1 claim package, readiness audit, paper Makefile, and validators
+  from the previous two-split status to the completed three-split status.
+
+Result:
+
+- Split `303`: `bad_aware_proxy_top40` reached `2/50`; the positive-NN support
+  baseline reached `1/50`.
+- Split `101/202/303` aggregate: `bad_aware_proxy_top40` reached `15/150` with
+  `82` hidden positives and `38` hidden bad demos selected; positive-NN reached
+  `5/150` with `12` hidden positives and `108` hidden bad demos selected.
+- The submission-readiness audit now marks the second non-Can task criterion as
+  `Caution`: the directional effect is complete, but absolute success remains
+  low.
+
+Validation:
+
+- `python scripts/validate_paper_claim_numbers.py` passed.
+- `python scripts/validate_paper_structure.py` passed.
+- `python scripts/validate_paper_artifact_refs.py` checked 131 unique artifact
+  references.
+- `python scripts/validate_method_freeze_v02.py` passed.
+
+Interpretation:
+
+- This completes the planned three-split non-Can Lift hard-negative endpoint
+  gate and strengthens the mechanism story beyond Can.
+- It still does not justify a primary non-Can endpoint or methods-dominance
+  claim because the absolute success rate is only `15/150` versus `5/150`.
+
+## 2026-06-25: Lift hard-negative split202 endpoint extension
+
+Environment:
+
+- Used the `tri-piql` conda environment with GPU/MuJoCo flags:
+  `XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl`.
+- Robomimic official BC-RNN-GMM endpoint budget: 200 epochs, 100 gradient steps
+  per epoch, 50 valid-positive Lift starts, horizon 150.
+
+Implemented:
+
+- Generated Lift hard-negative endpoint configs for split seeds `202` and
+  `303` under `results/final_paper/ablations/lift_hard_negative_endpoint_200ep`.
+- Parallel HDF5 mask-writing prep hit a file-lock error on split `202`; reran
+  split `202` sequentially and left the successful split `303` setup staged.
+- Trained split `202` `state_action_positive_nn_top40` and
+  `bad_aware_proxy_top40` to `model_epoch_200.pth`.
+- Evaluated both split `202` checkpoints with
+  `scripts/evaluate_robomimic_official_policy.py`.
+- Added a parent two-split Lift endpoint aggregate report at
+  `results/final_paper/ablations/lift_hard_negative_endpoint_200ep/REPORT.md`.
+
+Result:
+
+- Split `202`: `bad_aware_proxy_top40` reached `6/50`; the positive-NN support
+  baseline reached `1/50`.
+- Split `101/202` aggregate: `bad_aware_proxy_top40` reached `13/100` with
+  `59` hidden positives and `21` hidden bad demos selected; positive-NN reached
+  `4/100` with `7` hidden positives and `73` hidden bad demos selected.
+
+Validation:
+
+- `make -C paper validate` passed end to end.
+- The gate regenerated the paper artifact stack, rebuilt both PDFs, validated
+  claim numbers and structure, checked 131 unique artifact references, passed
+  the v0.2 method-freeze validator, and passed the configured LaTeX log scans.
+
+Interpretation:
+
+- The non-Can Lift hard-negative mechanism is now stronger than the previous
+  split-101-only read, but it remains exploratory C1 evidence. Absolute Lift
+  endpoint success is low and split `303` is still unrun, so the paper should not
+  claim a non-Can endpoint win yet.
+
+## 2026-06-25: v0.2 method-freeze provenance gate
+
+Environment:
+
+- No GPU or training used.
+- Full paper validation ran from the repository root via `make -C paper validate`.
+
+Implemented:
+
+- Added `scripts/validate_method_freeze_v02.py`, a provenance check that
+  validates `METHOD_FREEZE_V02.md` against the v0.2 router implementation in
+  `scripts/summarize_v02_fresh_router_support_audit.py`.
+- The validator also checks the staged v0.2 router-support artifacts: Can
+  fresh splits route to `hard_risk_union`, Lift MG fresh splits route to
+  `soft_weighted`, and endpoint selected-row roles match those branches.
+- Wired the validator into `paper/Makefile`, `paper/README.md`,
+  `paper/MANUSCRIPT_CHECKLIST.md`, and `paper/REPRODUCE_PAPER.md`.
+- Marked the Week 1 `METHOD_FREEZE_V02.md` deliverable as staged and
+  validator-covered in `triage_bc_top_tier_completion_plan.md`.
+
+Validation:
+
+- `make -C paper validate` passed end to end.
+- The gate regenerated the paper artifact stack, rebuilt both PDFs, validated
+  claim numbers and structure, checked 131 unique artifact references, passed
+  the v0.2 method-freeze validator, and passed the configured LaTeX log scans.
+- `python scripts/validate_method_freeze_v02.py` passed.
+- `git diff --check` passed before the full validation gate.
+
+Interpretation:
+
+- The paper package now has an explicit freeze-to-code-to-artifact provenance
+  check for v0.2. This reduces reviewer/reproducer ambiguity between the older
+  v0.1-style final-matrix runner path and the frozen v0.2 portfolio-router
+  audit used for the fresh Can+Lift gate.
+- This does not strengthen the endpoint result itself; it strengthens the
+  submission's reproducibility and method-contract discipline.
+
+## 2026-06-25: Submission-readiness audit
+
+Environment:
+
+- No GPU or training used.
+- Full paper validation ran from the repository root via `make -C paper validate`.
+
+Implemented:
+
+- Added `scripts/summarize_submission_readiness_audit.py`, a generated
+  acceptance-readiness audit over the staged final-paper artifact package.
+- Wrote `results/final_paper/tables/submission_readiness_audit.csv` and
+  `results/final_paper/tables/submission_readiness_audit_REPORT.md`.
+- Wired the audit into `paper/Makefile`, `paper/MANUSCRIPT_CHECKLIST.md`,
+  `paper/REPRODUCE_PAPER.md`, `FINAL_CLAIM_CONTRACT.md`, and the paper
+  structure/claim-number validators.
+- Marked the top-tier plan's master evidence-table Week 1 deliverable as
+  staged.
+
+Validation:
+
+- `make -C paper validate` passed end to end.
+- The gate regenerated the paper artifact stack, rebuilt both PDFs, validated
+  claim numbers and structure, checked 130 unique artifact references, and
+  passed the configured LaTeX log scans.
+- `python -m py_compile scripts/summarize_submission_readiness_audit.py
+  scripts/validate_paper_artifact_refs.py scripts/validate_paper_claim_numbers.py
+  scripts/validate_paper_structure.py` passed.
+- `git diff --check` passed before the full validation gate.
+
+Interpretation:
+
+- The generated audit reports 6/6 high-quality empirical-submission criteria as
+  passing and 4/4 top-tier methods/SOTA dominance criteria as not met.
+- This strengthens the current submission posture: a careful precision/coverage
+  empirical study with cautious v0.2 portfolio-router evidence, not a
+  methods-dominance or SOTA claim.
+
+## 2026-06-25: Final claim contract and full paper validation
+
+Environment:
+
+- No GPU or training used.
+- Full paper validation ran from the repository root via `make -C paper validate`.
+
+Implemented:
+
+- Added `FINAL_CLAIM_CONTRACT.md`, the final paper-facing allowed-claim and
+  forbidden-claim boundary for the current evidence package.
+- Added the contract to `paper/README.md`, `paper/MANUSCRIPT_CHECKLIST.md`,
+  and `paper/REPRODUCE_PAPER.md`.
+- Refreshed stale v0.2 reproduction commands in `paper/README.md` and
+  `paper/REPRODUCE_PAPER.md` from split seeds `101/202/303` to the current
+  five-split gate `101/202/303/404/505`.
+- Wired `FINAL_CLAIM_CONTRACT.md` into
+  `scripts/validate_paper_artifact_refs.py`,
+  `scripts/validate_paper_claim_numbers.py`, and
+  `scripts/validate_paper_structure.py`.
+
+Validation:
+
+- `make -C paper validate` passed end to end.
+- The gate regenerated paper tables/figures, rebuilt both PDFs, validated claim
+  numbers and structure, checked 128 unique artifact references, and passed the
+  configured LaTeX log scans.
+- `git diff --check` passed.
+- No Robomimic train/eval processes were running.
+
+Interpretation:
+
+- The Week 1 `FINAL_CLAIM_CONTRACT.md` deliverable is now staged and
+  validator-covered.
+- The paper handoff docs now match the actual five-split v0.2 validation gate.
+- The contract preserves the current honest framing: a high-quality
+  precision/coverage empirical study with cautious v0.2 portfolio evidence,
+  not a methods/SOTA dominance claim.
+
+## 2026-06-25: Reviewer-facing claim summary
+
+Environment:
+
+- No GPU or training used.
+- Paper-facing validation ran from the repository root.
+
+Implemented:
+
+- Added `paper/REVIEWER_CLAIM_SUMMARY.md`, a compact claim/evidence/limitation
+  summary for reviewers.
+- Added the summary to `paper/README.md`, `paper/MANUSCRIPT_CHECKLIST.md`, and
+  `paper/REPRODUCE_PAPER.md`.
+- Wired the new summary into `scripts/validate_paper_artifact_refs.py`,
+  `scripts/validate_paper_structure.py`, and
+  `scripts/validate_paper_claim_numbers.py`.
+- Marked the top-tier plan's one-page reviewer-facing summary deliverable as
+  staged.
+
+Validation:
+
+- `python scripts/validate_paper_claim_numbers.py`
+- `python scripts/validate_paper_structure.py`
+- `python scripts/validate_paper_artifact_refs.py` checked 126 unique artifact
+  references.
+- `git diff --check`
+
+Interpretation:
+
+- This closes the named Week 4 paper-polish deliverable without expanding
+  claims.
+- The summary keeps the v0.2 result framed as directional branch-selection
+  evidence and keeps the Lift hard-negative split-101 endpoint as exploratory
+  C1 evidence only.
+
+## 2026-06-25: Lift hard-negative endpoint smoke
+
+Environment:
+
+- Conda env: `tri-piql`
+- GPU/MuJoCo runs used `XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl`
+
+Implemented:
+
+- Prepared split-101 endpoint configs from
+  `results/final_paper/ablations/lift_hard_negative_action_conflict_splits/split101/split_indices.json`.
+- Trained official Robomimic BC-RNN-GMM for 50 epochs, 100 steps per epoch:
+  `state_action_positive_nn_top40` and `bad_aware_proxy_top40`.
+- Evaluated both epoch-50 checkpoints on 10 valid-positive Lift starts.
+
+Result artifact:
+
+- `results/final_paper/ablations/lift_hard_negative_endpoint_smoke/split101/REPORT.md`
+- `results/final_paper/ablations/lift_hard_negative_endpoint_smoke/split101/endpoint_smoke_10ep_summary.csv`
+
+Result:
+
+- `bad_aware_proxy_top40`: `2/10`, average length `127.8`, support `21` hidden
+  positives and `19` hidden bad demos on split 101.
+- `state_action_positive_nn_top40`: `1/10`, average length `141.4`, support
+  `7` hidden positives and `33` hidden bad demos on split 101.
+
+Interpretation:
+
+- This is directionally consistent with the support audit but very weak.
+- It is only a feasibility smoke, not a C1 endpoint result.
+- The next meaningful gate is split-101 at 200 epochs and 50 rollouts before
+  expanding to seeds `202` and `303`.
+
+## 2026-06-25: Lift hard-negative full-budget split-101 gate
+
+Environment:
+
+- Conda env: `tri-piql`
+- GPU/MuJoCo runs used `XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl`
+
+Implemented:
+
+- Prepared a separate full-budget output root:
+  `results/final_paper/ablations/lift_hard_negative_endpoint_200ep/split101/`.
+- Trained official Robomimic BC-RNN-GMM for 200 epochs, 100 steps per epoch:
+  `state_action_positive_nn_top40` and `bad_aware_proxy_top40`.
+- Evaluated both epoch-200 checkpoints on 50 valid-positive Lift starts.
+
+Result artifact:
+
+- `results/final_paper/ablations/lift_hard_negative_endpoint_200ep/split101/REPORT.md`
+- `results/final_paper/ablations/lift_hard_negative_endpoint_200ep/split101/endpoint_200ep_summary.csv`
+
+Result:
+
+- `bad_aware_proxy_top40`: `7/50`, average length `137.3`, support `21` hidden
+  positives and `19` hidden bad demos on split 101.
+- `state_action_positive_nn_top40`: `3/50`, average length `143.6`, support
+  `7` hidden positives and `33` hidden bad demos on split 101.
+
+Interpretation:
+
+- The full-budget split-101 result is directionally consistent with the support
+  audit and the 50-epoch smoke.
+- The absolute success rate is low, so this should remain exploratory unless
+  split seeds `202/303` are run and preserve the margin.
+- Do not promote a non-Can C1 endpoint claim from this single split.
+
+## 2026-06-25: Generated regime-probe summary table
+
+Implemented:
+
+- `scripts/summarize_generated_regime_probe_table.py`: aggregates the
+  endpoint-backed hard-negative, coverage-shift, and prefix-positive Can probes.
+- `results/final_paper/tables/generated_regime_probe_summary.csv`
+- `results/final_paper/tables/generated_regime_probe_summary_REPORT.md`
+
+Result:
+
+- Hard-negative Can: bad-aware `104/150` versus positive-only `91/150`,
+  support `113/7` versus `70/50`.
+- Coverage-shift Can: bad-aware `120/150` versus positive-only `103/150`,
+  support `118/2` versus `105/15`.
+- Prefix-positive Can: bad-aware `119/150` versus positive-only `6/150`,
+  support `195/45` versus `37/203`.
+
+Interpretation:
+
+- This is the concise main-table artifact requested by the top-tier plan.
+- It is generated regime-probe evidence, not a default Robomimic benchmark row.
+
 ## 2026-06-22: Fast GridWorld diagnostics
 
 Environment:
@@ -7028,3 +8087,912 @@ validating structure and page boundaries, checking 105 unique artifact
 references, and running the configured LaTeX log scans. The standalone PDF is
 17 pages. The ICLR-format PDF is 15 pages, with conclusion on page 9,
 references on page 10, and appendix material starting on page 11.
+
+## 2026-06-25: A1 five-split v0.2 extension preflight
+
+Started Priority A1 from `triage_bc_top_tier_completion_plan.md`: expand the
+frozen v0.2 fresh Can+Lift gate from three split seeds to five split seeds before
+making stronger top-tier claims.
+
+Prepared new split/score artifacts for split seeds `404` and `505`:
+
+- Can 40p/80b: `results/final_paper_v02/splits/can_paired_pos40_bad80_split404/`
+  and `results/final_paper_v02/splits/can_paired_pos40_bad80_split505/`.
+- Lift MG: `results/final_paper_v02/splits/lift_mg_mg_sparse_split404/` and
+  `results/final_paper_v02/splits/lift_mg_mg_sparse_split505/`.
+- Score diagnostics under `results/final_paper_v02/score_diagnostics/*404*`
+  and `results/final_paper_v02/score_diagnostics/*505*`.
+
+Generated a five-split support/router preflight in:
+
+- `results/final_paper_v02/tables/a1_preflight_5split/v02_fresh_router_support_REPORT.md`
+- `results/final_paper_v02/A1_FIVE_SPLIT_EXTENSION_PREFLIGHT.md`
+
+Preflight read:
+
+- Can split `404`: frozen v0.2 chooses `hard_risk_union`; union selects `39/40`
+  hidden positives and `5/80` hidden bad demos.
+- Can split `505`: frozen v0.2 chooses `hard_risk_union`; union selects `40/40`
+  hidden positives and `4/80` hidden bad demos.
+- Lift split `404`: frozen v0.2 chooses `soft_weighted`.
+- Lift split `505`: frozen v0.2 chooses `soft_weighted`.
+- Across five Can splits, hard union selects `198/200` hidden positives and
+  `28/400` hidden bad demos. This is support-side preflight evidence only, not
+  endpoint evidence.
+
+Prepared endpoint configs for the added A1 queue:
+
+- Can `404`/`505`: v0.2 hard union, positive-only NN top40, weighted BC.
+- Lift `404`/`505`: weighted BC and positive-only NN top160.
+
+Next step:
+
+- Run the GPU endpoint queue documented in
+  `results/final_paper_v02/A1_FIVE_SPLIT_EXTENSION_PREFLIGHT.md`.
+- Keep all five-split summaries in a separate draft output directory until
+  every required added endpoint row is complete.
+
+## 2026-06-25: A1 Can split 404 selected-branch endpoint
+
+Ran the first bounded endpoint job from the A1 five-split expansion: Can
+40p/80b split `404`, frozen v0.2 selected hard-union branch
+`positive_nn_risk_union_top40`.
+
+Training/evaluation:
+
+- Train config:
+  `results/final_paper_v02/ablations/v02_fresh_endpoint_200ep_can40/split404/positive_nn_risk_union_top40/setup/config.json`
+- Epoch-200 checkpoint:
+  `results/final_paper_v02/ablations/v02_fresh_endpoint_200ep_can40/split404/positive_nn_risk_union_top40/train/v02fresh_can40_s404_positive_nn_risk_union_top40_seed0_bc_rnn_e200/20260625140247/models/model_epoch_200.pth`
+- Evaluation report:
+  `results/final_paper_v02/ablations/v02_fresh_endpoint_200ep_can40/split404/positive_nn_risk_union_top40/eval_50ep/REPORT.md`
+- Draft progress summary:
+  `results/final_paper_v02/tables/a1_endpoint_progress/v02_fresh_can_endpoint_REPORT.md`
+
+Result:
+
+- v0.2 selected hard union reaches `27/50` success (`0.540`) with average
+  length `248.4`.
+- This is much lower than splits `101`/`202`/`303` (`45/50`, `45/50`,
+  `39/50`). The A1 extension may weaken the clean Can story unless split `404`
+  positive-only NN and weighted BC are also low.
+- Do not update paper claims yet. Current comparable Can fresh-gate baseline
+  evidence remains the original three splits: selected `129/150` versus best
+  completed baselines `113/150`.
+
+Next step:
+
+- Run split `404` positive-only NN and weighted BC baselines before interpreting
+  the split `404` selected-branch result.
+
+## 2026-06-25: A1 Can split 404 positive-only baseline
+
+Completed the first Can split `404` comparator after the selected branch was
+weak. The `run_final_matrix.py --stage all` wrapper finished training but hung
+before writing eval metrics, so it was interrupted after the epoch-200
+checkpoint was present. Evaluation was then run directly with
+`scripts/evaluate_robomimic_official_policy.py` against the exact epoch-200
+checkpoint.
+
+Artifacts:
+
+- Positive-only checkpoint:
+  `results/final_paper_v02/per_seed/can_paired_pos40_bad80_split404_positive_only_nn_policy0/train/can_paired_pos40_bad80_split404_positive_only_nn_policy0_official_bc_rnn/20260625141435/models/model_epoch_200.pth`
+- Positive-only eval report:
+  `results/final_paper_v02/per_seed/can_paired_pos40_bad80_split404_positive_only_nn_policy0/eval/REPORT.md`
+- Updated draft progress report:
+  `results/final_paper_v02/tables/a1_endpoint_progress/v02_fresh_can_endpoint_REPORT.md`
+
+Result:
+
+- Positive-only NN reaches `39/50` success (`0.780`) with average length
+  `169.3`.
+- v0.2 hard union on the same split is only `27/50` (`0.540`), so split `404`
+  is a clear selected-branch loss to a no-bad-label baseline.
+- Across Can splits with completed selected rows and at least one completed
+  non-oracle baseline (`101`/`202`/`303`/`404`), v0.2 selected is now
+  `156/200` versus best completed baselines `152/200`. This margin is much
+  weaker than the original three-split Can gate.
+
+Interpretation:
+
+- The A1 extension is already doing useful stress-testing: it weakens the
+  "clean Can" story and supports the paper's cautious framing.
+- Do not promote five-split Can numbers until split `404` weighted BC and split
+  `505` selected/baseline rows are complete.
+
+## 2026-06-25: A1 Can split 404 weighted BC baseline
+
+Completed the remaining strong baseline for Can split `404` with the direct
+weighted-sampler trainer and direct endpoint evaluator, avoiding the
+`run_final_matrix.py --stage all` post-train hang seen in the positive-only
+row.
+
+Artifacts:
+
+- Weighted BC checkpoint:
+  `results/final_paper_v02/per_seed/can_paired_pos40_bad80_split404_weighted_bc_policy0/train/can_paired_pos40_bad80_split404_weighted_bc_policy0_official_bc_rnn/20260625143118/models/model_epoch_200.pth`
+- Weighted BC eval report:
+  `results/final_paper_v02/per_seed/can_paired_pos40_bad80_split404_weighted_bc_policy0/eval/REPORT.md`
+- Updated draft progress report:
+  `results/final_paper_v02/tables/a1_endpoint_progress/v02_fresh_can_endpoint_REPORT.md`
+
+Result:
+
+- Weighted BC reaches `33/50` success (`0.660`) with average length `208.9`.
+- Split `404` now has all three relevant endpoint rows: v0.2 selected hard
+  union `27/50`, positive-only NN `39/50`, and weighted BC `33/50`.
+- The best completed non-oracle baseline on split `404` is positive-only NN,
+  so the selected branch loses by `12/50` on this split.
+- Across the four completed Can splits (`101`/`202`/`303`/`404`), v0.2
+  selected remains `156/200` versus best completed baselines `152/200`
+  (margin `+0.020`).
+
+Interpretation:
+
+- The split `404` endpoint result substantially weakens the earlier three-split
+  Can margin but does not reverse the four-split aggregate.
+- Do not promote five-split Can numbers until split `505` selected, positive
+  only, and weighted rows are complete.
+
+## 2026-06-25: A1 Can split 505 selected-branch endpoint
+
+Ran the next A1 selected-branch endpoint: Can 40p/80b split `505`, frozen v0.2
+hard-union branch `positive_nn_risk_union_top40`.
+
+Artifacts:
+
+- Train config:
+  `results/final_paper_v02/ablations/v02_fresh_endpoint_200ep_can40/split505/positive_nn_risk_union_top40/setup/config.json`
+- Epoch-200 checkpoint:
+  `results/final_paper_v02/ablations/v02_fresh_endpoint_200ep_can40/split505/positive_nn_risk_union_top40/train/v02fresh_can40_s505_positive_nn_risk_union_top40_seed0_bc_rnn_e200/20260625144046/models/model_epoch_200.pth`
+- Evaluation report:
+  `results/final_paper_v02/ablations/v02_fresh_endpoint_200ep_can40/split505/positive_nn_risk_union_top40/eval_50ep/REPORT.md`
+- Updated draft progress report:
+  `results/final_paper_v02/tables/a1_endpoint_progress/v02_fresh_can_endpoint_REPORT.md`
+
+Result:
+
+- v0.2 selected hard union reaches `41/50` success (`0.820`) with average
+  length `158.8`.
+- Completed selected Can rows are now `197/250` across split seeds
+  `101`/`202`/`303`/`404`/`505`.
+- Comparable Can evidence is unchanged until split `505` baselines finish:
+  selected `156/200` versus best completed baselines `152/200` over
+  `101`/`202`/`303`/`404`.
+
+Interpretation:
+
+- Split `505` selected performance is healthy, but it cannot repair or confirm
+  the five-split claim until the positive-only NN and weighted BC comparator
+  rows are complete.
+
+## 2026-06-25: A1 Can split 505 baseline completion
+
+Completed the remaining Can split `505` strong baselines with direct train/eval
+calls: positive-only NN top40 and classifier-probability weighted BC.
+
+Artifacts:
+
+- Positive-only checkpoint:
+  `results/final_paper_v02/per_seed/can_paired_pos40_bad80_split505_positive_only_nn_policy0/train/can_paired_pos40_bad80_split505_positive_only_nn_policy0_official_bc_rnn/20260625144918/models/model_epoch_200.pth`
+- Positive-only eval report:
+  `results/final_paper_v02/per_seed/can_paired_pos40_bad80_split505_positive_only_nn_policy0/eval/REPORT.md`
+- Weighted BC checkpoint:
+  `results/final_paper_v02/per_seed/can_paired_pos40_bad80_split505_weighted_bc_policy0/train/can_paired_pos40_bad80_split505_weighted_bc_policy0_official_bc_rnn/20260625145704/models/model_epoch_200.pth`
+- Weighted BC eval report:
+  `results/final_paper_v02/per_seed/can_paired_pos40_bad80_split505_weighted_bc_policy0/eval/REPORT.md`
+- Updated five-split Can progress report:
+  `results/final_paper_v02/tables/a1_endpoint_progress/v02_fresh_can_endpoint_REPORT.md`
+
+Result:
+
+- Split `505`: selected hard union `41/50` (`0.820`), positive-only NN
+  `40/50` (`0.800`), weighted BC `30/50` (`0.600`).
+- All five Can split rows are now comparable. v0.2 selected totals `197/250`
+  versus best completed non-oracle baselines `192/250`, margin `+0.020`.
+- Per-split margins versus best non-oracle baseline are `+8/50`, `+5/50`,
+  `+3/50`, `-12/50`, and `+1/50` for splits
+  `101`/`202`/`303`/`404`/`505`.
+
+Interpretation:
+
+- A1 Can no longer supports a clean strong claim; it supports a small average
+  selected-branch edge with one severe split-level reversal.
+- Keep this as draft/progress evidence only until the Lift added-split rows are
+  also complete and the canonical paper summaries are intentionally promoted.
+
+## 2026-06-25: A1 Lift added splits and five-split gate completion
+
+Completed the remaining A1 Lift MG endpoints for added split seeds `404` and
+`505`, using direct train/eval commands rather than the wrapper.
+
+Artifacts:
+
+- Lift split `404` weighted report:
+  `results/final_paper_v02/per_seed/lift_mg_mg_sparse_split404_weighted_bc_policy0/eval/REPORT.md`
+- Lift split `404` positive-only report:
+  `results/final_paper_v02/per_seed/lift_mg_mg_sparse_split404_positive_only_nn_policy0/eval/REPORT.md`
+- Lift split `505` weighted report:
+  `results/final_paper_v02/per_seed/lift_mg_mg_sparse_split505_weighted_bc_policy0/eval/REPORT.md`
+- Lift split `505` positive-only report:
+  `results/final_paper_v02/per_seed/lift_mg_mg_sparse_split505_positive_only_nn_policy0/eval/REPORT.md`
+- Draft Lift summary:
+  `results/final_paper_v02/tables/a1_endpoint_progress/v02_fresh_lift_endpoint_REPORT.md`
+- Draft combined gate summary:
+  `results/final_paper_v02/tables/a1_endpoint_progress/v02_fresh_gate_REPORT.md`
+
+Result:
+
+- Lift split `404`: selected weighted BC `30/50` (`0.600`) versus
+  positive-only NN `25/50` (`0.500`).
+- Lift split `505`: selected weighted BC `33/50` (`0.660`) versus
+  positive-only NN `26/50` (`0.520`).
+- Five-split Lift aggregate: selected weighted BC `143/250` versus best
+  non-oracle baselines `125/250`, margin `+0.072`; selected wins 4/5 splits.
+- Five-split Can aggregate from the completed A1 matrix: selected hard union
+  `197/250` versus best non-oracle baselines `192/250`, margin `+0.020`;
+  selected wins 4/5 splits.
+- Combined Can+Lift A1 draft gate: selected rows `340/500` versus best
+  per-split non-oracle baselines `317/500`, margin `+0.046`.
+
+Implementation note:
+
+- Updated `scripts/summarize_v02_fresh_gate.py` so the interpretation section
+  reports split counts dynamically; the old hardcoded text was only correct for
+  the original three-split gate.
+
+Interpretation:
+
+- A1 resolves the "only three split seeds" weakness in the draft evidence, but
+  the resulting effect is modest and still has one losing split on each task.
+- Do not promote these draft five-split rows into the paper until the canonical
+  tables and uncertainty audit are regenerated intentionally.
+
+## 2026-06-25: Promoted A1 five-split gate into canonical paper artifacts
+
+Promoted the completed A1 five-split endpoint matrix from draft/progress
+reports into the canonical `results/final_paper_v02/tables/` reports, the
+manuscript, the claim package, and the paper validation contract.
+
+Canonical five-split gate:
+
+- Can 40p/80b selected hard union: `197/250` versus `192/250` best per-split
+  non-oracle baselines; split margins `+8/50`, `+5/50`, `+3/50`, `-12/50`,
+  and `+1/50`.
+- Lift MG selected weighted BC: `143/250` versus `125/250` positive-only NN;
+  split margins `+3/50`, `+5/50`, `-2/50`, `+5/50`, and `+7/50`.
+- Combined selected rows: `340/500` versus `317/500`, pooled margin `+0.046`.
+- Paired initial-state bootstrap intervals still cross zero: Can
+  `[-0.144, 0.168]`, Lift `[-0.027, 0.167]`, combined `[-0.049, 0.136]`.
+
+Implementation and validation:
+
+- Updated the paper validation pipeline to regenerate v0.2 Can, Lift, router
+  support, gate, and uncertainty reports over split seeds
+  `101`/`202`/`303`/`404`/`505`.
+- Updated `scripts/validate_paper_claim_numbers.py` to enforce the five-split
+  counts, split rows, intervals, and manuscript caveats.
+- Fixed v0.2 CSV writers to emit LF line endings so `git diff --check` stays
+  clean after regeneration.
+- `make -C paper validate` passes, including both LaTeX builds, claim-number
+  validation, structure validation, artifact reference validation, and strict
+  LaTeX log scans.
+
+Interpretation:
+
+- A1 is now a canonical paper-facing result, not just a preflight draft.
+- The high-impact framing remains cautious: v0.2 is positive branch-selection
+  evidence, but not a formal significance claim and not a universal dominance
+  claim over positive-only retrieval or weighted BC.
+
+## 2026-06-25: A2 router-regret table staged
+
+Built the first paper-facing router-regret table for the v0.2 portfolio story.
+
+Artifacts:
+
+- Script:
+  `scripts/summarize_v02_router_regret_table.py`
+- Summary CSV:
+  `results/final_paper_v02/tables/v02_router_regret_summary.csv`
+- Per-regime CSV:
+  `results/final_paper_v02/tables/v02_router_regret_per_regime.csv`
+- Report:
+  `results/final_paper_v02/tables/v02_router_regret_REPORT.md`
+
+Result:
+
+- Completed Can+Lift fresh rows: v0.2 selected branches have `14/500` regret
+  to the audit-only oracle branch selector.
+- Always positive-only NN has `55/500` Can+Lift regret.
+- Always weighted BC has `53/500` Can+Lift regret.
+- Generated Can regime probes show zero regret for bad-aware hard support on
+  hard-negative, coverage-shift, and prefix-positive settings.
+- Can MG is recorded as v0.2 `stress_abstain`, not a forced failure.
+
+Scope caveat:
+
+- This is an A2 current-state artifact, not a complete fixed-branch leaderboard.
+  v0.1 TRIAGE-BC and fresh Lift hard-support rows are marked as A3 gaps rather
+  than filled from non-comparable older split seeds.
+
+Validation:
+
+- Added the script to `paper/Makefile validate`.
+- `make -C paper validate` passes and now checks 106 artifact references.
+
+## 2026-06-25: A3 baseline completion started with fresh Lift v0.1 row
+
+Started A3 by training and evaluating the first missing fresh v0.1
+TRIAGE-BC / hard-support row:
+
+- Task/split/method: `lift_mg`, `mg_sparse`, split seed `101`, `triage_bc`,
+  policy seed `0`.
+- Router branch: `hard_pos_min`.
+- Training support: `301` demos, including `291` selected unlabeled demos.
+- Checkpoints evaluated: epoch `50`, `100`, `150`, and `200`.
+- Endpoint row used by the paper tables: epoch `200`, `36/50` successes
+  (`0.720`) over valid-positive starts.
+
+This row is stronger than the frozen v0.2 selected weighted branch on Lift
+split `101` (`31/50`) and positive-only NN (`28/50`). After regenerating the
+fresh gate, the canonical A1/A3-aware numbers are:
+
+- Can 40p/80b remains `197/250` versus `192/250` best completed baselines.
+- Lift MG becomes `143/250` versus `133/250` best completed per-split
+  baselines, with split `101` now using `triage_bc` as the best baseline.
+- Combined Can+Lift becomes `340/500` versus `325/500`, pooled margin
+  `+0.030`.
+- Paired initial-state bootstrap intervals still cross zero: Can
+  `[-0.144, 0.168]`, Lift `[-0.017, 0.177]`, combined `[-0.045, 0.142]`.
+
+Router-regret update:
+
+- v0.2 Can+Lift regret to the completed oracle selector is now `19/500`.
+- Always positive-only NN regret is `60/500`.
+- Always weighted BC regret is `58/500`.
+- v0.1 TRIAGE-BC is now partial rather than absent: `36/50` on the completed
+  Lift split101 cell, with Can fresh and Lift split seeds `202`/`303`/`404`/`505`
+  still marked as A3 gaps.
+
+Implementation and validation:
+
+- Fixed the fresh endpoint summarizers to select `model_epoch_200` when
+  `metrics.csv` contains multiple checkpoint rows.
+- Updated the router-regret script to consume completed `triage_bc` rows and
+  mark partial branch coverage explicitly.
+- Updated the manuscript, claim package, completion plan, and claim-number
+  validator to the revised A3-aware numbers.
+- `make -C paper validate` passes end to end.
+
+## 2026-06-25: A3 Lift split202 v0.1 row completed
+
+Completed the second fresh Lift v0.1 TRIAGE-BC / hard-support row:
+
+- Task/split/method: `lift_mg`, `mg_sparse`, split seed `202`, `triage_bc`,
+  policy seed `0`.
+- Router branch: `hard_pos_min`.
+- Training support: `231` demos, including `221` selected unlabeled demos.
+- Endpoint evaluation: epoch `200`, `34/50` successes (`0.680`) over
+  valid-positive starts.
+
+This is again stronger than the frozen v0.2 selected weighted branch on the
+same split (`30/50`) and positive-only NN (`25/50`). After regenerating the
+paper artifacts with split101 and split202 v0.1 rows included:
+
+- Can 40p/80b remains `197/250` versus `192/250`.
+- Lift MG is now nearly tied: v0.2 weighted `143/250` versus best completed
+  per-split baselines `142/250`; v0.2 wins only splits `404` and `505`.
+- Combined Can+Lift is `340/500` versus `334/500`, pooled margin `+0.012`.
+- Paired initial-state bootstrap intervals still cross zero: Can
+  `[-0.144, 0.168]`, Lift `[-0.069, 0.158]`, combined `[-0.067, 0.128]`.
+
+Router-regret update:
+
+- v0.2 Can+Lift regret to the completed oracle selector is now `23/500`.
+- Always positive-only NN regret is `64/500` on the Can+Lift rows.
+- Always weighted BC regret is `62/500` on the Can+Lift rows.
+- v0.1 TRIAGE-BC is still partial: `70/100` on completed Lift split101/202
+  cells, with Can fresh and Lift split seeds `303`/`404`/`505` still A3 gaps.
+
+Implementation and validation:
+
+- Updated claim-number constants, manuscript text, claim package, completion
+  plan, and v0.2 reports to the split202-aware numbers.
+- Tightened the ICLR manuscript wording to keep the compiled PDF at the
+  validator-expected 15 pages after the more cautious A3 wording.
+- `make -C paper validate` passes end to end.
+
+## 2026-06-25: A3 Lift split303 v0.1 row completed
+
+Completed the third fresh Lift v0.1 TRIAGE-BC / hard-support audit row:
+
+- Task/split/method: `lift_mg`, `mg_sparse`, split seed `303`, `triage_bc`,
+  policy seed `0`.
+- Router branch: `hard_pos_min`.
+- Training support: `385` demos, including `375` selected unlabeled demos.
+- Endpoint evaluation: epoch `200`, `20/50` successes (`0.400`) over
+  valid-positive starts.
+
+This row beats the frozen v0.2 selected weighted branch on the same split by
+one success (`20/50` versus `19/50`) but does not beat positive-only NN
+(`21/50`). After regenerating the paper artifacts with split101, split202, and
+split303 v0.1 rows included:
+
+- Can 40p/80b remains `197/250` versus `192/250`.
+- Lift MG remains nearly tied: v0.2 weighted `143/250` versus best completed
+  per-split baselines `142/250`; v0.2 wins only splits `404` and `505`.
+- Combined Can+Lift remains `340/500` versus `334/500`, pooled margin
+  `+0.012`.
+- Paired initial-state bootstrap intervals still cross zero: Can
+  `[-0.144, 0.168]`, Lift `[-0.069, 0.158]`, combined `[-0.067, 0.128]`.
+
+Router-regret update:
+
+- v0.2 Can+Lift regret to the completed oracle selector remains `23/500`.
+- Always positive-only NN regret is `64/500` on the Can+Lift rows.
+- Always weighted BC regret is `62/500` on the Can+Lift rows.
+- v0.1 TRIAGE-BC is still partial but now covers three Lift cells:
+  `90/150` with `1/150` regret to the same completed-split oracle.
+
+Implementation and validation:
+
+- Regenerated the Lift endpoint, fresh-gate, uncertainty, and router-regret
+  reports under `results/final_paper_v02/tables/`.
+- Updated the manuscript text, claim package, completion plans, and checklist
+  to reflect the completed split303 audit row and refreshed regret counts.
+- `make -C paper validate` passes end to end, including the claim-number
+  validator and the 15-page ICLR PDF layout check.
+
+## 2026-06-25: A3 Lift split404/505 v0.1 rows completed
+
+Completed the remaining fresh Lift v0.1 TRIAGE-BC / hard-support audit rows:
+
+- Split `404`: router branch `hard_pos_min`, training support `219` demos
+  including `209` selected unlabeled demos, endpoint `29/50` successes
+  (`0.580`) at epoch `200`.
+- Split `505`: router branch `hard_pos_min`, training support `215` demos
+  including `205` selected unlabeled demos, endpoint `24/50` successes
+  (`0.480`) at epoch `200`.
+
+These rows complete the five-split Lift v0.1 audit. Split `404` is just below
+the frozen v0.2 selected weighted branch (`29/50` versus `30/50`) and above
+positive-only NN (`25/50`). Split `505` is below both weighted BC (`33/50`) and
+positive-only NN (`26/50`).
+
+After regenerating the paper artifacts with all five Lift v0.1 rows included:
+
+- Can 40p/80b remains `197/250` versus `192/250`.
+- Lift MG becomes negative against the best completed per-split baselines:
+  v0.2 weighted `143/250` versus `146/250`.
+- Completed Lift v0.1 hard support ties weighted BC in aggregate at `143/250`,
+  but the per-split oracle reaches `154/250`.
+- Combined Can+Lift weakens to `340/500` versus `338/500`, pooled margin
+  `+0.004`.
+- Paired initial-state bootstrap intervals still cross zero: Can
+  `[-0.144, 0.168]`, Lift `[-0.083, 0.140]`, combined `[-0.074, 0.120]`.
+
+Router-regret update:
+
+- v0.2 Can+Lift regret to the completed oracle selector remains `23/500`.
+- Always positive-only NN regret is `64/500` on the Can+Lift rows.
+- Always weighted BC regret is `62/500` on the Can+Lift rows.
+- Always hard support now ties v0.2 on completed Can+Lift regret (`23/500`),
+  so the portfolio claim should not be written as dominance over every fixed
+  branch.
+
+Implementation notes:
+
+- Regenerated the Lift endpoint, fresh-gate, uncertainty, and router-regret
+  reports under `results/final_paper_v02/tables/`.
+- Updated the claim-number validator, manuscript text, claim package,
+  checklist, and completion plans to the weaker `340/500` versus `338/500`
+  gate.
+- `make -C paper validate` passes end to end, including the refreshed
+  claim-number validator and the 15-page ICLR PDF layout check.
+
+## 2026-06-25: TRI-Signal regime-probe suite registry added
+
+Created `REGIME_PROBE_SUITE.md` to turn the generated diagnostics into a
+coherent paper-facing suite rather than a loose list of ablations.
+
+The registry freezes six regimes:
+
+- Prefix-positive Can: bad-aware `119/150` versus positive-only `6/150`.
+- Hard-negative Can: bad-aware `104/150` versus positive-only `91/150`.
+- Coverage-shift Can: bad-aware `120/150` versus positive-only `103/150`.
+- Default Can 40p/80b: v0.2 hard union `197/250` versus best baselines
+  `192/250`, while original v0.1 still loses to positive-only NN.
+- Lift MG broad coverage: v0.2 weighted and v0.1 hard support tie at
+  `143/250`, below the best per-split baseline total `146/250`.
+- Can MG score plateau: abstention remains justified because likelihood
+  proxies select weaker hard-support policies on the original Can MG check.
+
+This is intentionally framed as a registry/freeze for paper claims, not a
+retroactive claim that completed generated probes were pre-registered before
+initial exploration. Future generated variants must be added to the registry
+before endpoint training if they are to support fresh validation claims.
+
+Also updated `METHOD_FREEZE_V02.md` to record that the original fresh seeds were
+`101`/`202`/`303` and the five-split A1 extension added `404`/`505` before
+promoting five-split endpoint numbers.
+
+## 2026-06-25: Cross-regime precision/coverage frontier staged
+
+Created `scripts/summarize_precision_coverage_frontier.py` and wired it into
+`paper/Makefile` so the paper validation path regenerates:
+
+- `results/final_paper/tables/precision_coverage_frontier.csv`
+- `results/final_paper/tables/precision_coverage_frontier_REPORT.md`
+- `results/final_paper/figures/precision_coverage_frontier.png`
+- `results/final_paper/figures/precision_coverage_frontier.pdf`
+
+The artifact puts Can 40p/80b, Can 20p/80b, Can 80p/80b, Lift MG, hard-negative
+Can, coverage-shift Can, and prefix-positive Can in one hidden-positive-recall
+versus hidden-bad-admission space. Endpoint-backed matched comparisons recover
+the intended thesis: generated probes improve when bad-aware or hybrid support
+improves both recall and bad-admission over positive-only retrieval, while
+default Can 40p/80b and Lift MG show why positive-only precision and broad
+weighted coverage remain first-class baselines.
+
+## 2026-06-25: Policy-quality proxy no-go table staged
+
+Created `scripts/summarize_policy_quality_proxy_no_go.py` and wired it into
+`paper/Makefile` so the paper validation path regenerates:
+
+- `results/final_paper/tables/policy_quality_proxy_no_go.csv`
+- `results/final_paper/tables/policy_quality_proxy_no_go_REPORT.md`
+
+The consolidated table turns the scattered no-go evidence into a single
+appendix artifact. It covers positive likelihood, positive-minus-negative
+likelihood, negative rejection, coverage-only selection, initial/transition
+coverage, support purity, and hidden-positive recall. Deployable proxy attempts
+match endpoint winners in only `2/11` rows; audit-only support rows match in
+`3/6`; original Can MG likelihood-style proxies match in `0/6`.
+
+Paper-facing updates:
+
+- Added the no-go artifact to the manuscript checklist, reproduction map,
+  outline, Markdown draft, standalone TeX, ICLR TeX, claim package, and
+  completion plans.
+- Updated the expected artifact-reference validator count to `112` unique
+  references and the standalone PDF page count to `17`.
+
+Validation:
+
+```bash
+python scripts/summarize_policy_quality_proxy_no_go.py
+python -m py_compile scripts/summarize_policy_quality_proxy_no_go.py scripts/validate_paper_claim_numbers.py scripts/validate_paper_artifact_refs.py scripts/validate_paper_structure.py
+python scripts/validate_paper_artifact_refs.py
+python scripts/validate_paper_claim_numbers.py
+make -C paper validate
+```
+
+The full paper validation gate passed: both PDFs compiled, the claim-number and
+structure validators passed, and the artifact-reference validator reported
+`checked 112 unique artifact references`.
+
+## 2026-06-25: Hard-union component ablation staged
+
+Created `scripts/summarize_hard_union_component_ablation.py` and wired it into
+`paper/Makefile` along with the cheap upstream union and Can40 support
+summaries:
+
+- `scripts/summarize_can40_score_support_tradeoff.py`
+- `scripts/summarize_v02_union_candidate_audit.py`
+- `scripts/summarize_v02_union_endpoint_aggregate.py`
+- `scripts/summarize_hard_union_component_ablation.py`
+
+New generated B3 artifacts:
+
+- `results/final_paper/tables/hard_union_component_ablation.csv`
+- `results/final_paper/tables/hard_union_component_ablation_per_split.csv`
+- `results/final_paper/tables/hard_union_component_ablation_REPORT.md`
+
+The component table answers the B3 hard-union question without new policy
+training:
+
+- Positive-only NN top40 selects `106/120` hidden positives and `14/240`
+  hidden bad demos, reaching `108/150`.
+- Risk-fusion top40 improves the support audit to `117/120` hidden positives
+  and `3/240` hidden bad demos, but reaches only `73/100`, `-0.070` versus
+  positive-only on the same two endpoint splits.
+- The union selects `119/120` hidden positives and `16/240` hidden bad demos,
+  reaching `116/150`, `+0.053` versus positive-only over all three splits.
+- Classifier-only top40 is support-only and dominated by positive-only top40
+  (`85/120` hidden positives and `35/240` hidden bad demos).
+- Weighted BC reaches `90/150`; v0.1 adaptive masscap reaches `99/150`.
+
+Interpretation:
+
+The union helps by combining mechanisms, not by replacing positive-only with
+risk-fusion. It preserves the positive-only anchor and adds risk-derived
+coverage. The pooled gain comes from split `22` and split `33`; split `11` still
+favors positive-only NN.
+
+Paper-facing updates:
+
+- Added the B3 artifact to the manuscript checklist, reproduction map, outline,
+  Markdown draft, standalone TeX, ICLR TeX, claim package, and completion plans.
+- Extended `scripts/validate_paper_claim_numbers.py` with hard-union component
+  row checks.
+- Updated the artifact-reference validator count to `114` and the standalone
+  PDF page count to `18`.
+
+Validation:
+
+```bash
+python scripts/summarize_hard_union_component_ablation.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_artifact_refs.py
+python scripts/validate_paper_structure.py
+make -C paper validate
+```
+
+The full paper validation gate passed after compacting the appendix wording:
+both PDFs compiled, the ICLR-format PDF remained at 15 pages, the claim-number
+and structure validators passed, and the artifact-reference validator reported
+`checked 120 unique artifact references`.
+
+## 2026-06-25: Active abstention evaluation staged
+
+Created `scripts/summarize_active_abstention_evaluation.py` and staged the C2
+abstention audit from existing router-v2 and Can MG branch-proxy artifacts.
+
+New generated C2 artifacts:
+
+- `results/final_paper/tables/active_abstention_evaluation.csv`
+- `results/final_paper/tables/active_abstention_assignment_summary.csv`
+- `results/final_paper/tables/active_abstention_evaluation_REPORT.md`
+
+Key rows:
+
+- Original Can MG is `stress_abstain` with mass/count `1947.9`/`1025.7`.
+  Forced branches top out at weighted BC `0.333`, all-demo is worst at `0.100`,
+  and likelihood-style proxies match best success in `0/6` cases.
+- Shuffled Can MG is also `stress_abstain` with mass/count `1466.3`/`515.7`.
+  The staged hard and soft forced branches both reach only `0.100`; proxies
+  match best success in `6/6` cases only because both branches are tied and weak.
+- Across the router-v2 audit, assigned rows average `0.700` fixed-20k success
+  with minimum `0.600`, while abstained rows average `0.217` and top out at
+  `0.333`.
+
+Interpretation:
+
+This stages C2 as a stress/limitation result. Abstention is justified as risk
+control for large ambiguous MG score plateaus until a coverage-sensitive
+policy-quality proxy is validated. It is not a Can MG endpoint-success claim.
+
+Paper-facing updates:
+
+- Added the active-abstention artifact to the manuscript checklist,
+  reproduction map, outline, Markdown draft, claim package, and completion
+  plans.
+- Extended `paper/Makefile` to regenerate the C2 artifact.
+- Extended `scripts/validate_paper_claim_numbers.py` with active-abstention row
+  and assignment-summary checks.
+- Extended `scripts/validate_paper_structure.py` with the new artifact-map rows.
+
+Validation:
+
+```bash
+python scripts/summarize_active_abstention_evaluation.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_artifact_refs.py
+python scripts/validate_paper_structure.py
+make -C paper validate
+```
+
+The full paper validation gate passed: both PDFs compiled, the ICLR-format PDF
+remained at 15 pages, the claim-number and structure validators passed, and the
+artifact-reference validator reported `checked 122 unique artifact references`.
+
+## 2026-06-25: Theory-lite proposition staged
+
+Staged Priority C3 by naming the existing precision/coverage risk decomposition
+as `Proposition 1 (coverage-contamination criterion)` in the standalone TeX,
+ICLR TeX, and Markdown draft.
+
+Key proposition:
+
+- Under the mixed useful/harmful support model, adding an unlabeled trajectory
+  should improve the hard-selector bound when its marginal coverage gain exceeds
+  its normalized marginal contamination cost.
+- The weighted analogue keeps the same logic but replaces selected support size
+  with effective sample size and bad-demo count with weighted bad-action mass.
+
+Interpretation:
+
+This is a theory-lite organizing result, not a formal guarantee for nonlinear
+BC-RNN-GMM policies. It makes the empirical reversals explicit: hard support
+wins when extra data mostly adds action-conflicting failures, soft weighting
+wins when coverage dominates, and abstention is appropriate when the score shape
+does not justify either branch.
+
+Paper-facing updates:
+
+- Updated `paper/triage_bc_paper.tex`, `paper/iclr2026/main.tex`, and
+  `paper/triage_bc_draft.md`.
+- Added C3 status to `triage_bc_top_tier_completion_plan.md` and
+  `tri_piql_paper_completion_plan.md`.
+- Added a theory-lite claim row to `results/PAPER_CLAIM_PACKAGE.md`.
+- Added validator checks for `Proposition 1`, the
+  `coverage-contamination criterion`, and the marginal coverage/contamination
+  condition.
+
+Validation:
+
+```bash
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_artifact_refs.py
+python scripts/validate_paper_structure.py
+make -C paper validate
+```
+
+The full paper validation gate passed: both PDFs compiled, the ICLR-format PDF
+remained at 15 pages, the claim-number and structure validators passed, and the
+artifact-reference validator reported `checked 122 unique artifact references`.
+
+The full paper validation gate passed: both PDFs compiled, the claim-number and
+structure validators passed, and the artifact-reference validator reported
+`checked 114 unique artifact references`.
+
+## 2026-06-25: Failure-mode initial-state audit staged
+
+Created `scripts/summarize_failure_mode_initial_states.py` and wired it into
+`paper/Makefile` after the hard-union component ablation.
+
+New generated B4 artifacts:
+
+- `results/final_paper/tables/failure_mode_initial_states_cases.csv`
+- `results/final_paper/tables/failure_mode_initial_states.csv`
+- `results/final_paper/tables/failure_mode_initial_states_REPORT.md`
+
+The audit reuses existing Can 40p/80b endpoint rollouts and selects three
+representative paired initial states:
+
+- Hard-union rescue: split `33` / `demo_105`, union `5/5` versus positive-only
+  `0/5`, weighted `1/5`, and all-demo `0/5`.
+- Positive-anchor regression: split `11` / `demo_39`, positive-only `5/5`
+  versus union `0/5` and weighted `0/5`.
+- Soft-pool rescue: split `33` / `demo_99`, weighted `5/5` versus positive-only
+  `0/5` and union `1/5`.
+
+Interpretation:
+
+The failure-mode audit supports the paper's current precision/coverage framing
+rather than a one-sided hard-union story. The union can rescue states that
+positive-only and full-pool cloning miss, but positive-only and weighted BC each
+have representative rescue cases. The report explicitly marks grasp and
+loop/miss fields as proxies derived from success and horizon-length failures,
+not video-level annotations.
+
+Paper-facing updates:
+
+- Added the B4 artifact to the manuscript checklist, reproduction map, outline,
+  Markdown draft, standalone TeX, ICLR TeX, claim package, and completion plans.
+- Extended `scripts/validate_paper_claim_numbers.py` with selected-case and
+  per-method row checks.
+- Extended `scripts/validate_paper_structure.py` with the new artifact-map rows.
+
+Validation:
+
+```bash
+python scripts/summarize_failure_mode_initial_states.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_artifact_refs.py
+python scripts/validate_paper_structure.py
+make -C paper validate
+```
+
+The full paper validation gate passed: both PDFs compiled, the claim-number and
+structure validators passed, and the artifact-reference validator reported
+`checked 116 unique artifact references`.
+
+## 2026-06-25: Prefix-length robustness support sweep staged
+
+Created `scripts/summarize_can_prefix_length_robustness.py` and wired it into
+`paper/Makefile` after the prefix-positive endpoint/figure artifact.
+
+New generated B5 artifacts:
+
+- `results/final_paper/tables/can_prefix_length_robustness.csv`
+- `results/final_paper/tables/can_prefix_length_robustness_all_candidates.csv`
+- `results/final_paper/tables/can_prefix_length_robustness_REPORT.md`
+- generated split files under
+  `results/final_paper/ablations/can_prefix_length_robustness_splits/`
+
+The sweep varies the labeled-positive prefix length for the generated Can
+prefix-positive construction while holding split seeds `101/202/303`, label
+budget, and top80 support size fixed:
+
+- Short prefixes: bad-aware state top80 selects `157` hidden positives and `83`
+  hidden bad demos, versus prefix positive-NN top80 `61` and `179`; recall delta
+  `+0.400`, bad-admission delta `-0.400`.
+- Default prefixes: bad-aware state top80 selects `195` hidden positives and
+  `45` hidden bad demos, versus prefix positive-NN top80 `37` and `203`; recall
+  delta `+0.658`, bad-admission delta `-0.658`.
+- Long prefixes: bad-aware state top80 selects `199` hidden positives and `41`
+  hidden bad demos, versus prefix positive-NN top80 `22` and `218`; recall
+  delta `+0.737`, bad-admission delta `-0.737`.
+
+Interpretation:
+
+The generated prefix-positive probe is not a one-point artifact of the default
+prefix length. Across the short/default/long support-only sweep, bad-aware top80
+improves hidden-positive recall and reduces hidden-bad admission at matched
+support size. This strengthens the generated-probe mechanism story but should
+not be promoted as a new endpoint result without endpoint training on a
+non-default prefix setting.
+
+Paper-facing updates:
+
+- Added the B5 artifact to the manuscript checklist, reproduction map, outline,
+  Markdown draft, standalone TeX, ICLR TeX, claim package, and completion plans.
+- Extended `scripts/validate_paper_claim_numbers.py` with prefix-length
+  robustness row checks.
+- Extended `scripts/validate_paper_structure.py` with the new artifact-map rows.
+
+Validation:
+
+```bash
+python scripts/summarize_can_prefix_length_robustness.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_artifact_refs.py
+python scripts/validate_paper_structure.py
+make -C paper validate
+```
+
+The full paper validation gate passed: both PDFs compiled, the claim-number and
+structure validators passed, and the artifact-reference validator reported
+`checked 118 unique artifact references`.
+
+## 2026-06-25: Lift hard-negative support audit staged
+
+Created `scripts/summarize_lift_hard_negative_action_conflict_audit.py` as the
+first non-Can generated support diagnostic for Priority C1.
+
+New generated C1 support-only artifacts:
+
+- `results/final_paper/ablations/lift_hard_negative_action_conflict_construction.csv`
+- `results/final_paper/ablations/lift_hard_negative_action_conflict_support_per_split.csv`
+- `results/final_paper/ablations/lift_hard_negative_action_conflict_summary.csv`
+- `results/final_paper/ablations/lift_hard_negative_action_conflict_REPORT.md`
+- generated split files under
+  `results/final_paper/ablations/lift_hard_negative_action_conflict_splits/`
+
+Key support rows over generated Lift split seeds `101/202/303`:
+
+- State-action positive-NN top40 selects `12/120` hidden positives and admits
+  `108/240` hidden bad demos (`0.100` recall, `0.450` bad admission).
+- Bad-aware proxy top40 selects `82/120` hidden positives and admits `38/240`
+  hidden bad demos (`0.683` recall, `0.158` bad admission).
+- Hybrid positive/filter/refill top40 selects `68/120` hidden positives and
+  admits `52/240` hidden bad demos (`0.567` recall, `0.217` bad admission).
+
+Interpretation:
+
+The generated bad-aware support mechanism transfers beyond Can at the
+support-audit level. This clears the first C1 support gate, but it should not be
+reported as a non-Can policy result until Lift endpoint training is run.
+
+Paper-facing updates:
+
+- Added the support-only C1 artifact to the manuscript checklist, reproduction
+  map, outline, Markdown draft, standalone TeX, ICLR TeX, claim package, and
+  completion plans.
+- Extended `paper/Makefile` to regenerate the Lift audit.
+- Extended `scripts/validate_paper_claim_numbers.py` with Lift support row
+  checks.
+- Extended `scripts/validate_paper_structure.py` with the new artifact-map rows.
+
+Validation:
+
+```bash
+python scripts/summarize_lift_hard_negative_action_conflict_audit.py
+python scripts/validate_paper_claim_numbers.py
+python scripts/validate_paper_artifact_refs.py
+python scripts/validate_paper_structure.py
+make -C paper validate
+```

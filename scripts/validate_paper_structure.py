@@ -27,6 +27,7 @@ EXPECTED_FIGURE_LABELS = [
 EXPECTED_TABLE_LABELS = [
     "tab:main-results",
     "tab:v02-gate",
+    "tab:regime-probes",
     "tab:bad-label-controls",
     "tab:hard-negative-can",
     "tab:coverage-shift-can",
@@ -39,8 +40,14 @@ EXPECTED_DOC_ROWS = {
         "| Figure 3 | `results/final_paper/figures/robotics_primary_endpoint_matrix.png` | Primary Robomimic endpoint matrix |",
         "| Figure 4 | `results/final_paper/figures/can40_precision_coverage.png` | Precision/coverage frontier |",
         "| Figure 5 | `results/final_paper/figures/score_shape_diagnostics.png` | Score-shape and abstention diagnostic |",
+        "| Main Table | In-source table `tab:regime-probes` backed by `results/final_paper/tables/generated_regime_probe_summary_REPORT.md` | Generated Can regime-probe summary |",
         "| Appendix Figure | `results/final_paper/figures/primary_endpoint_paired_deltas.png` | Paired initial-state endpoint uncertainty |",
         "| Appendix Table | `results/final_paper/tables/bad_label_control_summary.csv` | Bad-label versus positive-only control summary |",
+        "| Appendix Table | `results/final_paper/tables/failure_mode_initial_states_REPORT.md` | Paired Can initial-state failure-mode audit |",
+        "| Appendix Table | `results/final_paper/tables/can_prefix_length_robustness_REPORT.md` | Support-only prefix-length robustness sweep |",
+        "| Appendix Table | `results/final_paper/tables/active_abstention_evaluation_REPORT.md` | Active abstention audit for Can MG stress rows |",
+        "| Appendix Table | `results/final_paper/ablations/lift_hard_negative_action_conflict_REPORT.md` | Support-only non-Can Lift hard-negative diagnostic |",
+        "| Appendix Table | `results/final_paper/ablations/lift_hard_negative_endpoint_200ep/REPORT.md` | Exploratory three-split non-Can Lift hard-negative endpoint aggregate |",
     ],
     ROOT / "paper" / "MANUSCRIPT_CHECKLIST.md": [
         "| Figure 1 | `../results/final_paper/figures/triage_bc_method_diagram.pdf` | TRIAGE-BC pipeline and hidden-label-free flow. |",
@@ -51,15 +58,26 @@ EXPECTED_DOC_ROWS = {
         "| Appendix Figure | `../results/final_paper/figures/primary_endpoint_paired_deltas.pdf` | Paired initial-state endpoint uncertainty. |",
         "| Appendix Figure | `../results/final_paper/figures/can_prefix_positive_diagnostic.pdf` | Can prefix-positive generated diagnostic. |",
         "| Main Table | In-source table `tab:v02-gate` in `../paper/triage_bc_paper.tex` | Fresh v0.2 Can+Lift endpoint gate. |",
+        "| Main Table | In-source table `tab:regime-probes` in `../paper/triage_bc_paper.tex` | Generated Can regime-probe summary. |",
+        "| Appendix Table | `../results/final_paper/tables/generated_regime_probe_summary_REPORT.md` | Concise generated Can regime-probe summary backing `tab:regime-probes`. |",
         "| Appendix Table | `../results/final_paper_v02/tables/v02_fresh_gate_REPORT.md` | Combined v0.2 fresh Can+Lift endpoint gate. |",
         "| Appendix Table | `../results/final_paper_v02/tables/v02_fresh_gate_uncertainty_REPORT.md` | Fresh v0.2 paired initial-state uncertainty audit. |",
+        "| Appendix Table | `../results/final_paper_v02/tables/v02_fresh_baseline_coverage_REPORT.md` | Fresh v0.2 selected-vs-baseline coverage audit, including optional all-demo/all-positive diagnostic status. |",
         "| Appendix Table | `../results/final_paper_v02/tables/v02_fresh_router_support_REPORT.md` | Fresh v0.2 hidden-label audit and branch decisions. |",
         "| Appendix Table | `../results/final_paper/tables/bad_label_control_summary_REPORT.md` | Bad-label versus positive-only control summary. |",
         "| Appendix Table | `../results/final_paper/ablations/hard_negative_can_action_conflict_REPORT.md` | Support-only hard-negative Can action-conflict diagnostic. |",
+        "| Appendix Table | `../results/final_paper/ablations/lift_hard_negative_action_conflict_REPORT.md` | Support-only non-Can Lift hard-negative action-conflict diagnostic. |",
+        "| Appendix Table | `../results/final_paper/ablations/lift_hard_negative_endpoint_200ep/REPORT.md` | Exploratory full-budget three-split Lift hard-negative endpoint gate. |",
         "| Appendix Table | `../results/final_paper/ablations/hard_negative_can_endpoint_200ep/REPORT.md` | Three-split hard-negative Can endpoint check. |",
         "| Appendix Table | `../results/final_paper/ablations/can_coverage_shift_REPORT.md` | Support-only coverage-shift Can diagnostic. |",
         "| Appendix Table | `../results/final_paper/ablations/can_coverage_shift_endpoint_200ep/REPORT.md` | Three-split coverage-shift Can endpoint check. |",
         "| Appendix Table | `../results/final_paper/tables/can_prefix_positive_diagnostic_REPORT.md` | Three-split prefix-positive Can endpoint check. |",
+        "| Appendix Table | `../results/final_paper/tables/can_prefix_length_robustness_REPORT.md` | Support-only prefix-length robustness sweep for the generated Can prefix-positive probe. |",
+        "| Appendix Table | `../results/final_paper/tables/active_abstention_evaluation_REPORT.md` | Active abstention audit for original and shuffled Can MG stress rows. |",
+        "| Appendix Table | `../results/final_paper/tables/failure_mode_initial_states_REPORT.md` | Paired initial-state failure-mode audit over positive-only, weighted, hard-union, and all-demo Can policies. |",
+        "| Appendix Table | `../results/final_paper/tables/submission_readiness_audit_REPORT.md` | Generated acceptance-readiness audit over empirical-submission and methods-dominance criteria. |",
+        "| Reviewer Summary | `../paper/REVIEWER_CLAIM_SUMMARY.md` | One-page claim, evidence, and limitation summary for paper review. |",
+        "| Final Claim Contract | `../FINAL_CLAIM_CONTRACT.md` | Final allowed-claim and forbidden-claim boundary for the current paper package. |",
     ],
     ROOT / "paper" / "REPRODUCE_PAPER.md": [
         "| Figure 1, method diagram | `../results/final_paper/figures/triage_bc_method_diagram.pdf` | `../scripts/plot_triage_bc_method_diagram.py` |",
@@ -71,16 +89,27 @@ EXPECTED_DOC_ROWS = {
         "| Bad-label control summary | `../results/final_paper/tables/bad_label_control_summary_REPORT.md` | `../scripts/summarize_bad_label_control_table.py` |",
         "| Fresh v0.2 Can+Lift gate | `../results/final_paper_v02/tables/v02_fresh_gate_REPORT.md` | `../scripts/summarize_v02_fresh_gate.py` |",
         "| Fresh v0.2 uncertainty audit | `../results/final_paper_v02/tables/v02_fresh_gate_uncertainty_REPORT.md` | `../scripts/summarize_v02_fresh_gate_uncertainty.py` |",
+        "| Fresh v0.2 baseline coverage audit | `../results/final_paper_v02/tables/v02_fresh_baseline_coverage_REPORT.md` | `../scripts/summarize_v02_fresh_baseline_coverage.py` |",
         "| Fresh v0.2 router support audit | `../results/final_paper_v02/tables/v02_fresh_router_support_REPORT.md` | `../scripts/summarize_v02_fresh_router_support_audit.py` |",
+        "| v0.2 router-regret table | `../results/final_paper_v02/tables/v02_router_regret_REPORT.md` | `../scripts/summarize_v02_router_regret_table.py` |",
+        "| Generated regime-probe summary | `../results/final_paper/tables/generated_regime_probe_summary_REPORT.md` | `../scripts/summarize_generated_regime_probe_table.py` |",
         "| Master evidence tables | `../results/final_paper/tables/baseline_strength_REPORT.md` | `../scripts/summarize_master_evidence_tables.py` |",
         "| Candidate-family audit | `../results/final_paper/tables/candidate_family_oracle_proxy_REPORT.md` | `../scripts/summarize_candidate_family_audit.py` |",
         "| Hybrid support audit | `../results/final_paper/tables/hybrid_candidate_support_REPORT.md` | `../scripts/summarize_hybrid_candidate_support_audit.py` |",
         "| Hard-negative Can diagnostic | `../results/final_paper/ablations/hard_negative_can_action_conflict_REPORT.md` | `../scripts/summarize_hard_negative_can_action_conflict_audit.py` |",
+        "| Hard-negative Lift support diagnostic | `../results/final_paper/ablations/lift_hard_negative_action_conflict_REPORT.md` | `../scripts/summarize_lift_hard_negative_action_conflict_audit.py` |",
+        "| Hard-negative Lift three-split endpoint gate | `../results/final_paper/ablations/lift_hard_negative_endpoint_200ep/REPORT.md` | manual GPU runs documented in the aggregate report |",
         "| Hard-negative Can endpoint check | `../results/final_paper/ablations/hard_negative_can_endpoint_200ep/REPORT.md` | `../scripts/summarize_hard_negative_can_endpoint_smoke.py` |",
         "| Coverage-shift Can diagnostic | `../results/final_paper/ablations/can_coverage_shift_REPORT.md` | `../scripts/summarize_can_coverage_shift_audit.py` |",
         "| Coverage-shift Can endpoint check | `../results/final_paper/ablations/can_coverage_shift_endpoint_200ep/REPORT.md` | `../scripts/summarize_hard_negative_can_endpoint_smoke.py` |",
         "| Prefix-positive Can diagnostic figure | `../results/final_paper/figures/can_prefix_positive_diagnostic.pdf` | `../scripts/summarize_can_prefix_positive_endpoint.py`, then `../scripts/plot_can_prefix_positive_diagnostic.py` |",
         "| Prefix-positive Can diagnostic report | `../results/final_paper/tables/can_prefix_positive_diagnostic_REPORT.md` | `../scripts/plot_can_prefix_positive_diagnostic.py` |",
+        "| Prefix-length robustness support sweep | `../results/final_paper/tables/can_prefix_length_robustness_REPORT.md` | `../scripts/summarize_can_prefix_length_robustness.py` |",
+        "| Active abstention evaluation | `../results/final_paper/tables/active_abstention_evaluation_REPORT.md` | `../scripts/summarize_active_abstention_evaluation.py` |",
+        "| Failure-mode initial-state audit | `../results/final_paper/tables/failure_mode_initial_states_REPORT.md` | `../scripts/summarize_failure_mode_initial_states.py` |",
+        "| Submission-readiness audit | `../results/final_paper/tables/submission_readiness_audit_REPORT.md` | `../scripts/summarize_submission_readiness_audit.py` |",
+        "| Reviewer-facing claim summary | `../paper/REVIEWER_CLAIM_SUMMARY.md` | manually maintained claim-contract summary guarded by validators |",
+        "| Final claim contract | `../FINAL_CLAIM_CONTRACT.md` | manually maintained final allowed-claim boundary guarded by validators |",
     ],
 }
 
@@ -154,8 +183,8 @@ def main() -> None:
     except RuntimeError as exc:
         failures.append(str(exc))
     else:
-        if standalone_pages != 17:
-            failures.append(f"paper/triage_bc_paper.pdf has {standalone_pages} pages, expected 17")
+        if standalone_pages != 18:
+            failures.append(f"paper/triage_bc_paper.pdf has {standalone_pages} pages, expected 18")
         if iclr_pages != 15:
             failures.append(f"paper/iclr2026/main.pdf has {iclr_pages} pages, expected 15")
         if not re.search(r"\b8\s+C ONCLUSION\b", page9):

@@ -18,7 +18,13 @@ Use:
 - Tri-signal scoring can recover useful hidden-positive support in controlled settings.
 - Hard support can beat soft weighting on frozen Can 40p/80b.
 - Soft weighting can beat hard support when coverage dominates, as on frozen Lift MG and Can MG stress diagnostics.
-- A frozen v0.2 portfolio router passes a fresh Can+Lift gate by selecting hard union on Can and weighted coverage on Lift (`209/300` versus `187/300` best per-split baselines), but paired-bootstrap intervals cross zero and keep the claim directional.
+- A frozen v0.2 portfolio router remains barely positive on the five-split fresh Can+Lift gate by selecting hard union on Can and weighted coverage on Lift (`340/500` versus `338/500` best per-split baselines), but paired-bootstrap intervals cross zero and keep the claim directional.
+- The current router-regret table supports the portfolio framing on completed Can+Lift rows: v0.2 has `23/500` regret to the audit-only oracle branch selector, versus `64/500` for always positive-only NN and `62/500` for always weighted BC.
+- Active abstention is a stress/limitation result, not endpoint dominance: original/shuffled Can MG are both `stress_abstain`, with estimated mass/count `1947.9`/`1025.7` and `1466.3`/`515.7`; assigned router-v2 rows average `0.700`, while abstained rows top out at `0.333`.
+- The generated Can regime-probe summary is staged in `results/final_paper/tables/generated_regime_probe_summary_REPORT.md`: hard-negative is `104/150` versus `91/150` (`+13/150`), coverage-shift is `120/150` versus `103/150` (`+17/150`), and prefix-positive is `119/150` versus `6/150` (`+113/150`). These remain controlled split constructions, not default benchmark rows.
+- The non-Can Lift hard-negative endpoint gate is exploratory only: `results/final_paper/ablations/lift_hard_negative_endpoint_200ep/REPORT.md` gives a full-budget split-101/202/303 aggregate of `15/150` for bad-aware proxy top40 versus `5/150` for state-action positive-NN top40, with selected support of 82 hidden positives and 38 hidden bad demos versus 12 hidden positives and 108 hidden bad demos. Low absolute success keeps it out of the main endpoint claims.
+- The theory-lite contribution is `Proposition 1 (coverage-contamination criterion)`: add unlabeled support when marginal coverage gain exceeds normalized marginal contamination cost.
+- `REGIME_PROBE_SUITE.md` freezes the generated diagnostics as a TRI-Signal regime-probe suite and explicitly separates completed mechanism probes from default benchmark rows.
 - Strong positive-only retrieval is a first-class baseline and often beats the current bad-aware converter.
 
 Avoid:
@@ -31,14 +37,14 @@ Avoid:
 
 ## Abstract Skeleton
 
-Offline imitation datasets often contain a small number of trusted successful demonstrations, a small number of known failures, and a larger unlabeled log with mixed behavior. A common response is to clone all data or softly weight the log with a learned score, but these choices can fail under action-conflicting contamination or coverage-sensitive tasks. We study the score-to-policy conversion problem: how scarce successes and failures should calibrate support selection from a mixed log. TRIAGE-BC learns a tri-signal desirability score, estimates hidden positive mass, and routes between hard support, soft weighting, and abstention. In controlled continuous PointNav, adaptive score-gap support reaches perfect success under extreme contamination. On frozen Robomimic endpoints, v0.1 exposes the precision/coverage tradeoff, and a frozen v0.2 portfolio router reaches `209/300` selected-branch successes versus `187/300` for best per-split baselines on fresh Can+Lift splits. The resulting evidence supports a narrower but useful conclusion: support calibration is the bottleneck, and strong no-bad-label retrieval must be included in this problem class.
+Offline imitation datasets often contain a small number of trusted successful demonstrations, a small number of known failures, and a larger unlabeled log with mixed behavior. A common response is to clone all data or softly weight the log with a learned score, but these choices can fail under action-conflicting contamination or coverage-sensitive tasks. We study the score-to-policy conversion problem: how scarce successes and failures should calibrate support selection from a mixed log. TRIAGE-BC learns a tri-signal desirability score, estimates hidden positive mass, and routes between hard support, soft weighting, and abstention. In controlled continuous PointNav, adaptive score-gap support reaches perfect success under extreme contamination. On frozen Robomimic endpoints, v0.1 exposes the precision/coverage tradeoff, and a frozen v0.2 portfolio router reaches `340/500` selected-branch successes versus `338/500` for best per-split baselines on fresh Can+Lift splits. The resulting evidence supports a narrower but useful conclusion: support calibration is the bottleneck, and strong no-bad-label retrieval must be included in this problem class.
 
 ## Contributions
 
 1. Formalize offline imitation from scarce positive demonstrations, scarce failure demonstrations, and a contaminated unlabeled log as a score-to-support conversion problem.
 2. Propose TRIAGE-BC v0.1 and a frozen v0.2 portfolio router: tri-signal score learning, trajectory-score calibration, positive-mass estimation, hidden-label-free support routing, and BC-RNN-GMM policy learning.
 3. Provide controlled PointNav evidence that adaptive score-gap support can solve heavy-contamination settings where all-demo, positive-plus-unlabeled, and local weighted BC degrade.
-4. Provide frozen Robomimic evidence showing both sides of the precision/coverage tradeoff: Can 40p/80b favors hard selected support, Lift MG favors broader weighted coverage, and fresh v0.2 branch selection improves the combined Can+Lift gate.
+4. Provide frozen Robomimic evidence showing both sides of the precision/coverage tradeoff: Can 40p/80b shows hard selected support beating weighted and all-demo controls, Lift MG favors broader weighted coverage, positive-only retrieval remains stronger on Can, and fresh v0.2 branch selection is barely positive on the combined Can+Lift gate without establishing fixed-branch dominance.
 5. Establish strong caveats through positive-only NN, all-positive oracle, score-shape diagnostics, and Can MG branch-proxy failure.
 
 ## Recommended Paper Structure
@@ -215,6 +221,7 @@ Core points:
 - Lift MG has strong score separation, but endpoint success still favors weighted coverage.
 - Can MG has a high-score plateau, motivating abstention.
 - Simple positive/negative likelihood branch proxies fail on Can MG.
+- The active-abstention audit shows this is a risk-control decision: original MG proxies match best success in `0/6` cases, while shuffled MG gets `6/6` only because the staged hard and soft forced branches both reach `0.100`.
 
 Suggested limitation:
 
@@ -226,7 +233,7 @@ List directly:
 
 - Positive-only NN is strongest on frozen Can 40p/80b and Can 20p/80b diagnostics.
 - Weighted BC is strongest on frozen Lift MG.
-- v0.2 selected weighted BC is only a modest Lift improvement over positive-only NN (`80/150` versus `74/150`) and loses one fresh split.
+- v0.2 selected weighted BC is a modest Lift improvement over positive-only NN (`143/250` versus `125/250`) and ties the completed v0.1 hard-support total (`143/250`), but the best completed per-split Lift baseline is `146/250` and v0.2 wins only 2/5 completed comparisons.
 - Can MG is an abstention/stress diagnostic, not a main success.
 - Square and Transport are support-side relative-quality diagnostics, not failure-demo policy benchmarks.
 - The robotics method relies on a strong BC-RNN-GMM backbone.
@@ -252,13 +259,24 @@ core overclaim-avoidance caveats are guarded by
 | Figure 3 | `results/final_paper/figures/robotics_primary_endpoint_matrix.png` | Primary Robomimic endpoint matrix |
 | Figure 4 | `results/final_paper/figures/can40_precision_coverage.png` | Precision/coverage frontier |
 | Figure 5 | `results/final_paper/figures/score_shape_diagnostics.png` | Score-shape and abstention diagnostic |
+| Main Table | In-source table `tab:regime-probes` backed by `results/final_paper/tables/generated_regime_probe_summary_REPORT.md` | Generated Can regime-probe summary |
 | Appendix Figure | `results/final_paper/figures/robotics_current_endpoint_matrix.png` | Diagnostic endpoint matrix |
 | Appendix Figure | `results/final_paper/figures/primary_endpoint_paired_deltas.png` | Paired initial-state endpoint uncertainty |
+| Appendix Figure | `results/final_paper/figures/precision_coverage_frontier.png` | Cross-regime precision/coverage frontier |
 | Appendix Table | `results/final_paper/tables/primary_endpoint_uncertainty.csv` | Primary endpoint uncertainty |
 | Appendix Table | `results/final_paper/tables/primary_endpoint_paired_bootstrap.csv` | Paired initial-state bootstrap uncertainty |
 | Appendix Table | `results/final_paper_v02/tables/v02_fresh_gate_uncertainty_REPORT.md` | Fresh v0.2 paired initial-state uncertainty |
+| Appendix Table | `results/final_paper_v02/tables/v02_router_regret_REPORT.md` | Current v0.2 router-regret table and A3 gap audit |
 | Appendix Table | In-source table `tab:bad-label-controls` backed by `results/final_paper/tables/bad_label_control_summary.csv` | Bad-label versus positive-only control summary in the compiled appendix |
 | Appendix Table | `results/final_paper/tables/bad_label_control_summary.csv` | Bad-label versus positive-only control summary |
+| Appendix Table | `results/final_paper/tables/precision_coverage_frontier_REPORT.md` | Cross-regime support frontier and matched comparisons |
+| Appendix Table | `results/final_paper/tables/policy_quality_proxy_no_go_REPORT.md` | Consolidated policy-quality proxy no-go table |
+| Appendix Table | `results/final_paper/tables/active_abstention_evaluation_REPORT.md` | Active abstention audit for Can MG stress rows |
+| Appendix Table | `results/final_paper/tables/hard_union_component_ablation_REPORT.md` | Can 40 hard-union component ablation |
+| Appendix Table | `results/final_paper/tables/failure_mode_initial_states_REPORT.md` | Paired Can initial-state failure-mode audit |
+| Appendix Table | `results/final_paper/tables/can_prefix_length_robustness_REPORT.md` | Support-only prefix-length robustness sweep |
+| Appendix Table | `results/final_paper/ablations/lift_hard_negative_action_conflict_REPORT.md` | Support-only non-Can Lift hard-negative diagnostic |
+| Appendix Table | `results/final_paper/ablations/lift_hard_negative_endpoint_200ep/REPORT.md` | Exploratory three-split non-Can Lift hard-negative endpoint aggregate |
 | Appendix Table | `results/final_paper/ablations/can_paired_pos20_bad80_support_audit_3split.csv` | Heavy-contamination Can caveat |
 | Appendix Table | `results/final_paper/ablations/can_paired_balanced_80p80b_support_and_split33_endpoint.csv` | Balanced Can caveat |
 | Appendix Table | `results/final_paper/ablations/lift_mg_classifier_top160_endpoint_summary.csv` | Fixed top-k Lift failure |
@@ -304,12 +322,20 @@ Can MG stress:
 - All-positive support: `0.200`.
 - Pos-p10 hard support: `0.167`.
 - All-demo cloning: `0.100`.
+- Active abstention: original/shuffled MG are `stress_abstain`; assigned rows average `0.700`, abstained rows average `0.217` and top out at `0.333`.
+
+Theory-lite proposition:
+
+- `Proposition 1 (coverage-contamination criterion)` names the marginal support
+  test in Section 7: add an unlabeled trajectory when expected coverage gain
+  exceeds normalized bad-action contamination cost.
 
 ## Open Decisions Before Submission
 
 1. Whether Can 20p/80b split-33 endpoint is worth the compute. Current split-22 extension already strengthens the positive-only caveat.
 2. Square/Transport are repository-only diagnostics for now; include them in a venue appendix only if a later draft needs support-side relative-quality examples.
-3. Confirm the final venue/year. A provisional ICLR 2026 shell now exists, but
+3. Do not promote the Lift hard-negative endpoint gate as a primary result unless a higher-success non-Can row is added; the completed split-101/202/303 aggregate is only `15/150` versus `5/150`.
+4. Confirm the final venue/year. A provisional ICLR 2026 shell now exists, but
    the style files should be refreshed if the target changes.
 
 ## Immediate Writing Tasks

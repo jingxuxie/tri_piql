@@ -32,13 +32,22 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 def write_csv(path: Path, rows: list[dict[str, object]], fieldnames: list[str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
 
 def success_count(row: dict[str, str]) -> int:
     return int(round(float(row["success_rate"]) * int(float(row["eval_episodes"]))))
+
+
+def select_endpoint_metric(rows: list[dict[str, str]]) -> dict[str, str]:
+    for row in rows:
+        checkpoint_name = row.get("checkpoint_name", "")
+        checkpoint = row.get("checkpoint", "")
+        if checkpoint_name == "model_epoch_200" or Path(checkpoint).name == "model_epoch_200.pth":
+            return row
+    return rows[-1]
 
 
 def train_counts(report_path: Path) -> tuple[str, str]:
@@ -62,7 +71,7 @@ def collect_rows(root: Path, split_seeds: list[int]) -> list[dict[str, object]]:
             metrics_path = run_root / "eval" / "metrics.csv"
             if not metrics_path.exists():
                 continue
-            metrics = read_csv(metrics_path)[0]
+            metrics = select_endpoint_metric(read_csv(metrics_path))
             train_demo_count, selected_unlabeled = train_counts(run_root / "REPORT.md")
             rows.append(
                 {

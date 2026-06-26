@@ -1,0 +1,2 @@
+task,split_type,split_seed,method,policy_seed,selected_unlabeled,hidden_positive,hidden_bad,purity,train_demo_count,train_filter_key
+can_paired,pos40_bad80,404,positive_only_nn,0,40,35,5,0.875,50,final_can_paired_pos40_bad80_s404_positive_plus_positive_nn_top_unlabeled_demos_top40_seed0_train

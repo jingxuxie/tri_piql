@@ -31,19 +31,19 @@ Current status as of 2026-06-25:
 - The package is **not** ready for a decisive high-impact methods claim around TRIAGE-BC v0.2.
 - The latest action-risk v0.2 candidate improves support purity but fails the endpoint gate: positive-NN/risk fusion reaches `0.820` versus positive-only NN `0.840` on Can 40p/80b split 11, and `0.640` versus `0.760` on split 22.
 - A follow-up union candidate that keeps positive-only NN support and adds risk-fusion demos improves the pooled Can 40p/80b endpoint row to `116/150`, versus positive-only NN `108/150`, TRIAGE-BC v0.1 `99/150`, and weighted BC `90/150`. This is promising Can-only development evidence, but it is not a frozen v0.2 because it loses split 11 to positive-only NN and does not address Lift MG or Can MG.
-- A follow-up mass/count portfolio-router audit chooses hard union for low-mass Can rows, soft weighted BC for Lift, and abstention for Can MG. It reaches `209/300` over the two primary development endpoints versus `201/300` for the strongest pre-union per-task baselines and `173/300` for v0.1. This is the first plausible cross-task v0.2 shape, but it is post-hoc and must be frozen before fresh splits.
-- The fresh frozen Can 40p/80b branch is now complete and positive for the
-  predeclared v0.2 router: hard union reaches `45/50`, `45/50`, and `39/50` on
-  split seeds `101`, `202`, and `303`, versus strongest completed non-oracle
-  baselines `37/50`, `40/50`, and `36/50`.
-- The fresh frozen Lift MG branch is also complete for the predeclared v0.2
-  router: selected weighted BC reaches `31/50`, `30/50`, and `19/50` on split
-  seeds `101`, `202`, and `303`, versus positive-only NN `28/50`, `25/50`, and
-  `21/50`. This gives a modest aggregate edge (`80/150` versus `74/150`) but
-  loses split `303`, so it supports cautious branch-selection framing rather
-  than a decisive new-method claim.
+- A follow-up mass/count portfolio-router audit chooses hard union for low-mass Can rows, soft weighted BC for Lift, and abstention for Can MG. It reaches `209/300` over the two primary development endpoints versus `201/300` for the strongest pre-union per-task baselines and `173/300` for v0.1. This is the development shape that was frozen into v0.2; after completing all five A3 Lift v0.1 audit rows, the five-split fresh Can+Lift gate now reaches `340/500` versus `338/500`.
+- The fresh frozen Can 40p/80b branch is now complete over five splits for the
+  predeclared v0.2 router: hard union reaches `197/250` versus `192/250` for
+  the strongest completed non-oracle baselines, winning 4/5 splits but losing
+  split `404` by `12/50`.
+- The fresh frozen Lift MG branch is also complete over five splits for the
+  predeclared v0.2 router: selected weighted BC reaches `143/250` versus
+  the best completed per-split baseline at `146/250`, winning 2/5 completed
+  comparisons after completing all five v0.1 TRIAGE hard-support audit rows.
+  This supports cautious branch-selection framing rather than a decisive
+  new-method claim because the selected Lift branch is a strong baseline.
 - Combined across fresh Can 40p/80b and Lift MG, the selected v0.2 branches
-  reach `209/300` versus `187/300` for the best completed non-oracle baseline
+  reach `340/500` versus `338/500` for the best completed non-oracle baseline
   per split.
 - The strongest evidence for explicit bad labels is now controlled PointNav plus generated Can hard-negative, coverage-shift, and prefix-positive diagnostics; the primary frozen Robomimic rows still require strong caveats.
 
@@ -1278,6 +1278,14 @@ explicit action-conflict / bad-neighbor proxies match it in only `1/32` cases.
 Do not train another endpoint variant from the current hybrid candidate family
 unless the candidate generator itself changes.
 
+Consolidated proxy no-go status on 2026-06-25: the paper-facing table in
+`results/final_paper/tables/policy_quality_proxy_no_go_REPORT.md` aggregates
+likelihood, contrastive likelihood, negative rejection, support-purity,
+hidden-positive-recall, coverage, and initial/transition-coverage checks.
+Deployable proxy attempts match endpoint winners in only `2/11` rows, and
+audit-only support rows match `3/6`; this should be cited as the main
+policy-quality proxy no-go artifact.
+
 Follow-up candidate-generator status on 2026-06-25: direct action-risk
 candidates do improve hidden support labels, but the first proper endpoint gate
 is negative. On Can 40p/80b split seed 11, `bad_neighbor_safe_top40` selects
@@ -1307,6 +1315,25 @@ candidate family, not as TRIAGE-BC v0.2: Lift MG and Can MG remain unresolved,
 and any promoted v0.2 still needs a frozen hidden-label-free selection rule and
 fresh cross-task validation.
 
+Component-ablation status on 2026-06-25: the paper-facing table in
+`results/final_paper/tables/hard_union_component_ablation_REPORT.md` now
+separates positive-only NN top40, risk-fusion top40, union top40,
+classifier-only top40, weighted BC, and v0.1 adaptive masscap. It shows that
+risk-fusion alone improves hidden support labels but loses the two-split
+endpoint check to positive-only (`73/100`, `-0.070`), classifier-only top40 is
+support-only and dominated, and the union's pooled gain comes from preserving
+the positive-only anchor while adding coverage on splits `22` and `33`.
+
+Failure-mode audit status on 2026-06-25:
+`results/final_paper/tables/failure_mode_initial_states_REPORT.md` now
+compares positive-only NN, weighted BC, v0.2 hard union, and all-demo BC on
+three representative paired Can 40p/80b initial states from existing endpoint
+rollouts. It includes a hard-union rescue on split `33` / `demo_105`, a
+positive-anchor regression on split `11` / `demo_39`, and a soft-pool rescue on
+split `33` / `demo_99`. Treat this as appendix intuition only: grasp and
+loop/miss columns are metric proxies from success and horizon-length failures,
+not video-level annotations.
+
 Portfolio-router update on 2026-06-25: the candidate-family audit now includes
 the union branch, and a new mass/count router audit gives the first plausible
 cross-task v0.2 shape. The rule uses no hidden labels: low estimated positive
@@ -1321,18 +1348,20 @@ The development freeze for that fresh-split gate is now drafted in
 `METHOD_FREEZE_V02.md`, `configs/final_method_v02.yaml`, and
 `configs/final_eval_v02.yaml`.
 
-Fresh-gate update on 2026-06-25: all three frozen Can 40p/80b and Lift MG split
+Fresh-gate update on 2026-06-25: five frozen Can 40p/80b and Lift MG split
 seeds completed selected-branch endpoints and the strongest completed
 same-backbone baselines. The v0.2 hard union row on Can is `45/50`, `45/50`,
-and `39/50` on split seeds `101`, `202`, and `303`; strongest completed
-non-oracle baselines are `37/50`, `40/50`, and `36/50`. The v0.2 selected
-weighted row on Lift is `31/50`, `30/50`, and `19/50`; positive-only NN is
-`28/50`, `25/50`, and `21/50`. All rows use 200-epoch official BC-RNN-GMM and
-50 valid-positive-start rollouts. Combined selected rows are `209/300` versus
-`187/300` for the best completed non-oracle baseline per split. This is a
-completed fresh Can+Lift gate, but
-the cross-task v0.2 claim should stay cautious because Lift is only `80/150`
-versus `74/150` in aggregate and loses split `303`.
+`39/50`, `27/50`, and `41/50` on split seeds `101`, `202`, `303`, `404`, and
+`505`; strongest completed non-oracle baselines are `37/50`, `40/50`, `36/50`,
+`39/50`, and `40/50`. The v0.2 selected weighted row on Lift is `31/50`,
+`30/50`, `19/50`, `30/50`, and `33/50`; positive-only NN is `28/50`, `25/50`,
+`21/50`, `25/50`, and `26/50`. All rows use 200-epoch official BC-RNN-GMM and
+50 valid-positive-start rollouts. Combined selected rows are `340/500` versus
+`338/500` for the best completed non-oracle baseline per split after completing
+all five v0.1 TRIAGE hard-support audit rows. This is a
+completed fresh Can+Lift gate, but the cross-task v0.2 claim should stay
+cautious because Can has a severe split-404 reversal, Lift selects weighted BC,
+and the paired-bootstrap intervals cross zero.
 
 Prefix-positive robotics diagnostic status on 2026-06-25: the controlled Can
 prefix-positive construction produces a strong bad-label win. Across split
@@ -1350,6 +1379,72 @@ Paper-facing summary artifacts are staged as
 `results/final_paper/figures/can_prefix_positive_diagnostic.{png,pdf}`, and the
 appendix text/checklist/repro docs now reference the diagnostic without
 promoting it to the main benchmark matrix.
+
+Generated regime-probe summary status on 2026-06-25:
+`results/final_paper/tables/generated_regime_probe_summary_REPORT.md` now
+consolidates the endpoint-backed hard-negative, coverage-shift, and
+prefix-positive Can probes for the main-paper `tab:regime-probes` table.
+The concise row is hard-negative `104/150` versus `91/150` (`+13/150`,
+support `113/7` versus `70/50`), coverage-shift `120/150` versus `103/150`
+(`+17/150`, support `118/2` versus `105/15`), and prefix-positive `119/150`
+versus `6/150` (`+113/150`, support `195/45` versus `37/203`). Keep this as
+generated mechanism evidence, not a default Robomimic benchmark row.
+
+Prefix-length robustness status on 2026-06-25:
+`results/final_paper/tables/can_prefix_length_robustness_REPORT.md` varies the
+generated Can prefix-positive label length at fixed split seeds `101/202/303`,
+label budget, and top80 support size. Bad-aware state top80 clears matched
+prefix state-action positive-NN top80 for short/default/long prefixes:
+hidden-positive recall deltas are `+0.400`, `+0.658`, and `+0.737`, while
+hidden-bad admission deltas are `-0.400`, `-0.658`, and `-0.737`. This is
+support-only construction robustness; it strengthens the generated-probe
+mechanism story but is not another endpoint result.
+
+Non-Can generated support status on 2026-06-25:
+`results/final_paper/ablations/lift_hard_negative_action_conflict_REPORT.md`
+adds the first Lift generated hard-negative/action-conflict support audit. Across
+split seeds `101/202/303`, bad-aware proxy top40 selects `82/120` hidden
+positives and admits `38/240` hidden bad demos, while state-action positive-NN
+top40 selects `12/120` hidden positives and admits `108/240` hidden bad demos.
+This clears a support-only C1 gate and suggests the bad-aware support mechanism
+can transfer beyond Can, but it is not a policy endpoint result.
+
+Non-Can endpoint-smoke status on 2026-06-25:
+`results/final_paper/ablations/lift_hard_negative_endpoint_smoke/split101/REPORT.md`
+adds a bounded Lift hard-negative endpoint smoke. It trains official
+BC-RNN-GMM for only 50 epochs on split `101` and evaluates 10 valid-positive
+starts. Bad-aware proxy top40 reaches `2/10`, while state-action positive-NN
+top40 reaches `1/10`; support on this split is `21` hidden positives and `19`
+hidden bad demos for bad-aware proxy top40 versus `7` and `33` for positive-NN.
+This is feasibility evidence only. It is too noisy and under-budgeted for a C1
+endpoint claim; the next meaningful gate is full 200-epoch / 50-rollout split
+`101` before expanding to seeds `202` and `303`.
+
+Non-Can full-budget split-101 status on 2026-06-25:
+`results/final_paper/ablations/lift_hard_negative_endpoint_200ep/split101/REPORT.md`
+now runs the same Lift hard-negative pair at 200 epochs and 50 rollouts on split
+`101`. Bad-aware proxy top40 reaches `7/50` with average length `137.3`, while
+state-action positive-NN top40 reaches `3/50` with average length `143.6`.
+This is directionally consistent with the support audit but weak in absolute
+success. It should stay exploratory unless the remaining split seeds `202/303`
+are run and preserve the margin.
+
+Active-abstention status on 2026-06-25:
+`results/final_paper/tables/active_abstention_evaluation_REPORT.md` stages the
+C2 Can MG abstention audit. Router-v2 abstains on original and shuffled Can MG
+with mass/count `1947.9`/`1025.7` and `1466.3`/`515.7`; assigned router-v2 rows
+average `0.700` fixed-20k success with minimum `0.600`, while abstained rows
+average `0.217` and top out at `0.333`. Original-MG proxies match best success
+in `0/6` cases; shuffled MG gets `6/6` only because both staged forced branches
+reach `0.100`. Treat this as stress/limitation evidence that abstention is more
+honest than forcing a branch, not as a Can MG success result.
+
+Theory-lite status on 2026-06-25: the paper theory section now names the
+existing risk decomposition as `Proposition 1 (coverage-contamination
+criterion)`. The proposition states that a hard selector should add an unlabeled
+trajectory exactly when its marginal coverage gain exceeds its normalized
+marginal contamination cost. This is intentionally an organizing proposition,
+not a formal guarantee for nonlinear BC-RNN-GMM policies.
 
 If proxy works:
 
@@ -1415,6 +1510,12 @@ Recommended section order:
    endpoint checks are complete for split seeds 101/202/303; bad-aware prefix
    selection reaches 119/150 versus 6/150 for prefix positive-NN. This is now a
    paper-facing controlled robotics result, not a primary benchmark row.
+7. Can prefix-positive prefix-length robustness: support-only short/default/long
+   prefix sweep is complete; it should remain an appendix construction
+   robustness check unless a non-default prefix condition is endpoint-trained.
+8. Lift hard-negative/action-conflict support audit: support-only C1 diagnostic
+   is complete and clears against matched positive-NN support; endpoint training
+   is still required before it can be claimed as a non-Can policy result.
 
 ### Optional
 

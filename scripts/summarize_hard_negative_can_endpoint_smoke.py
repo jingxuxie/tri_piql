@@ -225,8 +225,10 @@ def aggregate_report(rows: list[dict[str, object]], args: argparse.Namespace) ->
     split_seeds = sorted({int(row["split_seed"]) for row in rows})
     train_epochs = sorted({int(row["train_epochs"]) for row in rows})
     eval_episodes = sorted({int(row["eval_episodes"]) for row in rows})
+    split_count = len(split_seeds)
+    aggregate_label = "Three-Split" if split_count == 3 else f"{split_count}-Split"
     lines = [
-        f"# {args.diagnostic_name} Three-Split Endpoint Check",
+        f"# {args.diagnostic_name} {aggregate_label} Endpoint Check",
         "",
         f"This is a {args.diagnostic_description} over split seeds "
         f"{', '.join(str(seed) for seed in split_seeds)}. It is stronger than a single-split development check, "
@@ -338,9 +340,20 @@ def report(rows: list[dict[str, object]], args: argparse.Namespace) -> str:
             )
     if any(row["candidate_id"] == "bad_aware_proxy_top40" for row in rows):
         if best["candidate_id"] == "bad_aware_proxy_top40":
-            lines.append(
-                "- The pure bad-aware candidate is best in this smoke; verify at the frozen endpoint budget before treating the cleaner support as a policy-quality claim."
-            )
+            if max(train_epochs) >= 200 and max(eval_episodes) >= 50:
+                aggregate_path = RESULT_ROOT.parent / "REPORT.md"
+                if aggregate_path.exists():
+                    lines.append(
+                        "- The bad-aware candidate is best on this split; use the aggregate report for claim scope."
+                    )
+                else:
+                    lines.append(
+                        "- The bad-aware candidate is best on this split; keep it exploratory until multi-split confirmation."
+                    )
+            else:
+                lines.append(
+                    "- The pure bad-aware candidate is best in this smoke; verify at the frozen endpoint budget before treating the cleaner support as a policy-quality claim."
+                )
         else:
             lines.append(
                 "- The pure bad-aware support is cleaner but not best in the smoke; the best endpoint candidate should be prioritized for the next run."

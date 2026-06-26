@@ -1,0 +1,19 @@
+split_seed,method_id,method_label,selected_unlabeled,hidden_positive_selected,hidden_bad_selected,support_purity,hidden_positive_recall,hidden_bad_admission,endpoint_success,endpoint_success_count,endpoint_delta_vs_positive,endpoint_status
+11,positive_only_nn_top40,positive-only NN top40,40,36,4,0.900,0.900,0.050,0.840,42/50,+0.000,endpoint
+11,positive_nn_risk_fusion_top40,risk-fusion top40,40,39,1,0.975,0.975,0.013,0.820,41/50,-0.020,endpoint
+11,positive_nn_risk_union_top40,positive-NN/risk union top40,45,40,5,0.889,1.000,0.062,0.760,38/50,-0.080,endpoint
+11,classifier_top40,classifier-only top40,40,27,13,0.675,0.675,0.163,,,,support_only
+11,weighted_full_pool,weighted BC full pool,120,40,80,0.333,1.000,1.000,0.720,36/50,-0.120,endpoint
+11,triage_adaptive_masscap,v0.1 adaptive masscap,70,40,30,0.571,1.000,0.375,0.760,38/50,-0.080,endpoint
+22,positive_only_nn_top40,positive-only NN top40,40,37,3,0.925,0.925,0.037,0.760,38/50,+0.000,endpoint
+22,positive_nn_risk_fusion_top40,risk-fusion top40,40,40,0,1.000,1.000,0.000,0.640,32/50,-0.120,endpoint
+22,positive_nn_risk_union_top40,positive-NN/risk union top40,43,40,3,0.930,1.000,0.037,0.780,39/50,+0.020,endpoint
+22,classifier_top40,classifier-only top40,40,26,14,0.650,0.650,0.175,,,,support_only
+22,weighted_full_pool,weighted BC full pool,120,40,80,0.333,1.000,1.000,0.440,22/50,-0.320,endpoint
+22,triage_adaptive_masscap,v0.1 adaptive masscap,73,36,37,0.493,0.900,0.463,0.520,26/50,-0.240,endpoint
+33,positive_only_nn_top40,positive-only NN top40,40,33,7,0.825,0.825,0.087,0.560,28/50,+0.000,endpoint
+33,positive_nn_risk_fusion_top40,risk-fusion top40,40,38,2,0.950,0.950,0.025,,,,support_only
+33,positive_nn_risk_union_top40,positive-NN/risk union top40,47,39,8,0.830,0.975,0.100,0.780,39/50,+0.220,endpoint
+33,classifier_top40,classifier-only top40,40,32,8,0.800,0.800,0.100,,,,support_only
+33,weighted_full_pool,weighted BC full pool,120,40,80,0.333,1.000,1.000,0.640,32/50,+0.080,endpoint
+33,triage_adaptive_masscap,v0.1 adaptive masscap,47,34,13,0.723,0.850,0.163,0.700,35/50,+0.140,endpoint

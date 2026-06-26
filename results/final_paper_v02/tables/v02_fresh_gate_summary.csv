@@ -1,3 +1,3 @@
 setting_label,selected_method,selected_success,selected_episodes,selected_rate,best_baseline_success,best_baseline_episodes,best_baseline_rate,margin,winning_splits,tied_splits,losing_splits,best_baseline_methods
-Can 40p/80b,positive_nn_risk_union_top40,129,150,0.860,113,150,0.753,+0.107,3,0,0,"weighted_bc,positive_only_nn,positive_only_nn"
-Lift MG,weighted_bc,80,150,0.533,74,150,0.493,+0.040,2,0,1,"positive_only_nn,positive_only_nn,positive_only_nn"
+Can 40p/80b,positive_nn_risk_union_top40,197,250,0.788,192,250,0.768,+0.020,4,0,1,"weighted_bc,positive_only_nn,positive_only_nn,positive_only_nn,positive_only_nn"
+Lift MG,weighted_bc,143,250,0.572,146,250,0.584,-0.012,2,0,3,"triage_bc,triage_bc,positive_only_nn,triage_bc,positive_only_nn"

@@ -1,0 +1,27 @@
+{
+  "split_path": "results/final_paper/ablations/lift_hard_negative_action_conflict_splits/split303/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/lift/mg/low_dim_sparse_v15.hdf5",
+  "env_name": "Lift",
+  "env_version": "1.5.1",
+  "eval_init_mode": "valid_positive_states",
+  "eval_initial_ids": [
+    "demo_1184",
+    "demo_1214",
+    "demo_1215",
+    "demo_1265",
+    "demo_1290",
+    "demo_1418",
+    "demo_1422",
+    "demo_1431",
+    "demo_1445",
+    "demo_1500"
+  ],
+  "eval_episodes": 50,
+  "eval_horizon": 150,
+  "seed": 0,
+  "device": "cuda",
+  "checkpoints": [
+    "/home/eston/tri-piql/results/final_paper/ablations/lift_hard_negative_endpoint_200ep/split303/bap40/train/lift_hn200_s303_bap40_seed0_bc_rnn_e200/20260625201423/models/model_epoch_200.pth",
+    "/home/eston/tri-piql/results/final_paper/ablations/lift_hard_negative_endpoint_200ep/split303/sapn40/train/lift_hn200_s303_sapn40_seed0_bc_rnn_e200/20260625200951/models/model_epoch_200.pth"
+  ]
+}

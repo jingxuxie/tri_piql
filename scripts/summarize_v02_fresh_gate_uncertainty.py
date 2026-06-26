@@ -30,7 +30,7 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 def write_csv(path: Path, rows: list[dict[str, object]], fieldnames: list[str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -271,6 +271,24 @@ def markdown_table(rows: list[dict[str, object]], columns: list[str]) -> list[st
     return out
 
 
+def split_word(count: int) -> str:
+    return "split" if count == 1 else "splits"
+
+
+def split_summary(summary_rows: list[dict[str, object]], scope: str) -> dict[str, object]:
+    matches = [row for row in summary_rows if row["scope"] == scope]
+    if len(matches) != 1:
+        raise ValueError(f"expected one summary row for {scope}, found {len(matches)}")
+    return matches[0]
+
+
+def wins_losses(rows: list[dict[str, object]], setting_label: str) -> tuple[int, int, int]:
+    setting_rows = [row for row in rows if row["setting_label"] == setting_label]
+    wins = sum(1 for row in setting_rows if str(row["margin"]).startswith("+"))
+    losses = sum(1 for row in setting_rows if str(row["margin"]).startswith("-"))
+    return len(setting_rows), wins, losses
+
+
 def build_report(summary_rows: list[dict[str, object]], per_split_rows: list[dict[str, object]]) -> str:
     columns = [
         "scope",
@@ -295,13 +313,23 @@ def build_report(summary_rows: list[dict[str, object]], per_split_rows: list[dic
         "best_baseline_success",
         "margin",
     ]
+    can_count, can_wins, can_losses = wins_losses(per_split_rows, "Can 40p/80b")
+    lift_count, lift_wins, lift_losses = wins_losses(per_split_rows, "Lift MG")
+    combined = split_summary(summary_rows, "Combined Can+Lift")
+    combined_margin = float(str(combined["pooled_delta"]))
+    interval_crosses_zero = (
+        float(str(combined["paired_bootstrap95_low"])) <= 0.0
+        <= float(str(combined["paired_bootstrap95_high"]))
+    )
+    interval_clause = "crosses zero" if interval_crosses_zero else "does not cross zero"
+    combined_split_count = int(combined["split_units"])
     lines = [
         "# v0.2 Fresh Gate Uncertainty Audit",
         "",
         "This report adds descriptive uncertainty checks to the frozen `METHOD_FREEZE_V02.md` fresh Can+Lift gate.",
         "Rows compare the router-selected branch against the best completed non-oracle baseline within each split.",
         "Wilson intervals describe pooled endpoint rates; paired bootstrap intervals average repeated rollouts by `initial_demo_id`, then resample split units and paired validation initial states.",
-        "The intervals are wording guardrails rather than formal independent tests because there are only three split seeds per setting.",
+        f"The intervals are wording guardrails rather than formal independent tests because there are only {can_count} split seeds per setting.",
         "",
         "## Aggregate And Paired-Bootstrap Read",
         "",
@@ -313,9 +341,9 @@ def build_report(summary_rows: list[dict[str, object]], per_split_rows: list[dic
         "",
         "## Interpretation",
         "",
-        "- Can 40p/80b remains the clean v0.2 result: the selected hard-union branch wins all three fresh splits.",
-        "- Lift MG remains modest: the selected weighted branch wins two splits, loses one, and has a paired-bootstrap interval that crosses zero.",
-        "- The combined Can+Lift gate is positive, but it should still be framed as branch-selection evidence because the Lift gain is small and uses the weighted branch.",
+        f"- Can 40p/80b remains a hard-union result: the selected branch wins {can_wins}/{can_count} fresh {split_word(can_count)} and loses {can_losses}.",
+        f"- Lift MG remains a weighted-coverage result: the selected weighted branch wins {lift_wins}/{lift_count} fresh {split_word(lift_count)} and loses {lift_losses}.",
+        f"- The combined Can+Lift gate is positive ({combined_margin:+.3f}) over {combined_split_count} split-task units, but the paired-bootstrap interval {interval_clause}; frame it as branch-selection evidence rather than formal significance.",
         "",
     ]
     return "\n".join(lines)

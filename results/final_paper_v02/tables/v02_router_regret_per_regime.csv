@@ -1,0 +1,37 @@
+row_id,row_label,regime_id,regime_label,status,successes,episodes,success_rate,oracle_successes,oracle_episodes,oracle_success_rate,regret_successes,regret_rate,source_method,note
+always_positive_only_nn,Always positive-only NN,can40_fresh,Can 40p/80b,complete,174,250,0.696,209,250,0.836,35,0.140,positive_only_nn,
+always_weighted_bc,Always weighted BC,can40_fresh,Can 40p/80b,complete,158,250,0.632,209,250,0.836,51,0.204,weighted_bc,
+always_hard_support,Always hard support,can40_fresh,Can 40p/80b,complete,197,250,0.788,209,250,0.836,12,0.048,positive_nn_risk_union_top40,
+v01_triage_bc,v0.1 TRIAGE-BC,can40_fresh,Can 40p/80b,complete,171,250,0.684,209,250,0.836,38,0.152,triage_bc,"Completed all current split seeds: 101, 202, 303, 404, 505."
+v02_router,v0.2 router,can40_fresh,Can 40p/80b,complete,197,250,0.788,209,250,0.836,12,0.048,hard_risk_union,Frozen v0.2 selects hard union on all five Can 40 fresh splits.
+oracle_branch_selector,Oracle branch selector,can40_fresh,Can 40p/80b,oracle,209,250,0.836,209,250,0.836,0,0.000,per_split_best_completed_branch,"Audit-only selector over completed positive-only, weighted, and hard-union branches."
+always_positive_only_nn,Always positive-only NN,lift_mg_fresh,Lift MG,complete,125,250,0.500,154,250,0.616,29,0.116,positive_only_nn,
+always_weighted_bc,Always weighted BC,lift_mg_fresh,Lift MG,complete,143,250,0.572,154,250,0.616,11,0.044,weighted_bc,
+always_hard_support,Always hard support,lift_mg_fresh,Lift MG,complete,143,250,0.572,154,250,0.616,11,0.044,triage_bc,"Fresh hard-support proxy uses the v0.1 hard pos-min TRIAGE branch. Completed all current split seeds: 101, 202, 303, 404, 505."
+v01_triage_bc,v0.1 TRIAGE-BC,lift_mg_fresh,Lift MG,complete,143,250,0.572,154,250,0.616,11,0.044,triage_bc,"Completed all current split seeds: 101, 202, 303, 404, 505."
+v02_router,v0.2 router,lift_mg_fresh,Lift MG,complete,143,250,0.572,154,250,0.616,11,0.044,soft_weighted,Frozen v0.2 selects weighted BC on all five Lift MG fresh splits.
+oracle_branch_selector,Oracle branch selector,lift_mg_fresh,Lift MG,oracle,154,250,0.616,154,250,0.616,0,0.000,per_split_best_completed_branch,Audit-only selector over completed positive-only and weighted branches.
+always_positive_only_nn,Always positive-only NN,hard_negative_can,Hard-negative Can,complete,91,150,0.607,104,150,0.693,13,0.087,state_action_positive_nn_top40,
+always_weighted_bc,Always weighted BC,hard_negative_can,Hard-negative Can,not_applicable,,,,104,150,0.693,,,,Weighted BC was not part of this matched generated-regime endpoint probe.
+always_hard_support,Always hard support,hard_negative_can,Hard-negative Can,complete,104,150,0.693,104,150,0.693,0,0.000,hybrid_rank_fusion_badaware_heavy_top40,Bad-aware hard-support probe branch.
+v01_triage_bc,v0.1 TRIAGE-BC,hard_negative_can,Hard-negative Can,not_applicable,,,,104,150,0.693,,,,v0.1 frozen router was not evaluated for this generated-regime endpoint probe.
+v02_router,v0.2 router,hard_negative_can,Hard-negative Can,not_applicable,,,,104,150,0.693,,,,v0.2 router rule was not frozen/evaluated for this generated-regime endpoint probe.
+oracle_branch_selector,Oracle branch selector,hard_negative_can,Hard-negative Can,oracle,104,150,0.693,104,150,0.693,0,0.000,per_split_best_completed_probe_branch,Audit-only selector over completed positive-only and bad-aware probe branches.
+always_positive_only_nn,Always positive-only NN,coverage_shift_can,Coverage-shift Can,complete,103,150,0.687,120,150,0.800,17,0.113,state_action_positive_nn_top40,
+always_weighted_bc,Always weighted BC,coverage_shift_can,Coverage-shift Can,not_applicable,,,,120,150,0.800,,,,Weighted BC was not part of this matched generated-regime endpoint probe.
+always_hard_support,Always hard support,coverage_shift_can,Coverage-shift Can,complete,120,150,0.800,120,150,0.800,0,0.000,hybrid_rank_fusion_badaware_heavy_top40,Bad-aware hard-support probe branch.
+v01_triage_bc,v0.1 TRIAGE-BC,coverage_shift_can,Coverage-shift Can,not_applicable,,,,120,150,0.800,,,,v0.1 frozen router was not evaluated for this generated-regime endpoint probe.
+v02_router,v0.2 router,coverage_shift_can,Coverage-shift Can,not_applicable,,,,120,150,0.800,,,,v0.2 router rule was not frozen/evaluated for this generated-regime endpoint probe.
+oracle_branch_selector,Oracle branch selector,coverage_shift_can,Coverage-shift Can,oracle,120,150,0.800,120,150,0.800,0,0.000,per_split_best_completed_probe_branch,Audit-only selector over completed positive-only and bad-aware probe branches.
+always_positive_only_nn,Always positive-only NN,prefix_positive_can,Prefix-positive Can,complete,6,150,0.040,119,150,0.793,113,0.753,prefix_state_action_nn_top80,
+always_weighted_bc,Always weighted BC,prefix_positive_can,Prefix-positive Can,not_applicable,,,,119,150,0.793,,,,Weighted BC was not part of this matched generated-regime endpoint probe.
+always_hard_support,Always hard support,prefix_positive_can,Prefix-positive Can,complete,119,150,0.793,119,150,0.793,0,0.000,prefix_bad_aware_state_top80,Bad-aware hard-support probe branch.
+v01_triage_bc,v0.1 TRIAGE-BC,prefix_positive_can,Prefix-positive Can,not_applicable,,,,119,150,0.793,,,,v0.1 frozen router was not evaluated for this generated-regime endpoint probe.
+v02_router,v0.2 router,prefix_positive_can,Prefix-positive Can,not_applicable,,,,119,150,0.793,,,,v0.2 router rule was not frozen/evaluated for this generated-regime endpoint probe.
+oracle_branch_selector,Oracle branch selector,prefix_positive_can,Prefix-positive Can,oracle,119,150,0.793,119,150,0.793,0,0.000,best_completed_probe_branch,Audit-only selector over completed positive-only and bad-aware probe branches.
+always_positive_only_nn,Always positive-only NN,can_mg_stress,Can MG abstention/stress,not_run,,,,,,0.333,,,,No matched positive-only NN endpoint row is staged for the Can MG stress artifact.
+always_weighted_bc,Always weighted BC,can_mg_stress,Can MG abstention/stress,rate_only,,,0.333,,,0.333,,0.000,weighted,Rate-only reused final-20k Can MG stress diagnostic; episode counts are not staged in this CSV.
+always_hard_support,Always hard support,can_mg_stress,Can MG abstention/stress,rate_only,,,0.167,,,0.333,,0.166,posp10,Rate-only hard-support stress branch; episode counts are not staged in this CSV.
+v01_triage_bc,v0.1 TRIAGE-BC,can_mg_stress,Can MG abstention/stress,not_run,,,,,,0.333,,,,No directly comparable v0.1 Can MG endpoint row is staged for this regret table.
+v02_router,v0.2 router,can_mg_stress,Can MG abstention/stress,abstained,,,,,,0.333,,,stress_abstain,Frozen v0.2 abstains on large ambiguous MG-style pools; abstention is counted separately from failure.
+oracle_branch_selector,Oracle branch selector,can_mg_stress,Can MG abstention/stress,oracle_rate_only,,,0.333,,,0.333,,0.000,weighted,Audit-only best observed stress branch is weighted at fixed 20k.

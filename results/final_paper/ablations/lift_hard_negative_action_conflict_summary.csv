@@ -1,0 +1,19 @@
+setting_id,setting_label,row_role,candidate_id,candidate_family,split_count,selected_unlabeled,hidden_positive_selected,hidden_bad_selected,total_hidden_positive,total_hidden_bad,support_purity,hidden_positive_recall,hidden_bad_admission,selected_contamination
+lift_hard_negative_action_conflict,Lift hard-negative/action-conflict,support_diagnostic,state_action_positive_nn_top20,positive-only,3,60,4,56,120,240,0.067,0.033,0.233,0.933
+lift_hard_negative_action_conflict,Lift hard-negative/action-conflict,support_diagnostic,state_action_positive_nn_top40,positive-only,3,120,12,108,120,240,0.100,0.100,0.450,0.900
+lift_hard_negative_action_conflict,Lift hard-negative/action-conflict,support_diagnostic,state_action_positive_nn_top60,positive-only,3,180,20,160,120,240,0.111,0.167,0.667,0.889
+lift_hard_negative_action_conflict,Lift hard-negative/action-conflict,support_diagnostic,state_action_positive_nn_top80,positive-only,3,240,36,204,120,240,0.150,0.300,0.850,0.850
+lift_hard_negative_action_conflict,Lift hard-negative/action-conflict,support_diagnostic,state_positive_nn_top20,positive-only,3,60,2,58,120,240,0.033,0.017,0.242,0.967
+lift_hard_negative_action_conflict,Lift hard-negative/action-conflict,support_diagnostic,state_positive_nn_top40,positive-only,3,120,8,112,120,240,0.067,0.067,0.467,0.933
+lift_hard_negative_action_conflict,Lift hard-negative/action-conflict,support_diagnostic,state_positive_nn_top60,positive-only,3,180,15,165,120,240,0.083,0.125,0.688,0.917
+lift_hard_negative_action_conflict,Lift hard-negative/action-conflict,support_diagnostic,state_positive_nn_top80,positive-only,3,240,27,213,120,240,0.113,0.225,0.887,0.887
+lift_hard_negative_action_conflict,Lift hard-negative/action-conflict,support_diagnostic,bad_aware_proxy_top20,bad-aware proxy,3,60,50,10,120,240,0.833,0.417,0.042,0.167
+lift_hard_negative_action_conflict,Lift hard-negative/action-conflict,support_diagnostic,bad_aware_proxy_top40,bad-aware proxy,3,120,82,38,120,240,0.683,0.683,0.158,0.317
+lift_hard_negative_action_conflict,Lift hard-negative/action-conflict,support_diagnostic,bad_aware_proxy_top60,bad-aware proxy,3,180,103,77,120,240,0.572,0.858,0.321,0.428
+lift_hard_negative_action_conflict,Lift hard-negative/action-conflict,support_diagnostic,bad_aware_proxy_top80,bad-aware proxy,3,240,115,125,120,240,0.479,0.958,0.521,0.521
+lift_hard_negative_action_conflict,Lift hard-negative/action-conflict,support_diagnostic,hybrid_intersection_pos40_badaware40,hybrid,3,21,5,16,120,240,0.238,0.042,0.067,0.762
+lift_hard_negative_action_conflict,Lift hard-negative/action-conflict,support_diagnostic,hybrid_pos40_filter_badaware80,hybrid,3,52,10,42,120,240,0.192,0.083,0.175,0.808
+lift_hard_negative_action_conflict,Lift hard-negative/action-conflict,support_diagnostic,hybrid_pos40_filter_badaware80_refill40,hybrid,3,120,68,52,120,240,0.567,0.567,0.217,0.433
+lift_hard_negative_action_conflict,Lift hard-negative/action-conflict,support_diagnostic,hybrid_rank_fusion_badaware_heavy_top40,hybrid,3,120,62,58,120,240,0.517,0.517,0.242,0.483
+lift_hard_negative_action_conflict,Lift hard-negative/action-conflict,support_diagnostic,hybrid_rank_fusion_equal_top40,hybrid,3,120,41,79,120,240,0.342,0.342,0.329,0.658
+lift_hard_negative_action_conflict,Lift hard-negative/action-conflict,support_diagnostic,all_unlabeled_soft_reference,soft-reference,3,360,120,240,120,240,0.333,1.000,1.000,0.667

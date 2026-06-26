@@ -32,13 +32,22 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 def write_csv(path: Path, rows: list[dict[str, object]], fieldnames: list[str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
 
 def success_count(row: dict[str, str]) -> int:
     return int(round(float(row["success_rate"]) * int(float(row["eval_episodes"]))))
+
+
+def select_endpoint_metric(rows: list[dict[str, str]]) -> dict[str, str]:
+    for row in rows:
+        checkpoint_name = row.get("checkpoint_name", "")
+        checkpoint = row.get("checkpoint", "")
+        if checkpoint_name == "model_epoch_200" or Path(checkpoint).name == "model_epoch_200.pth":
+            return row
+    return rows[-1]
 
 
 def metric_row(
@@ -51,7 +60,7 @@ def metric_row(
 ) -> dict[str, object] | None:
     if not metrics_path.exists():
         return None
-    metrics = read_csv(metrics_path)[0]
+    metrics = select_endpoint_metric(read_csv(metrics_path))
     out: dict[str, object] = {
         "split_seed": split_seed,
         "method_id": method_id,
@@ -171,8 +180,12 @@ def build_report(rows: list[dict[str, object]]) -> str:
         completed_split_ids = {int(row["split_seed"]) for row in selected_rows}
         best_successes = 0
         best_episodes = 0
+        comparable_selected_successes = 0
+        comparable_selected_episodes = 0
+        comparable_splits = 0
         for split_seed in sorted(completed_split_ids):
             split_rows = [row for row in rows if int(row["split_seed"]) == split_seed]
+            selected = next((row for row in split_rows if row["method_id"] == UNION_TAG), None)
             baselines = [
                 row
                 for row in split_rows
@@ -181,17 +194,33 @@ def build_report(rows: list[dict[str, object]]) -> str:
             if not baselines:
                 continue
             best = max(baselines, key=lambda row: float(row["endpoint_success"]))
+            comparable_splits += 1
+            if selected is not None:
+                comparable_selected_successes += int(selected["success_count"])
+                comparable_selected_episodes += int(selected["eval_episodes"])
             best_successes += int(best["success_count"])
             best_episodes += int(best["eval_episodes"])
         lines.append(
             f"- Completed v0.2 selected Can rows: {selected_successes}/{selected_episodes}."
         )
         if best_episodes:
-            margin = selected_successes / selected_episodes - best_successes / best_episodes
+            margin = (
+                comparable_selected_successes / comparable_selected_episodes
+                - best_successes / best_episodes
+            )
             lines.append(
-                f"- Best completed non-oracle baseline per split: {best_successes}/{best_episodes} "
+                f"- Comparable splits with completed non-oracle baselines: {comparable_splits}."
+            )
+            lines.append(
+                f"- On comparable splits, v0.2 selected Can rows: "
+                f"{comparable_selected_successes}/{comparable_selected_episodes}."
+            )
+            lines.append(
+                f"- On comparable splits, best completed non-oracle baseline per split: {best_successes}/{best_episodes} "
                 f"(margin {margin:+.3f})."
             )
+        else:
+            lines.append("- No completed non-oracle baseline rows are available for the selected splits.")
 
     lines.extend(["", "## Per-Split Read", ""])
     for split_seed in sorted({int(row["split_seed"]) for row in rows}):

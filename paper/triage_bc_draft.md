@@ -4,7 +4,7 @@ Draft status: working Markdown manuscript scaffold. This draft is intentionally 
 
 ## Abstract
 
-Offline imitation datasets often contain a few trusted successes, a few known failures, and a larger unlabeled log with mixed behavior. When do the failure demonstrations help? We study this as a score-to-support conversion problem: scarce successes and failures can train a desirability score, but policy quality depends on how that score is converted into behavior-cloning data. TRIAGE-BC learns a tri-signal state-action score, aggregates it to trajectory scores, estimates hidden positive mass, and routes the unlabeled log into hard support, soft weighting, or abstention. Controlled PointNav and targeted generated Robomimic Can diagnostics show that explicit failures are valuable when positives are incomplete, trusted positives under-cover the state distribution, or bad demos are action-conflicting near-neighbors. A frozen v0.2 portfolio router improves fresh Can 40p/80b by selecting hard union support, and modestly improves fresh Lift MG by selecting weighted coverage. The evidence supports a focused conclusion: bad labels can calibrate useful support, but the bottleneck is hidden-label-free conversion from scores to policy-training data, and strong positive-only and weighted baselines must remain first-class controls.
+Offline imitation datasets often contain a few trusted successes, a few known failures, and a larger unlabeled log with mixed behavior. When do the failure demonstrations help? We study this as a score-to-support conversion problem: scarce successes and failures can train a desirability score, but policy quality depends on how that score is converted into behavior-cloning data. TRIAGE-BC learns a tri-signal state-action score, aggregates it to trajectory scores, estimates hidden positive mass, and routes the unlabeled log into hard support, soft weighting, or abstention. Controlled PointNav and targeted generated Robomimic Can diagnostics show that explicit failures are valuable when positives are incomplete, trusted positives under-cover the state distribution, or bad demos are action-conflicting near-neighbors. A frozen v0.2 portfolio router improves fresh Can 40p/80b by selecting hard union support, while fresh Lift MG remains a caveat: the router selects weighted coverage but trails the best completed per-split baseline (`143/250` versus `146/250`). The evidence supports a focused conclusion: bad labels can calibrate useful support, but the bottleneck is hidden-label-free conversion from scores to policy-training data, and strong positive-only and weighted baselines must remain first-class controls.
 
 ## 1. Introduction
 
@@ -16,14 +16,14 @@ This paper studies the conversion step between score learning and policy learnin
 
 We propose TRIAGE-BC, a score-calibrated behavior cloning framework. TRIAGE-BC trains a state-action desirability classifier from labeled successes and failures, aggregates classifier probabilities into trajectory scores, estimates positive mass in the unlabeled log from labeled score anchors, and then routes the unlabeled data through a hidden-label-free support converter. The frozen v0.1 method uses hard adaptive mass-capped support, positive-minimum threshold support, and abstention for ambiguous high-mass score shapes. The frozen v0.2 portfolio adds an explicit hard-risk-union branch, a soft weighted branch, and stress abstention, chosen by score-derived mass and coverage features.
 
-Our results support a narrower story than a full inverse-reward or inverse-Q claim. In controlled PointNav, where positive labels are only route prefixes and the unlabeled log contains hidden full routes mixed with trap shortcuts, adaptive score-gap support recovers useful hidden support and reaches perfect success under heavy contamination. In Robomimic, v0.1 reveals the precision/coverage failure modes: positive-only retrieval is strongest on the original Can 40p/80b matrix, while weighted BC is strongest on the original Lift MG matrix. The frozen v0.2 router then passes a fresh Can+Lift gate, reaching `209/300` selected-branch successes versus `187/300` for the best per-split non-oracle baselines. Can carries the cleaner improvement; Lift is a modest branch-selection result because v0.2 selects weighted BC and loses one split.
+Our results support a narrower story than a full inverse-reward or inverse-Q claim. In controlled PointNav, where positive labels are only route prefixes and the unlabeled log contains hidden full routes mixed with trap shortcuts, adaptive score-gap support recovers useful hidden support and reaches perfect success under heavy contamination. In Robomimic, v0.1 reveals the precision/coverage failure modes: positive-only retrieval is strongest on the original Can 40p/80b matrix, while weighted BC is strongest on the original Lift MG matrix. The frozen v0.2 router remains barely positive on a five-split fresh Can+Lift gate, reaching `340/500` selected-branch successes versus `338/500` for the best per-split non-oracle baselines. Can carries the cleaner hard-union improvement but has one large losing split; Lift is negative against the completed per-split oracle after all five v0.1 TRIAGE audit rows.
 
 Contributions:
 
 1. We formalize offline imitation from scarce successes, scarce failures, and a contaminated unlabeled log as a score-to-support conversion problem.
 2. We introduce TRIAGE-BC v0.1, a hidden-label-free tri-signal support calibration baseline, and a frozen v0.2 portfolio router over hard union, soft weighting, and abstention.
 3. We provide controlled PointNav and generated Robomimic Can diagnostics showing when explicit failures help: incomplete positives, action-conflicting near-neighbor failures, and scarce-positive coverage shift.
-4. We provide frozen Robomimic endpoint evidence showing both sides of the precision/coverage tradeoff: Can 40p/80b favors hard selected support, Lift MG favors broader weighted coverage, and positive-only retrieval remains a strong no-bad-label baseline.
+4. We provide frozen Robomimic endpoint evidence showing both sides of the precision/coverage tradeoff: Can 40p/80b shows hard selected support beating weighted and all-demo controls, Lift MG favors broader weighted coverage, and positive-only retrieval remains stronger on Can.
 5. We establish caveats through positive-only NN, weighted BC, all-positive oracle, score-shape diagnostics, Can MG branch-proxy failure, and claim-checked artifact maps.
 
 ## 2. Related Work
@@ -116,7 +116,7 @@ The abstention branch is important. Can MG-style score shapes can contain a larg
 
 ### 4.5 Frozen v0.2 Portfolio Router
 
-After the v0.1 diagnostics, we froze a small v0.2 portfolio router before fresh Can 40p/80b and Lift MG split seeds `101`, `202`, and `303`. The v0.2 router uses the same score model and computes only two branch features from the unlabeled score shape: estimated positive mass `m_hat` and the number of unlabeled trajectories above the labeled-positive minimum score. If both are very large, the split is treated as a stress abstention. If mass and count are moderate, the router selects the soft weighted branch. Otherwise it selects hard positive-NN/risk-union support. This rule uses no hidden unlabeled labels for branch selection.
+After the v0.1 diagnostics, we froze a small v0.2 portfolio router before fresh Can 40p/80b and Lift MG split seeds `101`, `202`, `303`, `404`, and `505`. The v0.2 router uses the same score model and computes only two branch features from the unlabeled score shape: estimated positive mass `m_hat` and the number of unlabeled trajectories above the labeled-positive minimum score. If both are very large, the split is treated as a stress abstention. If mass and count are moderate, the router selects the soft weighted branch. Otherwise it selects hard positive-NN/risk-union support. This rule uses no hidden unlabeled labels for branch selection.
 
 The v0.2 hard branch unions positive-only nearest-neighbor support with a rank-fusion support set that combines positive-neighbor rank and bad-aware action-risk rank. The soft branch is classifier-probability weighted BC on `D+ union Du` with weights clipped below by `0.05`. We treat this as a portfolio support converter, not as evidence that one fixed hard threshold or one fixed weighting rule is universally best.
 
@@ -231,18 +231,18 @@ It should be used for final wording. On Can 40p/80b, TRIAGE-BC beats weighted BC
 
 ### 6.4 Fresh v0.2 Portfolio Gate
 
-The frozen v0.2 fresh gate uses split seeds `101`, `202`, and `303` for Can 40p/80b and Lift MG:
+The frozen v0.2 fresh gate uses split seeds `101`, `202`, `303`, `404`, and `505` for Can 40p/80b and Lift MG:
 
 ```text
-Can 40p/80b selected hard union: 129/150
-Can 40p/80b best baseline per split: 113/150
-Lift MG selected weighted branch: 80/150
-Lift MG best baseline per split: 74/150
-Combined selected branches: 209/300
-Combined best baselines per split: 187/300
+Can 40p/80b selected hard union: 197/250
+Can 40p/80b best baseline per split: 192/250
+Lift MG selected weighted branch: 143/250
+Lift MG best baseline per split: 146/250
+Combined selected branches: 340/500
+Combined best baselines per split: 338/500
 ```
 
-On Can 40p/80b, the router chooses hard positive-NN/risk-union support and wins all three fresh splits with margins `+8/50`, `+5/50`, and `+3/50`. On Lift MG, the router chooses soft weighted BC and wins two of three fresh splits, with margins `+3/50`, `+5/50`, and `-2/50`. Paired initial-state bootstraps remain descriptive and cross zero for Can (`[-0.033, 0.260]`), Lift (`[-0.083, 0.178]`), and the combined gate (`[-0.022, 0.179]`). This is therefore a cautious fresh-gate result, not a green-light dominance claim: Can provides the real hard-union improvement, while Lift mainly shows that the router can choose broad weighted coverage when hard support is coverage-limited.
+On Can 40p/80b, the router chooses hard positive-NN/risk-union support and wins four of five fresh splits with margins `+8/50`, `+5/50`, `+3/50`, `-12/50`, and `+1/50`. On Lift MG, the router chooses soft weighted BC and wins two of five completed comparisons, with margins `-5/50`, `-4/50`, `-2/50`, `+1/50`, and `+7/50`. Paired initial-state bootstraps remain descriptive and cross zero for Can (`[-0.144, 0.168]`), Lift (`[-0.083, 0.140]`), and the combined gate (`[-0.074, 0.120]`). This is therefore a cautious fresh-gate result, not a green-light dominance claim or formal significance claim: Can provides a hard-union improvement with one severe reversal, while Lift shows that broad weighted coverage and hard support tie in aggregate but neither dominates per split.
 
 Primary artifact:
 
@@ -273,7 +273,7 @@ Bad labels help calibrate a score, but the current bad-aware converter can selec
 
 Score-shape diagnostics explain why no single converter works everywhere. Can 40p/80b has moderate positive/bad overlap, motivating adaptive mass-capped hard support. Lift MG has stronger score separation, but policy performance still favors weighted coverage. Can MG has a high-score plateau containing both positives and bad demos, which motivates router abstention.
 
-The Can MG branch-proxy diagnostic shows that simple positive and negative likelihood proxies are not enough. On original Can MG, the rollout-best fixed-20k method is weighted BC, but the tested likelihood proxies choose all-positive support. On shuffled Can MG, proxy selection cannot detect that both hard and soft branches are weak. This supports abstention rather than overconfident branch choice.
+The Can MG branch-proxy diagnostic shows that simple positive and negative likelihood proxies are not enough. On original Can MG, the rollout-best fixed-20k method is weighted BC, but the tested likelihood proxies choose all-positive support. On shuffled Can MG, proxy selection cannot detect that both hard and soft branches are weak. The active-abstention audit quantifies the stress case: original/shuffled Can MG have estimated mass/count `1947.9`/`1025.7` and `1466.3`/`515.7`, original MG proxies match best success in `0/6` cases, and shuffled MG gets `6/6` only because both staged forced branches reach `0.100`. This supports abstention rather than overconfident branch choice.
 
 ### 6.7 Precision/Coverage View
 
@@ -305,7 +305,7 @@ R(pi_hat_t) - R(pi_g)
 
 The first term favors larger selected support when useful state-action coverage is scarce. The second term favors more selective support when admitted bad trajectories contain actions that conflict with the desired behavior. The optimal support threshold is therefore not necessarily the purest threshold: when the coverage term dominates, admitting additional imperfect trajectories can still improve policy learning.
 
-A marginal support criterion makes the tradeoff more concrete. Let `m_t = |S_t|`, `g_t = r_t N_g`, and `b_t = f_t N_b`. Suppose a candidate unlabeled trajectory is useful with score-implied probability `q` and harmful with probability `1-q`. Under the hard-support decomposition, adding it decreases the bound whenever:
+**Proposition 1 (coverage-contamination criterion).** Under the mixture model above, adding an unlabeled trajectory should improve the hard-selector bound exactly when its marginal coverage gain exceeds its normalized marginal contamination cost. Let `m_t = |S_t|`, `g_t = r_t N_g`, and `b_t = f_t N_b`. If a candidate unlabeled trajectory is useful with score-implied probability `q` and harmful with probability `1-q`, then the hard-support bound decreases whenever:
 
 ```text
 A * (1 / sqrt(n+ + g_t) - 1 / sqrt(n+ + g_t + q))
@@ -313,7 +313,7 @@ A * (1 / sqrt(n+ + g_t) - 1 / sqrt(n+ + g_t + q))
 C * ((b_t + 1 - q) / (n+ + m_t + 1) - b_t / (n+ + m_t)).
 ```
 
-The left side is the expected coverage gain; the right side is the expected increase in bad-action mass after normalizing by the enlarged training set. This inequality explains why neither maximum purity nor maximum coverage is uniformly correct. A pure but tiny support can be suboptimal when the coverage gain remains large for moderately risky trajectories, while hard filtering wins when extra trajectories mostly add action-conflicting failures.
+The left side is the expected coverage gain; the right side is the expected increase in bad-action mass after normalizing by the enlarged training set. This proposition explains why neither maximum purity nor maximum coverage is uniformly correct. A pure but tiny support can be suboptimal when the coverage gain remains large for moderately risky trajectories, while hard filtering wins when extra trajectories mostly add action-conflicting failures.
 
 For a weighted sampler with trajectory weights `w(tau)`, the analogous view replaces selected count with effective sample size and bad count with bad weight mass:
 
@@ -331,7 +331,7 @@ TRIAGE-BC v0.1 can be read as a hidden-label-free approximation to these two ter
 
 The main empirical lesson is that tri-signal labels are useful, but their value is mediated by support conversion. A classifier score is not the policy. A high-purity selected set is not always enough. A broad weighted set is not always safe. Different tasks occupy different parts of the precision/coverage landscape.
 
-The strongest positive result for TRIAGE-BC as a method is not universal dominance. It is that hard selected support can improve over weighted BC and all-demo cloning on Can contamination, and that a frozen v0.2 portfolio can choose hard union on fresh Can while switching to weighted coverage on fresh Lift. Controlled PointNav and generated Can diagnostics explain why scarce bad labels can be mechanistically valuable. The strongest limitation is equally important: positive-only NN is often stronger on Can, and weighted BC remains the right branch on Lift-like broad-coverage rows.
+The strongest positive result for TRIAGE-BC as a method is not universal dominance. It is a conditional pattern: hard selected support can improve over weighted BC and all-demo cloning on Can contamination and generated action-conflict or coverage-shift probes, while frozen v0.2 is only barely positive overall by choosing hard union on fresh Can and weighted coverage on fresh Lift. Controlled PointNav and generated Can diagnostics explain why scarce bad labels can be mechanistically valuable. The strongest limitation is equally important: positive-only NN is often stronger on Can, weighted BC remains the right branch on Lift-like broad-coverage rows, and generated split constructions are not intended to replace default benchmark rows.
 
 These findings suggest that future work should focus on hidden-label-free policy-quality prediction, task-aware coverage criteria, and better support conversion. The problem should not be framed as hard filtering versus soft weighting in the abstract. It should be framed as choosing a policy-training distribution under uncertainty about support quality and coverage.
 
@@ -343,6 +343,8 @@ Positive-only NN is the strongest non-oracle row on frozen Can 40p/80b and on th
 
 Weighted BC is strongest on the original frozen Lift MG matrix and is the selected v0.2 branch on fresh Lift. Therefore, hard support is not uniformly better than soft weighting.
 
+The fresh v0.2 gate is a selected-vs-strong-baseline/v0.1 audit. Optional fresh all-demo/all-positive diagnostic rows remain unrun and are not part of the claimed fresh leaderboard.
+
 Can MG remains a stress diagnostic. Router v2 abstention is more honest than claiming success on ambiguous high-score plateaus.
 
 Square and Transport are currently support-side relative-quality diagnostics, not failure-demo policy benchmarks.
@@ -351,7 +353,7 @@ The evaluation uses 50 endpoint rollouts per split. This is stronger than earlie
 
 ## 10. Conclusion
 
-TRIAGE-BC reframes offline imitation from scarce successes, scarce failures, and mixed logs as a score-to-support conversion problem. The results show that tri-signal scores can recover useful hidden support, that hard support can beat soft weighting in some contaminated settings, and that a frozen portfolio router can improve a fresh Can+Lift gate by selecting different support conversions in different regimes. They also show that strong no-bad-label retrieval and broad weighted coverage are essential baselines. The central claim is therefore precise: support calibration is the bottleneck, and reliable hidden-label-free conversion from scores to policy-training data is the next algorithmic step.
+TRIAGE-BC reframes offline imitation from scarce successes, scarce failures, and mixed logs as a score-to-support conversion problem. The results show that tri-signal scores can recover useful hidden support, that hard support can beat soft weighting in some contaminated settings, and that a frozen portfolio router is barely positive on a fresh Can+Lift gate by selecting different support conversions in different regimes. They also show that strong no-bad-label retrieval and broad weighted coverage are essential baselines. The central claim is therefore precise: support calibration is the bottleneck, and reliable hidden-label-free conversion from scores to policy-training data is the next algorithmic step.
 
 ## Appendix A. Diagnostic Endpoint And Support Evidence
 
@@ -436,6 +438,18 @@ positives are incomplete, not a primary benchmark row. In prose form, this is
 | prefix bad-aware state top80 | `195` | `45` | `119/150` | `171.3` |
 | prefix state-action positive-NN top80 | `37` | `203` | `6/150` | `388.3` |
 
+Generated regime-probe summary:
+
+`results/final_paper/tables/generated_regime_probe_summary_REPORT.md` stages the
+concise main-paper table for the three endpoint-backed generated Can probes.
+These are controlled split constructions, not default Robomimic benchmark rows.
+
+| probe | bad-aware endpoint | positive-only endpoint | delta | support selected (pos/bad) |
+|---|---:|---:|---:|---|
+| Hard-negative Can | `104/150` | `91/150` | `+13/150` | `113/7` vs `70/50` |
+| Coverage-shift Can | `120/150` | `103/150` | `+17/150` | `118/2` vs `105/15` |
+| Prefix-positive Can | `119/150` | `6/150` | `+113/150` | `195/45` vs `37/203` |
+
 Diagnostic summary:
 
 | diagnostic | evidence | endpoint | takeaway |
@@ -444,13 +458,19 @@ Diagnostic summary:
 | Can 20p/80b | Three-split support audit plus two completed endpoint splits | positive-only `54/100`, TRIAGE-BC `46/100`, weighted split-11 `18/50` | TRIAGE-BC recovers more hidden positives, `54/60` versus `49/60`, but admits more hidden bad demos, `69/240` versus `11/240`. |
 | Can 80p/80b | Three-split support audit plus split-33 endpoint | positive-only `49/50`, TRIAGE-BC `43/50` | Even when TRIAGE-BC selects purer split-33 support, positive-only retrieval keeps better coverage and wins the endpoint. |
 | Can MG | Branch-proxy diagnostic on original and shuffled MG | original weighted `0.333` is rollout-best; simple proxies choose all-positive at `0.200` | Positive/negative likelihood proxies do not replace abstention because they miss coverage-sensitive rollout quality. |
+| Active abstention | Router-v2 stress audit over original and shuffled Can MG | assigned rows average `0.700`; abstained rows average `0.217` and top out at `0.333` | Abstention is justified as risk control for ambiguous high-mass score plateaus, not as endpoint dominance. |
+| Policy-quality proxy no-go | Consolidated likelihood, rejection, purity, recall, coverage, and initial/transition coverage checks | deployable proxy attempts match endpoint winners in only `2/11` rows; audit-only support rows match `3/6` rows | Policy-quality prediction remains open: no tested simple support score replaces endpoint validation or abstention. |
+| Hard-union component ablation | Can 40p/80b positive-only, risk-fusion, union, classifier-only, weighted, and v0.1 support components | union `119/120` hidden positives, `16/240` hidden bad demos, and `116/150` endpoint successes; positive-only `108/150`, risk-fusion `73/100`, weighted `90/150`, v0.1 masscap `99/150`; classifier-only is support-only | The union works by preserving the positive-only anchor and adding risk-derived coverage; its pooled gain comes from splits 22 and 33, not uniform dominance. |
+| Failure-mode initial-state audit | Three paired Can 40p/80b initial states comparing positive-only, weighted, hard-union, and all-demo policies | union rescue split `33` / `demo_105`: union `5/5` versus positive-only `0/5` and all-demo `0/5`; positive-anchor regression split `11` / `demo_39`: positive-only `5/5` versus union `0/5`; soft-pool rescue split `33` / `demo_99`: weighted `5/5` versus union `1/5` | This is qualitative appendix intuition from existing endpoint metrics. Grasp and loop/miss fields are success and horizon-length proxies, not video-level labels. |
 | Hard-negative Can | Generated three-split action-conflict diagnostic | bad-aware hybrid `104/150`, state-action positive-NN top40 `91/150` | Explicit bad labels help when bad demos are near-neighbor action conflicts; keep this separate from the primary benchmark rows. |
+| Hard-negative Lift | Generated three-split non-Can action-conflict diagnostic | bad-aware proxy top40 `15/150`, state-action positive-NN top40 `5/150` | The endpoint effect is directionally consistent with the support audit: bad-aware selects `82/120` hidden positives with `38/240` hidden bad demos versus `12/120` and `108/240` for positive-NN. Equivalently, the endpoint aggregate selects 82 hidden positives and 38 hidden bad demos versus 12 hidden positives and 108 hidden bad demos. Absolute success is low, so this is exploratory mechanism evidence, not a primary benchmark endpoint claim. |
 | Coverage-shift Can | Generated three-split scarce-positive coverage-shift diagnostic | bad-aware-heavy hybrid `120/150`, state-action positive-NN top40 `103/150` | Explicit bad labels help when trusted positives under-cover initial conditions; keep this separate from the primary benchmark rows. |
 | Prefix-positive Can | Generated three-split prefix-positive diagnostic | prefix bad-aware state top80 `119/150`, prefix state-action positive-NN top80 `6/150` | Explicit bad labels help when trusted positives are only incomplete successful-demo prefixes; keep this separate from the primary benchmark rows. |
+| Prefix-length robustness | Support-only sweep varying generated Can prefix-positive label length | bad-aware state top80 beats matched prefix positive-NN top80 at short/default/long prefixes with recall deltas `+0.400`/`+0.658`/`+0.737` and bad-admission deltas `-0.400`/`-0.658`/`-0.737` | The prefix-positive mechanism is not a one-point artifact of the default prefix length, but this is not a new endpoint result. |
 | Action-risk v0.2 no-go | Can 40p/80b split-11/22 endpoint gate for support-clearing action-risk candidates | positive-NN/risk fusion `0.820` versus positive-only NN `0.840` on split 11; `0.640` versus `0.760` on split 22 | The candidate selects 39 hidden positives with 1 hidden bad on split 11 and 40 hidden positives with 0 hidden bad on split 22, but it does not beat the endpoint baseline; support purity alone is not a deployable policy-quality proxy. |
 | Lift MG top160 | Fixed classifier-score top160 ablation over three splits | classifier top160 `68/150`, TRIAGE-BC `74/150`, positive-only `82/150`, weighted `93/150` | A broader high-purity classifier top-k rule does not rescue Lift; policy quality needs more than support purity. |
 
-The diagnostic rows are consistent with the main claim. Bad labels can improve score calibration and hard support can beat soft weighting on the completed Can 40p/80b matrix, but the current converter is not on the best Can precision/coverage frontier. Positive-only retrieval is cleaner on Can 20p/80b and stronger on the Can 80p/80b endpoint diagnostic. The generated hard-negative, coverage-shift, and prefix-positive diagnostics show settings where explicit failures help beyond positive-only retrieval, while Can MG and the action-risk v0.2 no-go show that simple branch-quality proxies are inadequate and Lift MG shows that high-purity support can still under-cover the policy learner.
+The diagnostic rows are consistent with the main claim. Bad labels can improve score calibration and hard support can beat soft weighting on the completed Can 40p/80b matrix, but the current converter is not on the best Can precision/coverage frontier. Positive-only retrieval is cleaner on Can 20p/80b and stronger on the Can 80p/80b endpoint diagnostic. The generated hard-negative, coverage-shift, and prefix-positive diagnostics show settings where explicit failures help beyond positive-only retrieval; the Lift hard-negative extension shows directional non-Can transfer but with low absolute success. Can MG and the action-risk v0.2 no-go show that simple branch-quality proxies are inadequate, and Lift MG shows that high-purity support can still under-cover the policy learner.
 
 ## Artifact Map
 
@@ -484,6 +504,12 @@ Main tables and reports:
 - `../results/final_paper/tables/primary_endpoint_paired_bootstrap_REPORT.md`
 - `../results/final_paper/tables/primary_endpoint_paired_deltas_REPORT.md`
 - `../results/final_paper/tables/bad_label_control_summary_REPORT.md`
+- `../results/final_paper/tables/policy_quality_proxy_no_go_REPORT.md`
+- `../results/final_paper/tables/active_abstention_evaluation_REPORT.md`
+- `../results/final_paper/tables/hard_union_component_ablation_REPORT.md`
+- `../results/final_paper/tables/failure_mode_initial_states_REPORT.md`
+- `../results/final_paper/tables/can_prefix_length_robustness_REPORT.md`
+- `../results/final_paper/ablations/lift_hard_negative_action_conflict_REPORT.md`
 - `../results/final_paper/tables/robotics_current_endpoint_matrix_REPORT.md`
 - `../results/final_paper/tables/can_paired_pos40_bad80_final_endpoint_summary_REPORT.md`
 - `../results/final_paper/tables/lift_mg_mg_sparse_final_endpoint_summary_REPORT.md`

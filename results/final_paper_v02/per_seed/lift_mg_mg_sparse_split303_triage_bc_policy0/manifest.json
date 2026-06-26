@@ -5,7 +5,7 @@
   "split_seed": 303,
   "method": "triage_bc",
   "policy_seed": 0,
-  "stage": "prepare",
+  "stage": "train",
   "dataset_path": "data/robomimic/v1.5/lift/mg/low_dim_sparse_v15.hdf5",
   "split_path": "results/final_paper_v02/splits/lift_mg_mg_sparse_split303/split_indices.json",
   "score_dir": "results/final_paper_v02/score_diagnostics/lift_mg_mg_sparse_split303_policy0",

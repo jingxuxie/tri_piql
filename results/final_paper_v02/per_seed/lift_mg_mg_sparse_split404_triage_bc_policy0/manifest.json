@@ -1,0 +1,32 @@
+{
+  "run_id": "lift_mg_mg_sparse_split404_triage_bc_policy0",
+  "task": "lift_mg",
+  "split_type": "mg_sparse",
+  "split_seed": 404,
+  "method": "triage_bc",
+  "policy_seed": 0,
+  "stage": "train",
+  "dataset_path": "data/robomimic/v1.5/lift/mg/low_dim_sparse_v15.hdf5",
+  "split_path": "results/final_paper_v02/splits/lift_mg_mg_sparse_split404/split_indices.json",
+  "score_dir": "results/final_paper_v02/score_diagnostics/lift_mg_mg_sparse_split404_policy0",
+  "setup_dir": "results/final_paper_v02/per_seed/lift_mg_mg_sparse_split404_triage_bc_policy0/setup",
+  "train_dir": "results/final_paper_v02/per_seed/lift_mg_mg_sparse_split404_triage_bc_policy0/train",
+  "eval_dir": "results/final_paper_v02/per_seed/lift_mg_mg_sparse_split404_triage_bc_policy0/eval",
+  "router_decision": {
+    "router_v2_branch": "hard_pos_min",
+    "source": "positive_plus_classifier_demo_threshold_unlabeled_demos",
+    "reason": "labeled positives are high-scoring and enough unlabeled demos clear pos-min",
+    "estimated_positive_mass": 529.563528416488,
+    "count_ge_pos_min": 209,
+    "labeled_positive_p10": 0.9621277451515198,
+    "labeled_positive_min": 0.958652675151825,
+    "labeled_positive_mean": 0.9819824814796447,
+    "labeled_negative_mean": 0.01826809422345832,
+    "unlabeled_count": 1420
+  },
+  "diagnostics_path": "results/final_paper_v02/per_seed/lift_mg_mg_sparse_split404_triage_bc_policy0/setup/diagnostics.json",
+  "artifacts": {
+    "support_audit_csv": "results/final_paper_v02/per_seed/lift_mg_mg_sparse_split404_triage_bc_policy0/support_audit.csv",
+    "hidden_label_audit_csv": "results/final_paper_v02/per_seed/lift_mg_mg_sparse_split404_triage_bc_policy0/hidden_label_audit.csv"
+  }
+}

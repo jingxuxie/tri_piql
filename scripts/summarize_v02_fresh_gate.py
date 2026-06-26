@@ -23,7 +23,7 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 def write_csv(path: Path, rows: list[dict[str, object]], fieldnames: list[str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -170,13 +170,23 @@ def build_report(summary_rows: list[dict[str, object]], per_split_rows: list[dic
         "margin",
     ]
     lines.extend(markdown_table(per_split_rows, per_split_columns))
+    lines.extend(["", "## Interpretation", ""])
+    for row in summary_rows:
+        winning_splits = int(row["winning_splits"])
+        tied_splits = int(row["tied_splits"])
+        losing_splits = int(row["losing_splits"])
+        total_splits = winning_splits + tied_splits + losing_splits
+        tie_word = "tie" if tied_splits == 1 else "ties"
+        loss_word = "loss" if losing_splits == 1 else "losses"
+        lines.append(
+            "- "
+            f"{row['setting_label']}: selected branch margin {row['margin']} "
+            f"over the best per-split non-oracle baseline, with "
+            f"{winning_splits}/{total_splits} winning splits, "
+            f"{tied_splits} {tie_word}, and {losing_splits} {loss_word}."
+        )
     lines.extend(
         [
-            "",
-            "## Interpretation",
-            "",
-            "- Can 40p/80b is the cleaner v0.2 improvement: the selected hard-union branch wins all three fresh splits.",
-            "- Lift MG supports the router's soft-coverage branch only cautiously: selected weighted BC wins two splits but loses split `303`.",
             "- Treat the completed fresh gate as evidence for hidden-label-free branch selection, not as a claim that hard bad-aware support dominates weighted BC.",
             "",
         ]

@@ -7,11 +7,11 @@ Rows use official Robomimic BC-RNN-GMM, epoch-200 checkpoints, and 50 valid-posi
 
 | setting_label | selected_method | selected_success | selected_episodes | selected_rate | best_baseline_success | best_baseline_episodes | best_baseline_rate | margin | winning_splits | losing_splits |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Can 40p/80b | positive_nn_risk_union_top40 | 129 | 150 | 0.860 | 113 | 150 | 0.753 | +0.107 | 3 | 0 |
-| Lift MG | weighted_bc | 80 | 150 | 0.533 | 74 | 150 | 0.493 | +0.040 | 2 | 1 |
+| Can 40p/80b | positive_nn_risk_union_top40 | 197 | 250 | 0.788 | 192 | 250 | 0.768 | +0.020 | 4 | 1 |
+| Lift MG | weighted_bc | 143 | 250 | 0.572 | 146 | 250 | 0.584 | -0.012 | 2 | 3 |
 
-- Combined selected rows: 209/300.
-- Combined best per-split non-oracle baselines: 187/300 (margin +0.073).
+- Combined selected rows: 340/500.
+- Combined best per-split non-oracle baselines: 338/500 (margin +0.004).
 
 ## Per-Split Read
 
@@ -20,12 +20,16 @@ Rows use official Robomimic BC-RNN-GMM, epoch-200 checkpoints, and 50 valid-posi
 | Can 40p/80b | 101 | positive_nn_risk_union_top40 | 45 | 50 | weighted_bc | 37 | 50 | +0.160 |
 | Can 40p/80b | 202 | positive_nn_risk_union_top40 | 45 | 50 | positive_only_nn | 40 | 50 | +0.100 |
 | Can 40p/80b | 303 | positive_nn_risk_union_top40 | 39 | 50 | positive_only_nn | 36 | 50 | +0.060 |
-| Lift MG | 101 | weighted_bc | 31 | 50 | positive_only_nn | 28 | 50 | +0.060 |
-| Lift MG | 202 | weighted_bc | 30 | 50 | positive_only_nn | 25 | 50 | +0.100 |
+| Can 40p/80b | 404 | positive_nn_risk_union_top40 | 27 | 50 | positive_only_nn | 39 | 50 | -0.240 |
+| Can 40p/80b | 505 | positive_nn_risk_union_top40 | 41 | 50 | positive_only_nn | 40 | 50 | +0.020 |
+| Lift MG | 101 | weighted_bc | 31 | 50 | triage_bc | 36 | 50 | -0.100 |
+| Lift MG | 202 | weighted_bc | 30 | 50 | triage_bc | 34 | 50 | -0.080 |
 | Lift MG | 303 | weighted_bc | 19 | 50 | positive_only_nn | 21 | 50 | -0.040 |
+| Lift MG | 404 | weighted_bc | 30 | 50 | triage_bc | 29 | 50 | +0.020 |
+| Lift MG | 505 | weighted_bc | 33 | 50 | positive_only_nn | 26 | 50 | +0.140 |
 
 ## Interpretation
 
-- Can 40p/80b is the cleaner v0.2 improvement: the selected hard-union branch wins all three fresh splits.
-- Lift MG supports the router's soft-coverage branch only cautiously: selected weighted BC wins two splits but loses split `303`.
+- Can 40p/80b: selected branch margin +0.020 over the best per-split non-oracle baseline, with 4/5 winning splits, 0 ties, and 1 loss.
+- Lift MG: selected branch margin -0.012 over the best per-split non-oracle baseline, with 2/5 winning splits, 0 ties, and 3 losses.
 - Treat the completed fresh gate as evidence for hidden-label-free branch selection, not as a claim that hard bad-aware support dominates weighted BC.

@@ -30,8 +30,10 @@ Each split contains:
 - held-out positive eval starts: `split["valid_positive_ids"]`
 
 Development split seeds `11`, `22`, and `33` were used to design this freeze.
-Fresh validation split seeds for this v0.2 candidate are `101`, `202`, and
-`303` for Can 40p/80b and Lift MG.
+The initial fresh validation split seeds for this v0.2 candidate were `101`,
+`202`, and `303` for Can 40p/80b and Lift MG. The Priority-A1 five-split
+extension added seeds `404` and `505` before promoting five-split endpoint
+numbers; see `results/final_paper_v02/A1_FIVE_SPLIT_EXTENSION_PREFLIGHT.md`.
 
 ## Score Model
 
@@ -133,8 +135,8 @@ method row for an abstained split.
 
 Run fresh split seeds:
 
-- Can 40p/80b: `101`, `202`, `303`
-- Lift MG: `101`, `202`, `303`
+- Can 40p/80b: `101`, `202`, `303`, plus A1 extension seeds `404`, `505`
+- Lift MG: `101`, `202`, `303`, plus A1 extension seeds `404`, `505`
 - Can MG: score/router diagnostics only unless the frozen rule does not abstain
 
 Primary policy seed: `0`.

@@ -8,9 +8,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = [
     ROOT / "PAPER_DRAFT_OUTLINE.md",
+    ROOT / "FINAL_CLAIM_CONTRACT.md",
     ROOT / "paper" / "MANUSCRIPT_CHECKLIST.md",
     ROOT / "paper" / "README.md",
     ROOT / "paper" / "REPRODUCE_PAPER.md",
+    ROOT / "paper" / "REVIEWER_CLAIM_SUMMARY.md",
     ROOT / "paper" / "triage_bc_draft.md",
     ROOT / "results" / "final_paper" / "README.md",
 ]
@@ -20,7 +22,7 @@ TEX_DOCS = [
 ]
 
 PATH_PATTERN = re.compile(
-    r"`((?:\.\./)?(?:results|configs|paper|scripts|METHOD_FREEZE|PAPER_DRAFT_OUTLINE|tri_piql_paper_completion_plan)[^`]*?)`"
+    r"`((?:\.\./)?(?:results|configs|paper|scripts|METHOD_FREEZE|PAPER_DRAFT_OUTLINE|FINAL_CLAIM_CONTRACT|REGIME_PROBE_SUITE|tri_piql_paper_completion_plan)[^`]*?)`"
 )
 INCLUDEGRAPHICS_PATTERN = re.compile(r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}")
 BIBLIOGRAPHY_PATTERN = re.compile(r"\\bibliography\{([^}]+)\}")
