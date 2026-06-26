@@ -1,0 +1,6 @@
+group,method,alpha,successes,success_count,eval_episodes,avg_len,delta_vs_positive
+baseline,positive_only_nn_top40,,17/20,17,20,148.2,0
+baseline,weighted_bc_full_pool,1.00,13/20,13,20,211.5,-4
+candidate_t_interpolation,pos_to_weighted_alpha_0p05,0.05,16/20,16,20,168.0,-1
+candidate_t_interpolation,pos_to_weighted_alpha_0p10,0.10,13/20,13,20,211.7,-4
+candidate_t_interpolation,pos_to_weighted_alpha_0p20,0.20,3/20,3,20,358.8,-14

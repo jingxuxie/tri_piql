@@ -1,0 +1,4 @@
+method,successes,episodes,avg_len,gate_opens,choices_positive,choices_weighted,artifact
+positive_only_nn,16,20,163.95,,,,results/candidate_g_fresh_preflight/can606_positive_epoch200_eval20
+weighted_bc,14,20,197.75,,,,results/candidate_g_fresh_preflight/can606_weighted_epoch200_eval20
+candidate_e_gate,16,20,161.85,2,2719,518,results/candidate_g_fresh_preflight/can606_candidate_e_gate_eval20

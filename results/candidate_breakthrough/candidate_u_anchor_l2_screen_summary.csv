@@ -1,0 +1,8 @@
+group,method,train_epochs,successes,success_count,eval_episodes,avg_len,delta_vs_positive
+baseline,positive_only_nn_top40,200,17/20,17,20,148.2,0
+baseline,weighted_bc_full_pool,200,13/20,13,20,211.5,-4
+previous_candidate,candidate_c_sequence_mask_e200,200,16/20,16,20,167.7,-1
+candidate_u_anchor_l2,model_epoch_5,5,17/20,17,20,149.2,0
+candidate_u_anchor_l2,model_epoch_10,10,16/20,16,20,163.9,-1
+candidate_u_anchor_l2,model_epoch_15,15,14/20,14,20,194.2,-3
+candidate_u_anchor_l2,model_epoch_20,20,16/20,16,20,160.8,-1

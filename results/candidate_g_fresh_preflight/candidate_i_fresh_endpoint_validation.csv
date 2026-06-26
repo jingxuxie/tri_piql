@@ -1,0 +1,7 @@
+task,split_seed,method,selected_by_candidate_i,successes,episodes,success_rate,avg_len,protocol,report
+can_paired,707,candidate_g_triage,False,10,20,0.5,251.85,20 valid-positive starts,results/candidate_g_fresh_preflight/can707_triage_epoch200_eval20/REPORT.md
+can_paired,707,candidate_h_candidate_e_gate,False,13,20,0.65,209.55,20 valid-positive starts,results/candidate_g_fresh_preflight/can707_candidate_e_gate_eval20/REPORT.md
+can_paired,707,positive_only_nn,True,15,20,0.75,181.9,20 valid-positive starts,results/candidate_g_fresh_preflight/can707_positive_epoch200_eval20/REPORT.md
+lift_mg,606,triage_bc,True,23,50,0.46,100.12,50 valid-positive starts,results/candidate_g_fresh_preflight/lift606_triage_epoch200_eval50/REPORT.md
+lift_mg,606,positive_only_nn,False,28,50,0.56,85.18,50 valid-positive starts,results/candidate_g_fresh_preflight/lift606_positive_epoch200_eval50/REPORT.md
+lift_mg,606,weighted_bc,False,16,50,0.32,122.46,50 valid-positive starts,results/candidate_g_fresh_preflight/lift606_weighted_epoch200_eval50/REPORT.md

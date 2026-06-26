@@ -1,0 +1,4 @@
+split,positive,weighted,triage,candidate_e,candidate_v,candidate_w,candidate_w_delta_vs_positive,candidate_w_delta_vs_candidate_e,candidate_w_unique_gain_over_positive,candidate_w_unique_gain_over_pos_e,candidate_w_gate_opens
+404,39/50,33/50,36/50,46/50,39/50,46/50,7,0,7,0,5
+505,40/50,30/50,36/50,39/50,38/50,39/50,-1,0,2,1,5
+total,79/100,63/100,72/100,85/100,77/100,85/100,6,0,9,1,10

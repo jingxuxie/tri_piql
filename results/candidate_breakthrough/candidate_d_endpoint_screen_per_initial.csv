@@ -1,0 +1,11 @@
+initial_demo_id,positive_only_nn_top40,weighted_bc_full_pool,triage_v01_adaptive_masscap,candidate_c_sequence_mask_e200,candidate_d_negative_action_e100,candidate_d_negative_action_e200,candidate_x_extra_negative_action_e100,candidate_x_extra_negative_action_e200
+demo_5,2,0,2,2,2,2,1,2
+demo_29,2,1,2,1,1,2,1,1
+demo_39,0,1,0,0,0,0,0,0
+demo_45,2,1,2,2,2,2,0,2
+demo_53,2,2,2,2,2,2,2,2
+demo_81,2,2,2,2,2,1,2,2
+demo_89,2,1,2,2,1,2,1,0
+demo_99,1,1,1,1,1,0,0,2
+demo_105,2,2,1,2,2,2,2,2
+demo_189,2,2,0,2,1,0,1,1

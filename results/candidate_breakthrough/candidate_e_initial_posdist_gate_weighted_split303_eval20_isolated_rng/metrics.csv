@@ -1,0 +1,2 @@
+router_name,success_rate,avg_return,avg_len,eval_episodes,choices_positive,choices_weighted
+initial_anchor_pos_dist_force_alt_labeled_thr0_initthr3_positivebias0_weightedbias0,0.75,0.75,184.4,20,3688,0

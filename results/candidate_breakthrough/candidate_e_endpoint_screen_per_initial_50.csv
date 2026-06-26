@@ -1,0 +1,11 @@
+initial_demo_id,positive_only_nn_top40,weighted_bc_full_pool,triage_v01_adaptive_masscap,v02_positive_nn_risk_union_top40,candidate_a_transition_weighted_e200,candidate_e_initial_gate_weighted_e200,candidate_e_gate_open_count
+demo_5,5,1,5,4,4,5,0
+demo_29,4,4,4,2,1,5,0
+demo_39,0,3,1,1,3,5,5
+demo_45,5,1,3,2,0,5,0
+demo_53,5,5,5,5,5,5,0
+demo_81,4,5,5,5,5,5,0
+demo_89,4,3,4,0,4,4,0
+demo_99,4,2,4,1,3,4,0
+demo_105,5,5,4,4,5,5,0
+demo_189,3,4,1,3,0,3,0

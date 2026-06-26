@@ -66,10 +66,13 @@ This is not a validated inverse-Q robotics method. The robotics evidence validat
 - `results/final_paper/tables/policy_quality_proxy_no_go_REPORT.md`
 - `results/final_paper/tables/submission_readiness_audit_REPORT.md`
 - `results/final_paper/ablations/lift_hard_negative_endpoint_200ep/REPORT.md`
+- `results/candidate_breakthrough/candidate_breakthrough_decision_REPORT.md`
 
 ## Readiness Status
 
 The package is ready for a careful high-quality empirical submission if the paper remains framed as a precision/coverage study with cautious v0.2 portfolio-router evidence. It is not ready for a top-tier methods/SOTA-style dominance claim unless future evidence establishes stronger fixed-branch wins, a second non-Can endpoint bad-label benefit, or a validated hidden-label-free policy-quality proxy.
+
+Recent Candidate F / output-anchor / two-feature rescue / transition-objective searches are development evidence for that boundary: Candidate F has a scoped Can discovery result but fails the predeclared fresh validation gate, and the later rescue or training-side variants do not clear their first validation checks.
 
 The validation gate is:
 

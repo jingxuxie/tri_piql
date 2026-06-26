@@ -1,0 +1,32 @@
+{
+  "run_id": "can_paired_pos40_bad80_split808_triage_bc_policy0",
+  "task": "can_paired",
+  "split_type": "pos40_bad80",
+  "split_seed": 808,
+  "method": "triage_bc",
+  "policy_seed": 0,
+  "stage": "train",
+  "dataset_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "split_path": "results/candidate_f_can_fresh_validation/splits/can_paired_pos40_bad80_split808/split_indices.json",
+  "score_dir": "results/candidate_f_can_fresh_validation/score_diagnostics/can_paired_pos40_bad80_split808_policy0",
+  "setup_dir": "results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split808_triage_bc_policy0/setup",
+  "train_dir": "results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split808_triage_bc_policy0/train",
+  "eval_dir": "results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split808_triage_bc_policy0/eval",
+  "router_decision": {
+    "router_v2_branch": "hard_adaptive_masscap",
+    "source": "positive_plus_classifier_adaptive_masscap_unlabeled_demos",
+    "reason": "score shape is not a large ambiguous pool; use calibrated mass-capped hard support",
+    "estimated_positive_mass": 63.02725633052353,
+    "count_ge_pos_min": 28,
+    "labeled_positive_p10": 0.8041199326515198,
+    "labeled_positive_min": 0.7914791107177734,
+    "labeled_positive_mean": 0.8919322431087494,
+    "labeled_negative_mean": 0.10124547351151705,
+    "unlabeled_count": 120
+  },
+  "diagnostics_path": "results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split808_triage_bc_policy0/setup/diagnostics.json",
+  "artifacts": {
+    "support_audit_csv": "results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split808_triage_bc_policy0/support_audit.csv",
+    "hidden_label_audit_csv": "results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split808_triage_bc_policy0/hidden_label_audit.csv"
+  }
+}

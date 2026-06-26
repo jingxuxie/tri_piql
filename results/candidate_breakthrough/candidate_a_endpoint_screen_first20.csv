@@ -1,0 +1,8 @@
+method_id,label,train_epochs,eval_episodes,success_count,success_rate,avg_len,selected_hidden_positive,selected_hidden_bad
+positive_only_nn_top40,Positive-only NN top40,200,20,17,0.850,148.2,35,5
+weighted_bc_full_pool,Weighted BC full pool,200,20,13,0.650,211.5,40,80
+triage_v01_adaptive_masscap,TRIAGE-BC v0.1 hard support,200,20,14,0.700,195.4,33,26
+v02_positive_nn_risk_union_top40,v0.2 positive-NN/risk union top40,200,20,7,0.350,299.6,39,5
+candidate_a_transition_weighted_e50,Candidate A transition-weighted e50,50,20,1,0.050,385.1,,
+candidate_a_transition_weighted_e100,Candidate A transition-weighted e100,100,20,9,0.450,271.6,,
+candidate_a_transition_weighted_e200,Candidate A transition-weighted e200,200,20,12,0.600,222.5,39,5

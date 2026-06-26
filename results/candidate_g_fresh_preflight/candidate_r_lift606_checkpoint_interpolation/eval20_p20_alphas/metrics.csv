@@ -1,0 +1,5 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/candidate_g_fresh_preflight/candidate_r_lift606_checkpoint_interpolation/checkpoints/pos_to_anchor_union_p20_alpha_0p05.pth,pos_to_anchor_union_p20_alpha_0p05,0.55,0.55,86.45,20
+/home/eston/tri-piql/results/candidate_g_fresh_preflight/candidate_r_lift606_checkpoint_interpolation/checkpoints/pos_to_anchor_union_p20_alpha_0p10.pth,pos_to_anchor_union_p20_alpha_0p10,0.5,0.5,89.35,20
+/home/eston/tri-piql/results/candidate_g_fresh_preflight/candidate_r_lift606_checkpoint_interpolation/checkpoints/pos_to_anchor_union_p20_alpha_0p20.pth,pos_to_anchor_union_p20_alpha_0p20,0.5,0.5,92.45,20
+/home/eston/tri-piql/results/candidate_g_fresh_preflight/candidate_r_lift606_checkpoint_interpolation/checkpoints/pos_to_anchor_union_p20_alpha_0p35.pth,pos_to_anchor_union_p20_alpha_0p35,0.5,0.5,93.8,20

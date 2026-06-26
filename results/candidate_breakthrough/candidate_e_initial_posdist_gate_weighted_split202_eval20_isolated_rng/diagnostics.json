@@ -1,0 +1,43 @@
+{
+  "split_path": "results/final_paper_v02/splits/can_paired_pos40_bad80_split202/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "env_name": "PickPlaceCan",
+  "env_version": "1.5.1",
+  "policies": {
+    "positive": "results/final_paper_v02/per_seed/can_paired_pos40_bad80_split202_positive_only_nn_policy0/train/can_paired_pos40_bad80_split202_positive_only_nn_policy0_official_bc_rnn/20260625093934/models/model_epoch_200.pth",
+    "weighted": "results/final_paper_v02/per_seed/can_paired_pos40_bad80_split202_weighted_bc_policy0/train_weighted_sampler/can_paired_pos40_bad80_split202_weighted_bc_policy0_official_bc_rnn_weighted_sampler/20260625094720/models/model_epoch_200.pth"
+  },
+  "policy_order": [
+    "positive",
+    "weighted"
+  ],
+  "policy_biases": {},
+  "router_mode": "initial_anchor_pos_dist_force_alt",
+  "support_mode": "labeled",
+  "switch_threshold": 0.0,
+  "initial_gate_threshold": 3.0,
+  "isolated_policy_rng": true,
+  "obs_keys": [
+    "object",
+    "robot0_eef_pos",
+    "robot0_eef_quat",
+    "robot0_gripper_qpos"
+  ],
+  "eval_init_mode": "valid_positive_states",
+  "eval_initial_ids": [
+    "demo_5",
+    "demo_29",
+    "demo_39",
+    "demo_45",
+    "demo_53",
+    "demo_81",
+    "demo_89",
+    "demo_99",
+    "demo_105",
+    "demo_189"
+  ],
+  "eval_episodes": 20,
+  "eval_horizon": 400,
+  "seed": 0,
+  "device": "cuda"
+}

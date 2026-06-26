@@ -1,0 +1,7 @@
+split,candidate_f_source,positive,weighted,triage,best_baseline,candidate_f,delta_vs_best_baseline,gate_opens,artifact
+101,weighted_anchor,19,37,28,37,37,0,,results/candidate_breakthrough/candidate_f_frozen_split101_weighted_sampler_anchor_eval50
+202,candidate_e_gate,40,33,36,40,40,0,0,results/candidate_breakthrough/candidate_f_frozen_split202_candidate_e_gate_eval50
+303,candidate_e_gate,36,25,35,36,36,0,0,results/candidate_breakthrough/candidate_f_frozen_split303_candidate_e_gate_eval50
+404,candidate_e_gate,39,33,36,39,46,7,5,results/candidate_breakthrough/candidate_e_initial_posdist_gate_weighted_split404_eval50_isolated_rng
+505,candidate_e_gate,40,30,36,40,39,-1,15,results/candidate_breakthrough/candidate_e_initial_posdist_gate_weighted_split505_eval50_isolated_rng
+total,,174,158,171,192,198,6,20,

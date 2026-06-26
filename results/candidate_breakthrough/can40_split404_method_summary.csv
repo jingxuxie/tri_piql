@@ -1,0 +1,5 @@
+split_seed,method_id,method_label,role,success_count,eval_episodes,success_rate,avg_length,selected_unlabeled,selected_hidden_positive,selected_hidden_bad,support_purity,hidden_positive_recall,hidden_bad_admission
+404,positive_only_nn_top40,Positive-only NN top40,strong no-bad-label anchor,39,50,0.780,169.3,40,35,5,0.875,0.875,0.062
+404,weighted_bc_full_pool,Weighted BC full pool,soft broad-coverage baseline,33,50,0.660,208.9,120,40,80,0.333,1.000,1.000
+404,triage_v01_adaptive_masscap,TRIAGE-BC v0.1 hard support,v0.1 hard-support baseline,36,50,0.720,190.8,59,33,26,0.559,0.825,0.325
+404,v02_positive_nn_risk_union_top40,v0.2 positive-NN/risk union top40,v0.2 selected hard-union branch,27,50,0.540,248.4,44,39,5,0.886,0.975,0.062

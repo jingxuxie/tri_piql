@@ -202,6 +202,7 @@ submission shell. Refresh `../paper/iclr2026/iclr2026_conference.sty` and
 | Action-risk v0.2 endpoint no-go | `../results/final_paper/ablations/v02_action_risk_endpoint_200ep_can40/REPORT.md` | staged endpoint-check report |
 | Action-risk v0.2 policy-coverage diagnostic | `../results/final_paper/tables/v02_policy_coverage_diagnostic_REPORT.md` | `../scripts/summarize_v02_policy_coverage_diagnostic.py` |
 | Can 20 support audit | `../results/final_paper/ablations/can_paired_pos20_bad80_support_audit_3split_REPORT.md` | `../scripts/summarize_can20_support_audit.py` |
+| Candidate-breakthrough development audit | `../results/candidate_breakthrough/candidate_breakthrough_decision_REPORT.md` | `../scripts/summarize_candidate_breakthrough_decision.py` |
 | Reviewer-facing claim summary | `../paper/REVIEWER_CLAIM_SUMMARY.md` | manually maintained claim-contract summary guarded by validators |
 | Final claim contract | `../FINAL_CLAIM_CONTRACT.md` | manually maintained final allowed-claim boundary guarded by validators |
 

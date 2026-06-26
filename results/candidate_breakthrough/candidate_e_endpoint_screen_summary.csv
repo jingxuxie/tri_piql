@@ -1,0 +1,12 @@
+method_id,label,kind,eval_episodes,success_count,success_rate,avg_len,gate_open_count,choices_positive,choices_weighted
+positive_only_nn_top40,Positive-only NN top40,baseline,50,39,0.780,169.3,,,
+weighted_bc_full_pool,Weighted BC full pool,baseline,50,33,0.660,208.9,,,
+triage_v01_adaptive_masscap,TRIAGE-BC v0.1 hard support,baseline,50,36,0.720,190.8,,,
+v02_positive_nn_risk_union_top40,v0.2 positive-NN/risk union top40,baseline,50,27,0.540,248.4,,,
+candidate_a_transition_weighted_e200,Candidate A transition-weighted,candidate_a,50,30,0.600,224.2,,,
+candidate_e_initial_gate_weighted_e200,Candidate E initial support-distance gate (isolated RNG),candidate_e,50,46,0.920,130.3,5,5881,632
+positive_only_nn_top40_first20,Positive-only NN top40,baseline,20,17,0.850,148.2,,,
+candidate_b_router_no_bias_first20,"Candidate B router labeled support, no bias",candidate_b,20,16,0.800,162.2,,,
+candidate_c_sequence_mask_e200_first20,Candidate C sequence-mask e200,candidate_c,20,16,0.800,167.7,,,
+candidate_d_negative_action_e100_first20,Candidate D negative-action e100,candidate_d,20,14,0.700,198.8,,,
+candidate_e_initial_gate_weighted_first20,Candidate E initial support-distance gate (isolated RNG),candidate_e,20,19,0.950,122.3,2,2189,257

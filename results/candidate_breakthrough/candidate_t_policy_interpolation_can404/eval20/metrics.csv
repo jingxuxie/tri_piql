@@ -1,0 +1,4 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/candidate_breakthrough/candidate_t_policy_interpolation_can404/pos_to_weighted_alpha_0p05.pth,pos_to_weighted_alpha_0p05,0.8,0.8,168.0,20
+/home/eston/tri-piql/results/candidate_breakthrough/candidate_t_policy_interpolation_can404/pos_to_weighted_alpha_0p10.pth,pos_to_weighted_alpha_0p10,0.65,0.65,211.7,20
+/home/eston/tri-piql/results/candidate_breakthrough/candidate_t_policy_interpolation_can404/pos_to_weighted_alpha_0p20.pth,pos_to_weighted_alpha_0p20,0.15,0.15,358.8,20

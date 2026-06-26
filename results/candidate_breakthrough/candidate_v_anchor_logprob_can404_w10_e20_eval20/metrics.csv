@@ -1,0 +1,5 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/candidate_breakthrough/candidate_v_anchor_logprob_can404_w10_e20_train/candidate_v_anchor_logprob_can404_w10_e20/20260626100527/models/model_epoch_5.pth,model_epoch_5,0.75,0.75,180.6,20
+/home/eston/tri-piql/results/candidate_breakthrough/candidate_v_anchor_logprob_can404_w10_e20_train/candidate_v_anchor_logprob_can404_w10_e20/20260626100527/models/model_epoch_10.pth,model_epoch_10,0.9,0.9,135.6,20
+/home/eston/tri-piql/results/candidate_breakthrough/candidate_v_anchor_logprob_can404_w10_e20_train/candidate_v_anchor_logprob_can404_w10_e20/20260626100527/models/model_epoch_15.pth,model_epoch_15,0.75,0.75,179.1,20
+/home/eston/tri-piql/results/candidate_breakthrough/candidate_v_anchor_logprob_can404_w10_e20_train/candidate_v_anchor_logprob_can404_w10_e20/20260626100527/models/model_epoch_20.pth,model_epoch_20,0.8,0.8,164.15,20

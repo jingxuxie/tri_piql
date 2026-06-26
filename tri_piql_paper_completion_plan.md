@@ -3,7 +3,7 @@
 **Project:** Offline imitation / inverse reward learning from scarce successful demonstrations, scarce failure demonstrations, and a large mixed-quality offline log  
 **Working paper title:** **When Do Bad Demonstrations Help Offline Imitation? A Precision-Coverage Study**
 **Recommended framing:** offline imitation / reward-score learning, not yet full inverse-Q IRL on robotics  
-**Date:** 2026-06-25
+**Date:** 2026-06-26
 
 ---
 
@@ -25,10 +25,15 @@ The safest high-impact paper is therefore not “we solved offline IRL with bad 
 
 This is a good paper direction because it is specific, reproducible on one RTX 4090, and directly relevant to real offline data where unlabeled logs are contaminated.
 
-Current status as of 2026-06-25:
+Current status as of 2026-06-26:
 
-- The paper-facing package is now internally consistent as a diagnostic / benchmark-style precision-coverage paper.
-- The package is **not** ready for a decisive high-impact methods claim around TRIAGE-BC v0.2.
+- The paper-facing package is now internally consistent as a diagnostic / benchmark-style precision-coverage paper. The current pre-submission gate,
+  `make -C paper validate`, regenerates staged artifacts, compiles the standalone
+  and provisional ICLR PDFs, and passes the claim, structure, artifact-reference,
+  and v0.2 method-freeze validators.
+- The submission-readiness audit marks the high-quality empirical submission
+  criteria as green (`6` pass, `0` caution), while top-tier methods/SOTA
+  dominance remains explicitly not met (`1` caution, `4` not met).
 - The latest action-risk v0.2 candidate improves support purity but fails the endpoint gate: positive-NN/risk fusion reaches `0.820` versus positive-only NN `0.840` on Can 40p/80b split 11, and `0.640` versus `0.760` on split 22.
 - A follow-up union candidate that keeps positive-only NN support and adds risk-fusion demos improves the pooled Can 40p/80b endpoint row to `116/150`, versus positive-only NN `108/150`, TRIAGE-BC v0.1 `99/150`, and weighted BC `90/150`. This is promising Can-only development evidence, but it is not a frozen v0.2 because it loses split 11 to positive-only NN and does not address Lift MG or Can MG.
 - A follow-up mass/count portfolio-router audit chooses hard union for low-mass Can rows, soft weighted BC for Lift, and abstention for Can MG. It reaches `209/300` over the two primary development endpoints versus `201/300` for the strongest pre-union per-task baselines and `173/300` for v0.1. This is the development shape that was frozen into v0.2; after completing all five A3 Lift v0.1 audit rows, the five-split fresh Can+Lift gate now reaches `340/500` versus `338/500`.
@@ -45,7 +50,32 @@ Current status as of 2026-06-25:
 - Combined across fresh Can 40p/80b and Lift MG, the selected v0.2 branches
   reach `340/500` versus `338/500` for the best completed non-oracle baseline
   per split.
-- The strongest evidence for explicit bad labels is now controlled PointNav plus generated Can hard-negative, coverage-shift, and prefix-positive diagnostics; the primary frozen Robomimic rows still require strong caveats.
+- The strongest evidence for explicit bad labels is now controlled PointNav plus
+  generated Can hard-negative, coverage-shift, and prefix-positive diagnostics.
+  The non-Can Lift hard-negative/action-conflict endpoint diagnostic is complete
+  over split seeds `101/202/303` and is directionally positive (`15/150` versus
+  `5/150`), but absolute success is low, so it remains exploratory C1 mechanism
+  evidence rather than a primary endpoint claim.
+  The primary frozen Robomimic rows still require strong caveats.
+- A follow-up Candidate V output-anchor fine-tune and Candidate W two-feature
+  weighted-rescue gate did not create a methods-dominance path. Candidate W
+  ties Candidate E at `85/100` over Can splits `404` and `505`, but still loses
+  split `505` to positive-only (`39/50` versus `40/50`). The paper should not
+  promote another scalar initial support-distance/margin router as a new
+  method.
+- A follow-up extra-only negative-action hinge also failed the fast gate:
+  `14/20` on Can split `404`, below Candidate C sequence-mask `16/20` and
+  positive-only `17/20`. This closes the current nearest-negative hinge recipe
+  as a methods path.
+- The current candidate-breakthrough decision audit should be treated as
+  claim-boundary evidence: Candidate F is a scoped Can discovery (`198/250`)
+  but failed fresh validation (`81/100` versus `84/100` best completed
+  baselines), and later output-anchor, two-feature rescue, and transition-level
+  variants did not clear their first validation checks.
+- The next viable method-search direction, if pursued, needs a genuinely new
+  state-conditional policy-quality signal or a different transition-level
+  training objective. Otherwise the strongest paper path remains the
+  precision/coverage study.
 
 ---
 
@@ -1446,6 +1476,85 @@ trajectory exactly when its marginal coverage gain exceeds its normalized
 marginal contamination cost. This is intentionally an organizing proposition,
 not a formal guarantee for nonlinear BC-RNN-GMM policies.
 
+Candidate-breakthrough status on 2026-06-26:
+`results/candidate_breakthrough/candidate_f_frozen_matrix_REPORT.md` is the
+strongest new Can-only method evidence. Frozen Candidate F reaches `198/250`
+on Can 40p/80b versus positive-only `174/250`, weighted `158/250`, triage
+`171/250`, and the completed per-split baseline oracle `192/250`. It should be
+scoped as a Can 40p/80b result, not as unchanged Can-to-Lift transfer:
+`results/candidate_breakthrough/candidate_f_lift_transfer_audit_REPORT.md`
+shows direct transfer at only `145/250` on Lift versus the Lift per-split
+baseline oracle `154/250`.
+
+Fresh branch-validation status on 2026-06-26:
+the broader Candidate G/H/I tail routers were not safe enough after held-out
+preflight. Can 707 exposed task-agnostic mild-tail triage as bad
+(`10/20` versus positive-only `15/20`), and Lift 606 exposed retained mild-tail
+triage as bad (`23/50` versus positive-only `28/50`). Candidate K's
+first-step GMM confidence gate improved tuned Lift 606 (`32/50` versus
+positive-only `28/50`) but failed fresh Lift 707 (`10/20` versus positive-only
+`12/20`). Candidate L's labeled-positive q25 calibration preserved Lift 606
+(`18/20`) but still failed Lift 707 (`10/20`), and its cross-split audit
+shows the best Lift606-selected initial one-feature gates reach only `11/20`
+on Lift707. Candidate M then tested direct per-step temporal confidence on
+Lift606; both initial-q25 and sequence-q25 temporal calibration reached only
+`7/20` and heavily over-switched to triage. Candidate N added persistence, but
+sequence-q25 k10 reached only `13/20` and k20 only `11/20` on Lift606, below
+positive-only `14/20` and the initial confidence gate `18/20`. The current
+conclusion is: do not spend more endpoint budget on scalar initial-threshold
+routers, raw per-step confidence routers, or simple persistence gates; pursue
+policy-training changes, and keep Candidate F as the only clean new branch
+result so far.
+
+Policy-training follow-up status on 2026-06-26:
+Candidate O tested a simple Lift606 positive-anchored union recipe: full loss
+weight for labeled positives and positive-NN selected demos, plus triage-only
+extra demos at loss weight `0.25`. This 243-demo training set failed badly:
+epoch 50 reached `1/20` and epoch 100 reached `5/20` on the same Lift606
+first-20 endpoint screen. Do not continue constant-demo-weight union training;
+Candidate P then initialized from the positive-only NN epoch-200 checkpoint and
+fine-tuned on the same anchor-union weights for 20 epochs. It recovered some of
+Candidate O's collapse (`11/20`) but still degraded positive-only (`14/20`) and
+triage (`13/20`). Candidate Q then saved every checkpoint in the first 5
+epochs and found no early sweet spot; the best checkpoint was `11/20`.
+Candidate R interpolated from the positive-only checkpoint toward the 20-epoch
+anchor-union fine-tune and also topped out at `11/20`. Stop anchor-union rescue
+attempts. The next Lift training attempt needs a different objective or
+selector, not merely lower-weight triage support, positive-only
+initialization, shorter fine-tuning, or checkpoint interpolation. Candidate S
+then tested a different selector proxy: a balanced logistic initial-risk
+classifier trained from labeled positive versus labeled negative initial
+features. Its primary policy-feature q25 gate reached only `12/20` on Lift606,
+below positive-only `14/20`, and tied positive-only on Lift707 (`12/20`).
+This further supports treating Lift as a limitation/abstention case unless a
+substantially different policy-quality proxy appears.
+
+Fresh Can606 Candidate F no-tail smoke on 2026-06-26: after training the
+missing positive-only and weighted epoch-200 policies, the Candidate E gate
+branch tied positive-only at `16/20` and beat weighted (`14/20`) on the first-20
+valid-positive screen. This is neutral rather than claim-strengthening: it
+does not show a fresh Can no-tail failure, but it also does not add headroom.
+Fresh Can707 then tested Candidate F's mild-tail weighted branch: weighted tied
+positive-only at `15/20`, while Candidate E reached `13/20` and triage `10/20`.
+Across Can606+Can707 first-20 smokes, Candidate F ties positive-only at
+`31/40`. Only continue to 50 episodes if running a broader predeclared
+fresh Can-only validation matrix; these two held-out smokes are neutral, not a
+fresh methods win.
+
+Candidate-breakthrough decision report on 2026-06-26:
+`results/candidate_breakthrough/candidate_breakthrough_decision_REPORT.md`
+is now the paper-facing stop/continue artifact for this search thread. Its
+decision is: keep Candidate F as scoped Can 40p/80b discovery evidence
+(`198/250` versus positive-only `174/250`, weighted `158/250`, triage
+`171/250`, and per-split baseline oracle `192/250`), but do not promote a
+general methods-dominance claim. Fresh Can606+707 smokes are neutral
+(`31/40` tie versus positive-only), direct Lift transfer is below the Lift
+oracle (`145/250` versus `154/250`), and the tested Lift router/training
+variants are rejected. The next endpoint compute, if any, should be a
+predeclared fresh Can-only validation matrix; otherwise the paper should move
+forward as the precision-coverage study with Lift framed as a limitation or
+abstention case.
+
 If proxy works:
 
 - train final Can MG policies on fresh splits,
@@ -1513,9 +1622,12 @@ Recommended section order:
 7. Can prefix-positive prefix-length robustness: support-only short/default/long
    prefix sweep is complete; it should remain an appendix construction
    robustness check unless a non-default prefix condition is endpoint-trained.
-8. Lift hard-negative/action-conflict support audit: support-only C1 diagnostic
-   is complete and clears against matched positive-NN support; endpoint training
-   is still required before it can be claimed as a non-Can policy result.
+8. Lift hard-negative/action-conflict diagnostic: support and 200-epoch
+   endpoint checks are complete for split seeds `101/202/303`. The bad-aware
+   proxy reaches `15/150` versus `5/150` for state-action positive-NN top40 and
+   selects 82 hidden positives with 38 hidden bad demos versus 12 hidden
+   positives with 108 hidden bad demos. Keep this as exploratory non-Can C1
+   mechanism evidence because absolute success remains low.
 
 ### Optional
 
@@ -1532,7 +1644,7 @@ A paper-ready result should satisfy at least four of these:
 
 1. TRIAGE-BC beats BC-all under heavy contamination.
 2. TRIAGE-BC beats official weighted BC at fixed 20k on Can, while Lift is framed as a weighted-BC/coverage counterexample.
-3. TRIAGE-BC beats positive-only NN on at least one nontrivial robotics setting. Current frozen Can 20p/80b does not satisfy this: positive-only NN top20 reaches 54/100 versus 46/100 for TRIAGE-BC over the two completed endpoint splits, and the three-split support audit shows positive-only admits far fewer hidden-bad demos. Current frozen Can 80p/80b split 33 also does not satisfy it: positive-only NN top80 reaches 49/50 versus 43/50 for TRIAGE-BC.
+3. TRIAGE-BC beats positive-only NN on at least one nontrivial robotics setting. The generated Can diagnostics now satisfy this as targeted mechanism evidence: hard-negative Can reaches `104/150` versus `91/150`, coverage-shift Can reaches `120/150` versus `103/150`, and prefix-positive Can reaches `119/150` versus `6/150`. The default frozen Can 20p/80b and Can 80p/80b diagnostics do not satisfy this and should not be used as primary positive-only wins.
 4. The method is hidden-label-free.
 5. Final claims hold on fresh split seeds.
 6. 50-episode endpoint results agree in direction with 10-episode screening.
@@ -1616,7 +1728,7 @@ results/final_paper/
 
 ## 18. Recommended abstract draft
 
-> Offline imitation learning often assumes access to expert demonstrations, but real logs contain scarce successes, explicit failures, and large unlabeled mixtures of useful and harmful behavior. We study how to learn from this tri-signal supervision regime. We find that the central challenge is not merely learning a desirability score, but converting that score into policy-training data under a precision/coverage tradeoff: pure support can under-cover the task, while soft weighting can still imitate harmful actions. We propose TRIAGE-BC, a hidden-label-free method that learns a success-versus-failure score, estimates useful unlabeled mass, and adaptively converts scores into high-confidence policy-training support with abstention on ambiguous score shapes. On controlled continuous navigation and Robomimic manipulation benchmarks, TRIAGE-BC improves over naive mixed-log cloning, strong weighted BC, and positive-only retrieval in key contamination regimes, while revealing when broad ambiguous logs require coverage-sensitive validation. Our results suggest that explicit failures are most useful not as a replacement for successful demonstrations, but as calibration signal for robust offline support selection.
+> Offline imitation datasets often mix scarce trusted successes, scarce known failures, and larger unlabeled logs. We study when failure demonstrations help as a score-to-support conversion problem: failures can calibrate a desirability score, but policy quality depends on converting scores into behavior-cloning support. TRIAGE-BC learns a tri-signal state-action score, estimates hidden positive mass, and routes unlabeled data into hard support, soft weighting, or abstention. Controlled PointNav and targeted generated Robomimic Can diagnostics show explicit failures help when positives are incomplete, trusted positives under-cover the state distribution, or bad demos are action-conflicting near-neighbors. On the fresh gate, a frozen v0.2 portfolio improves Can 40p/80b (`197/250` versus `192/250`) but is slightly negative on Lift MG (`143/250` versus `146/250`), yielding `340/500` fresh Can+Lift successes versus `338/500` for best per-split non-oracle baselines. The evidence supports a focused conclusion: bad labels can calibrate useful support, but hidden-label-free conversion from scores to policy-training data remains the bottleneck, and strong positive-only and weighted baselines must remain first-class controls.
 
 ---
 
@@ -1630,9 +1742,9 @@ The complete paper should be about:
 
 The key next actions are:
 
-1. keep v0.1 as the frozen diagnostic method rather than promoting the failed action-risk branch as v0.2,
-2. write the current submission around precision versus coverage, not around weak baselines,
-3. foreground positive-only NN and weighted BC as strong same-backbone baselines,
-4. keep generated Can diagnostics separate from primary frozen Robomimic rows,
-5. treat Can MG as an abstention/limitation case unless a new coverage-sensitive proxy is predeclared and validated,
-6. use the completed fresh Can+Lift gate to decide between a cautious v0.2 selector story and a diagnostic-paper story; do not oversell the Lift result as more than modest branch-selection evidence.
+1. keep the current submission around precision versus coverage, not around weak baselines or methods/SOTA dominance,
+2. foreground positive-only NN and weighted BC as strong same-backbone baselines,
+3. keep generated Can diagnostics separate from primary frozen Robomimic rows while using them as the clearest robotics mechanism evidence,
+4. treat Can MG as an abstention/limitation case unless a new coverage-sensitive proxy is predeclared and validated,
+5. present the completed fresh Can+Lift gate as a cautious v0.2 portfolio-selector story, not as a decisive win,
+6. treat Candidate F/V/W/X and related follow-ups as development-audit evidence that bounds the claims; do not spend more endpoint budget on unchanged scalar gates, nearest-negative hinges, or output-anchor variants.

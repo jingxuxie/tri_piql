@@ -1,0 +1,7 @@
+method,successes,episodes,avg_len
+positive_only_nn,14,20,70.25
+triage_bc,13,20,78.45
+weighted_bc,6,20,124.75
+initial_confidence_q25,18,20,44.8
+candidate_o_epoch50,1,20,147.35
+candidate_o_epoch100,5,20,120.5

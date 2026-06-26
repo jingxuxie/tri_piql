@@ -1,0 +1,8 @@
+split,method,candidate_f_selected,successes,episodes,avg_len,artifact
+606,positive_only_nn,0,16,20,163.95,results/candidate_g_fresh_preflight/can606_positive_epoch200_eval20
+606,weighted_bc,0,14,20,197.75,results/candidate_g_fresh_preflight/can606_weighted_epoch200_eval20
+606,candidate_e_gate,1,16,20,161.85,results/candidate_g_fresh_preflight/can606_candidate_e_gate_eval20
+707,positive_only_nn,0,15,20,181.9,results/candidate_g_fresh_preflight/can707_positive_epoch200_eval20
+707,weighted_bc,1,15,20,183.55,results/candidate_g_fresh_preflight/can707_weighted_epoch200_eval20
+707,triage_bc,0,10,20,251.85,results/candidate_g_fresh_preflight/can707_triage_epoch200_eval20
+707,candidate_e_gate,0,13,20,209.55,results/candidate_g_fresh_preflight/can707_candidate_e_gate_eval20

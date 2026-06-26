@@ -1,0 +1,2 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/candidate_g_fresh_preflight/per_seed/lift_mg_mg_sparse_split606_triage_bc_policy0/train/lift_mg_mg_sparse_split606_triage_bc_policy0_official_bc_rnn/20260626053731/models/model_epoch_200.pth,model_epoch_200,0.65,0.65,78.45,20

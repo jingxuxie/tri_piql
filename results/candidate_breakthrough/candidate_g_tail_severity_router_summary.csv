@@ -1,0 +1,14 @@
+task,split,selected_count,below_count,below_fraction,tail_severity_choice,candidate_success,positive,weighted,triage,best_baseline,delta_vs_best,branch_note
+can40,101,40,2,0.05,weighted,37,19,37,28,37,0,no-tail uses Candidate E initial-distance gate
+can40,202,40,0,0.0,candidate_e_gate,40,40,33,36,40,0,no-tail uses Candidate E initial-distance gate
+can40,303,40,0,0.0,candidate_e_gate,36,36,25,35,36,0,no-tail uses Candidate E initial-distance gate
+can40,404,40,0,0.0,candidate_e_gate,46,39,33,36,39,7,no-tail uses Candidate E initial-distance gate
+can40,505,40,0,0.0,candidate_e_gate,39,40,30,36,40,-1,no-tail uses Candidate E initial-distance gate
+lift_mg,101,160,3,0.01875,triage,36,28,31,36,36,0,no-tail uses positive-only anchor
+lift_mg,202,160,4,0.025,triage,34,25,30,34,34,0,no-tail uses positive-only anchor
+lift_mg,303,160,0,0.0,positive,21,21,19,20,21,0,no-tail uses positive-only anchor
+lift_mg,404,160,8,0.05,weighted,30,25,30,29,30,0,no-tail uses positive-only anchor
+lift_mg,505,160,21,0.13125,weighted,33,26,33,24,33,0,no-tail uses positive-only anchor
+can40,total,,2,,,198,174,158,171,192,6,denom=250
+lift_mg,total,,36,,,154,125,143,143,154,0,denom=250
+combined,total,,38,,,352,299,301,314,346,6,denom=500

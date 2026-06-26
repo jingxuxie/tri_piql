@@ -1,0 +1,2 @@
+task,split_type,split_seed,method,policy_seed,selected_unlabeled,hidden_positive,hidden_bad,purity,train_demo_count,train_filter_key
+lift_mg,mg_sparse,606,positive_only_nn,0,160,141,19,0.88125,170,final_lift_mg_mg_sparse_s606_positive_plus_positive_nn_top_unlabeled_demos_top160_seed0_train

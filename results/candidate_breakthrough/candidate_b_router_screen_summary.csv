@@ -1,0 +1,11 @@
+method_id,label,kind,eval_episodes,success_count,success_rate,avg_len,choices_positive,choices_weighted
+positive_only_nn_top40,Positive-only NN top40,baseline,20,17,0.850,148.2,,
+weighted_bc_full_pool,Weighted BC full pool,baseline,20,13,0.650,211.5,,
+triage_v01_adaptive_masscap,TRIAGE-BC v0.1 hard support,baseline,20,14,0.700,195.4,,
+v02_positive_nn_risk_union_top40,v0.2 positive-NN/risk union top40,baseline,20,7,0.350,299.6,,
+candidate_a_transition_weighted_e200,Candidate A transition-weighted e200,candidate_a,20,12,0.600,222.5,,
+router_labeled_positive_bias,"Router labeled support, positive bias 0.25",candidate_b_router,20,15,0.750,176.7,2894,640
+router_labeled_no_bias,"Router labeled support, no bias",candidate_b_router,20,16,0.800,162.2,1801,1443
+router_anchor_support_no_bias,"Router positive-anchor support, no bias",candidate_b_router,20,16,0.800,164.6,1723,1569
+router_labeled_thr0p10,"Router labeled support, switch threshold 0.10",candidate_b_router,20,16,0.800,162.2,2623,622
+router_labeled_thr0p05,"Router labeled support, switch threshold 0.05",candidate_b_router,20,14,0.700,193.6,2414,1457

@@ -1,0 +1,7 @@
+split,positive_first20,positive_rate,weighted_first20,weighted_rate,triage_first20,triage_rate,candidate_e_first20,candidate_e_rate,best_baseline_first20,delta_vs_best_baseline,gate_opens,weighted_action_steps,denominator,checkpoint_note
+101,7,0.350,12,0.600,11,0.550,7,0.350,12,-5,2,800,20,weighted last.pth
+202,17,0.850,13,0.650,12,0.600,17,0.850,17,0,0,0,20,epoch200
+303,15,0.750,10,0.500,13,0.650,15,0.750,15,0,0,0,20,epoch200
+404,17,0.850,13,0.650,14,0.700,19,0.950,17,2,2,257,20,epoch200
+505,15,0.750,12,0.600,14,0.700,16,0.800,15,1,6,1298,20,epoch200
+total,71,0.710,60,0.600,64,0.640,74,0.740,76,-2,10,2355,100,split101 weighted uses last.pth

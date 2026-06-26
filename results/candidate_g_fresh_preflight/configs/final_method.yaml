@@ -1,0 +1,134 @@
+method:
+  name: TRIAGE-BC
+  version: v0.1
+  freeze_date: "2026-06-24"
+  freeze_commit: bafffccf4d551f8d39c0e78e0d9fbc17d54dfe11
+  paper_framing: offline_imitation_score_to_support_conversion
+  hidden_labels_allowed_in_decisions: false
+
+score_model:
+  type: state_action_binary_classifier
+  feature_mode: obs
+  labels:
+    positive: labeled_positive_transitions
+    negative: labeled_negative_transitions
+    unlabeled: unused_for_training
+  classifier_steps: 800
+  classifier_batch_size: 512
+  hidden_dim: 128
+  depth: 2
+  learning_rate: 0.0001
+  classifier_seed_offset: 77
+  output_transform: sigmoid
+
+trajectory_scoring:
+  primary_aggregation: mean_transition_probability
+  diagnostic_aggregations:
+    - min
+    - p10
+    - p50
+    - p90
+    - max
+  positive_mass_estimate:
+    formula: clip((score - mean_positive_negative_anchor) / denominator, 0, 1)
+    denominator: mean_labeled_positive_score_minus_mean_labeled_negative_score_plus_1e-8
+
+router_v2:
+  stress_mass_floor: 800
+  stress_pos_min_count_floor: 400
+  hard_positive_p10: 0.85
+  hard_pos_min_count_floor: 80
+  decisions:
+    - branch: stress_abstain
+      condition: estimated_positive_mass >= 800 and count_ge_pos_min >= 400
+      action: do_not_train_main_triage_branch
+    - branch: hard_pos_min
+      condition: labeled_positive_p10 >= 0.85 and count_ge_pos_min >= 80
+      action: train_pos_min_support
+    - branch: hard_adaptive_masscap
+      condition: otherwise
+      action: train_adaptive_masscap_support
+
+support_rules:
+  adaptive_masscap:
+    gap_select_max_unlabeled_demos: 80
+    gap_select_min_unlabeled_demos: 4
+    gap_select_min_labeled_positive_multiplier: 4.0
+    adaptive_mass_cap_ratio: 1.25
+    precision_fallback_labeled_positive_multiplier: 2.0
+  pos_min:
+    threshold: min_labeled_positive_demo_mean_score
+    empty_fallback: top_1_unlabeled_demo
+  weighted_sampler_baseline:
+    positive_demo_weight: 1.0
+    unlabeled_weight: max(0.05, demo_mean_score)
+    num_samples_multiplier: 1.0
+  positive_only_nn_control:
+    can_pos40_bad80_top_k: 40
+    lift_mg_top_k: 160
+
+robomimic_policy:
+  algorithm: bc
+  backbone: official_robomimic_bc_rnn_gmm
+  obs_keys:
+    - robot0_eef_pos
+    - robot0_eef_quat
+    - robot0_gripper_qpos
+    - object
+  seq_length: 10
+  frame_stack: 1
+  actor_layer_dims:
+    - 1024
+    - 1024
+  rnn:
+    enabled: true
+    type: LSTM
+    hidden_dim: 400
+    num_layers: 2
+    open_loop: false
+    bidirectional: false
+  gmm:
+    enabled: true
+    num_modes: 5
+    min_std: 0.0001
+    std_activation: softplus
+    low_noise_eval: true
+  optimization:
+    policy_lr: 0.0001
+    train_batch_size: 100
+    num_epochs: 200
+    epoch_steps: 100
+    l2_weight: 1.0
+    l1_weight: 0.0
+    cos_weight: 0.0
+    cuda: true
+  checkpoints:
+    save_epochs:
+      - 50
+      - 100
+      - 150
+      - 200
+    main_endpoint_epoch: 200
+    no_best_checkpoint_selection: true
+
+final_splits:
+  development: existing_original_splits
+  validation: existing_shuffle42_splits
+  final_test_split_seeds:
+    - 11
+    - 22
+    - 33
+  primary_policy_seeds:
+    - 0
+  optional_policy_seed_extension:
+    - 1
+    - 2
+
+required_main_baselines:
+  - bc_positive_only
+  - bc_all_mixed
+  - classifier_probability_weighted_bc
+  - positive_only_nn_support
+  - triage_bc_router_v2
+  - all_train_positives_oracle_diagnostic
+

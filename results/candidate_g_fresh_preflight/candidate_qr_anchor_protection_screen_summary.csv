@@ -1,0 +1,15 @@
+group,method,successes,episodes,avg_len
+baseline,positive_only_nn,14,20,70.25
+baseline,triage_bc,13,20,78.45
+baseline,weighted_bc,6,20,124.75
+baseline,initial_confidence_q25,18,20,44.8
+baseline,candidate_p_epoch20_posinit_finetune,11,20,94.25
+candidate_q_short_finetune,model_epoch_1,10,20,90.4
+candidate_q_short_finetune,model_epoch_2,10,20,89.8
+candidate_q_short_finetune,model_epoch_3,9,20,96.3
+candidate_q_short_finetune,model_epoch_4,11,20,84.4
+candidate_q_short_finetune,model_epoch_5,10,20,91.7
+candidate_r_interpolation,pos_to_anchor_union_p20_alpha_0p05,11,20,86.45
+candidate_r_interpolation,pos_to_anchor_union_p20_alpha_0p10,10,20,89.35
+candidate_r_interpolation,pos_to_anchor_union_p20_alpha_0p20,10,20,92.45
+candidate_r_interpolation,pos_to_anchor_union_p20_alpha_0p35,10,20,93.8

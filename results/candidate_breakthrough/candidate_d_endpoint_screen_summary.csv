@@ -1,0 +1,9 @@
+method_id,label,kind,train_epochs,eval_episodes,success_count,success_rate,avg_len
+positive_only_nn_top40,Positive-only NN top40,baseline,200,20,17,0.850,148.2
+weighted_bc_full_pool,Weighted BC full pool,baseline,200,20,13,0.650,211.5
+triage_v01_adaptive_masscap,TRIAGE-BC v0.1 hard support,baseline,200,20,14,0.700,195.4
+candidate_c_sequence_mask_e200,Candidate C sequence-mask e200,candidate_c,200,20,16,0.800,167.7
+candidate_d_negative_action_e100,Candidate D negative-action e100,candidate_d,100,20,14,0.700,198.8
+candidate_d_negative_action_e200,Candidate D negative-action e200,candidate_d,200,20,13,0.650,205.4
+candidate_x_extra_negative_action_e100,Candidate X extra-only negative-action e100,candidate_x,100,20,10,0.500,256.4
+candidate_x_extra_negative_action_e200,Candidate X extra-only negative-action e200,candidate_x,200,20,14,0.700,201.5

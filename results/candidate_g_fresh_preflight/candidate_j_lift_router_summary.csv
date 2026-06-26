@@ -1,0 +1,5 @@
+method,successes,episodes,avg_len,choices_positive,choices_triage,choices_weighted,note
+margin_labeled,11,20,84.75,798,524,373,"Unrestricted per-step support-margin router over positive, triage, weighted."
+positive_anchor_labeled,11,20,84.75,798,524,373,Per-step margin router that keeps positive unless another branch is better.
+positive_anchor_anchor_support,10,20,91.15,675,654,494,"Same anchor router, but positive support includes Lift606 positive-NN selected demos."
+init_posdist3_pos_to_triage,14,20,70.25,1405,0,0,Episode-level gate: switch positive to triage if initial positive action is far from positive support.

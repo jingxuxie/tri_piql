@@ -1,0 +1,24 @@
+{
+  "run_id": "can_paired_pos40_bad80_split909_positive_only_nn_policy0",
+  "task": "can_paired",
+  "split_type": "pos40_bad80",
+  "split_seed": 909,
+  "method": "positive_only_nn",
+  "policy_seed": 0,
+  "stage": "train",
+  "dataset_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "split_path": "results/candidate_f_can_fresh_validation/splits/can_paired_pos40_bad80_split909/split_indices.json",
+  "score_dir": "",
+  "setup_dir": "results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split909_positive_only_nn_policy0/setup",
+  "train_dir": "results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split909_positive_only_nn_policy0/train",
+  "eval_dir": "results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split909_positive_only_nn_policy0/eval",
+  "router_decision": {
+    "router_v2_branch": "",
+    "source": "positive_plus_positive_nn_top_unlabeled_demos"
+  },
+  "diagnostics_path": "results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split909_positive_only_nn_policy0/setup/diagnostics.json",
+  "artifacts": {
+    "support_audit_csv": "results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split909_positive_only_nn_policy0/support_audit.csv",
+    "hidden_label_audit_csv": "results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split909_positive_only_nn_policy0/hidden_label_audit.csv"
+  }
+}

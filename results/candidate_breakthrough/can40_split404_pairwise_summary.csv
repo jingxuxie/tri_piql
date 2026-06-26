@@ -1,0 +1,5 @@
+left_method,right_method,left_success_count,right_success_count,left_minus_right_successes,left_better_initials,right_better_initials,tied_initials,left_advantage_episode_count,right_advantage_episode_count
+positive_only_nn_top40,v02_positive_nn_risk_union_top40,39,27,12,6,2,2,14,2
+weighted_bc_full_pool,v02_positive_nn_risk_union_top40,33,27,6,6,2,2,10,4
+triage_v01_adaptive_masscap,v02_positive_nn_risk_union_top40,36,27,9,5,1,4,11,2
+positive_only_nn_top40,weighted_bc_full_pool,39,33,6,4,3,3,11,5

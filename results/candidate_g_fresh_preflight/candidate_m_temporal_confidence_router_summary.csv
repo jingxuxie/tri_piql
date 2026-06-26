@@ -1,0 +1,3 @@
+method,description,successes,episodes,avg_len,threshold_source,threshold,calibration_values,gate_open_mean,gate_open_min,gate_open_max,choices_positive,choices_triage
+temporal_initial_q25,"temporal gate, threshold from labeled-positive initial states q25",7,20,112.65,labeled_positive_quantile,6.180339,10,107.3,21,148,107,2146
+temporal_sequence_q25,"temporal gate, threshold from all labeled-positive sequence timesteps q25",7,20,108.25,labeled_positive_sequence_quantile,1.762162,1500,92.35,8,147,318,1847

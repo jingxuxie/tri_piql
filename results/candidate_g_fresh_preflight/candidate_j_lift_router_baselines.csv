@@ -1,0 +1,4 @@
+method,first20_successes,first20_episodes,first20_avg_len,eval50_successes,eval50_episodes,eval50_avg_len
+positive_only_nn,14,20,70.25,28,50,85.18
+triage_bc,13,20,78.45,23,50,100.12
+weighted_bc,6,20,124.75,16,50,122.46

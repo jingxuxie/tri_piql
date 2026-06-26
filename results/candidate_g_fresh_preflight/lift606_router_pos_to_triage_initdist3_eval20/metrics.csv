@@ -1,0 +1,2 @@
+router_name,success_rate,avg_return,avg_len,eval_episodes,choices_positive,choices_triage
+initial_anchor_pos_dist_force_alt_labeled_thr0_initthr3_positivebias0_triagebias0,0.7,0.7,70.25,20,1405,0

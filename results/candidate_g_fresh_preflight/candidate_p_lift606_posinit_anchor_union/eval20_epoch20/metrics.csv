@@ -1,0 +1,2 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/candidate_g_fresh_preflight/candidate_p_lift606_posinit_anchor_union/train/candidate_p_lift606_posinit_anchor_union_e20_seed0/20260626071736/models/model_epoch_20.pth,model_epoch_20,0.55,0.55,94.25,20

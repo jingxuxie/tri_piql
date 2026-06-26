@@ -1,0 +1,11 @@
+initial_demo_id,positive_only_nn_top40,weighted_bc_full_pool,triage_v01_adaptive_masscap,v02_positive_nn_risk_union_top40,candidate_a_transition_weighted_e200,router_labeled_positive_bias,router_labeled_no_bias,router_anchor_support_no_bias,router_labeled_thr0p10,router_labeled_thr0p05,oracle_best_count,router_labeled_positive_bias_positive_choices,router_labeled_positive_bias_weighted_choices,router_labeled_no_bias_positive_choices,router_labeled_no_bias_weighted_choices,router_anchor_support_no_bias_positive_choices,router_anchor_support_no_bias_weighted_choices,router_labeled_thr0p10_positive_choices,router_labeled_thr0p10_weighted_choices,router_labeled_thr0p05_positive_choices,router_labeled_thr0p05_weighted_choices
+demo_5,2,0,2,1,1,2,2,2,1,1,2,167,10,51,114,64,95,292,197,175,307
+demo_29,2,1,2,0,1,1,2,1,2,2,2,400,100,110,100,342,163,155,43,150,52
+demo_39,0,1,0,0,0,0,0,1,0,0,1,757,43,485,315,328,246,718,82,585,215
+demo_45,2,1,2,0,0,2,2,2,2,1,2,173,15,72,107,97,86,129,58,302,191
+demo_53,2,2,2,2,2,2,2,2,2,2,2,215,10,138,74,144,73,204,13,176,48
+demo_81,2,2,2,2,2,2,2,2,2,2,2,221,8,151,76,134,98,199,26,179,49
+demo_89,2,1,2,0,2,2,2,2,2,2,2,185,11,111,101,110,83,164,30,153,49
+demo_99,1,1,1,0,1,1,2,2,2,2,2,373,145,99,131,117,111,147,83,126,101
+demo_105,2,2,1,2,2,2,2,2,2,2,2,177,30,91,118,86,115,168,42,131,82
+demo_189,2,2,0,0,1,1,0,0,1,0,2,226,268,493,307,301,499,447,48,437,363

@@ -1,0 +1,2 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/candidate_breakthrough/candidate_c_mask_can404_e200_train/candidate_c_mask_can404_e200_seed0/20260626023458/models/model_epoch_100.pth,model_epoch_100,0.4,0.4,290.55,20

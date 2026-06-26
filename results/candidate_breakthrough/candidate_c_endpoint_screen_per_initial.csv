@@ -1,0 +1,11 @@
+initial_demo_id,positive_only_nn_top40,weighted_bc_full_pool,triage_v01_adaptive_masscap,v02_positive_nn_risk_union_top40,candidate_a_transition_weighted_e200,router_labeled_no_bias,router_anchor_support_no_bias,candidate_c_sequence_mask_e100,candidate_c_sequence_mask_e200
+demo_5,2,0,2,1,1,2,2,2,2
+demo_29,2,1,2,0,1,2,1,0,1
+demo_39,0,1,0,0,0,0,1,0,0
+demo_45,2,1,2,0,0,2,2,1,2
+demo_53,2,2,2,2,2,2,2,2,2
+demo_81,2,2,2,2,2,2,2,2,2
+demo_89,2,1,2,0,2,2,2,0,2
+demo_99,1,1,1,0,1,2,2,0,1
+demo_105,2,2,1,2,2,2,2,1,2
+demo_189,2,2,0,0,1,0,0,0,2

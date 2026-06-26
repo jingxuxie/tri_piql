@@ -1,0 +1,4 @@
+split,positive,weighted,triage,candidate_e,candidate_v,oracle_positive_v,oracle_positive_e_v,candidate_v_delta_vs_positive,candidate_v_unique_gain_over_positive,candidate_v_unique_gain_over_pos_e
+404,39/50,33/50,36/50,46/50,39/50,42/50,48/50,0,3,2
+505,40/50,30/50,36/50,39/50,38/50,43/50,45/50,-2,3,0
+total,79/100,63/100,72/100,85/100,77/100,85/100,93/100,-2,6,2

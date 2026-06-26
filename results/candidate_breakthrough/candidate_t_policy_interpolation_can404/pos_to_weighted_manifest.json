@@ -1,0 +1,18 @@
+{
+  "base": "results/final_paper_v02/per_seed/can_paired_pos40_bad80_split404_positive_only_nn_policy0/train/can_paired_pos40_bad80_split404_positive_only_nn_policy0_official_bc_rnn/20260625141435/models/model_epoch_200.pth",
+  "target": "results/final_paper_v02/per_seed/can_paired_pos40_bad80_split404_weighted_bc_policy0/train/can_paired_pos40_bad80_split404_weighted_bc_policy0_official_bc_rnn/20260625143118/models/model_epoch_200.pth",
+  "checkpoints": [
+    {
+      "alpha": 0.05,
+      "checkpoint": "results/candidate_breakthrough/candidate_t_policy_interpolation_can404/pos_to_weighted_alpha_0p05.pth"
+    },
+    {
+      "alpha": 0.1,
+      "checkpoint": "results/candidate_breakthrough/candidate_t_policy_interpolation_can404/pos_to_weighted_alpha_0p10.pth"
+    },
+    {
+      "alpha": 0.2,
+      "checkpoint": "results/candidate_breakthrough/candidate_t_policy_interpolation_can404/pos_to_weighted_alpha_0p20.pth"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+seed,claim_use,tail_status,below_count,below_fraction,candidate_f_branch,candidate_f_first20,positive_first20,weighted_first20,triage_first20,candidate_e_first20
+606,pilot_only_excluded,ready,0,0.000,candidate_e_gate,16/20,16/20,14/20,,16/20
+707,pilot_only_excluded,ready,1,0.025,weighted_bc,15/20,15/20,15/20,10/20,13/20

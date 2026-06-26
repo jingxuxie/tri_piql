@@ -1,0 +1,6 @@
+method,successes,episodes
+candidate_f,31,40
+positive_only_nn,31,40
+candidate_e_gate,29,40
+weighted_bc,29,40
+triage_bc,10,20

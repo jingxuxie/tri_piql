@@ -1,0 +1,22 @@
+{
+  "base": "results/candidate_g_fresh_preflight/per_seed/lift_mg_mg_sparse_split606_positive_only_nn_policy0/train/lift_mg_mg_sparse_split606_positive_only_nn_policy0_official_bc_rnn/20260626054343/models/model_epoch_200.pth",
+  "target": "results/candidate_g_fresh_preflight/candidate_p_lift606_posinit_anchor_union/train/candidate_p_lift606_posinit_anchor_union_e20_seed0/20260626071736/models/model_epoch_20.pth",
+  "checkpoints": [
+    {
+      "alpha": 0.05,
+      "checkpoint": "results/candidate_g_fresh_preflight/candidate_r_lift606_checkpoint_interpolation/checkpoints/pos_to_anchor_union_p20_alpha_0p05.pth"
+    },
+    {
+      "alpha": 0.1,
+      "checkpoint": "results/candidate_g_fresh_preflight/candidate_r_lift606_checkpoint_interpolation/checkpoints/pos_to_anchor_union_p20_alpha_0p10.pth"
+    },
+    {
+      "alpha": 0.2,
+      "checkpoint": "results/candidate_g_fresh_preflight/candidate_r_lift606_checkpoint_interpolation/checkpoints/pos_to_anchor_union_p20_alpha_0p20.pth"
+    },
+    {
+      "alpha": 0.35,
+      "checkpoint": "results/candidate_g_fresh_preflight/candidate_r_lift606_checkpoint_interpolation/checkpoints/pos_to_anchor_union_p20_alpha_0p35.pth"
+    }
+  ]
+}

@@ -57,6 +57,9 @@ def build_rows() -> list[dict[str, str]]:
     router_regret = read_csv(
         ROOT / "results" / "final_paper_v02" / "tables" / "v02_router_regret_summary.csv"
     )
+    candidate_breakthrough = read_csv(
+        ROOT / "results" / "candidate_breakthrough" / "candidate_breakthrough_decision_summary.csv"
+    )
     v02_baseline_coverage = read_csv(
         ROOT / "results" / "final_paper_v02" / "tables" / "v02_fresh_baseline_coverage.csv"
     )
@@ -243,6 +246,33 @@ def build_rows() -> list[dict[str, str]]:
         }
     )
 
+    candidate_f_can = find_row(candidate_breakthrough, area="Can discovery matrix")
+    candidate_f_fresh_can = find_row(candidate_breakthrough, area="Fresh Can smokes")
+    candidate_f_fresh_validation = find_row(candidate_breakthrough, area="Fresh Can validation")
+    candidate_f_lift = find_row(candidate_breakthrough, area="Lift transfer")
+    transition_objectives = find_row(candidate_breakthrough, area="Transition-level objectives")
+    output_anchor = find_row(candidate_breakthrough, area="Output-anchor fine-tuning")
+    two_feature_gate = find_row(candidate_breakthrough, area="Two-feature weighted-rescue gate")
+    rows.append(
+        {
+            "criterion_id": "methods_candidate_breakthrough_validation",
+            "required_for": "top_tier_methods_dominance",
+            "status": "not_met",
+            "criterion": "The latest candidate-breakthrough search validates a general method beyond scoped Can discovery.",
+            "evidence": (
+                f"{candidate_f_can['key_result']}; "
+                f"{candidate_f_fresh_can['key_result']}; "
+                f"{candidate_f_fresh_validation['key_result']}; "
+                f"{candidate_f_lift['key_result']}; "
+                f"{transition_objectives['key_result']}; "
+                f"{output_anchor['key_result']}; "
+                f"{two_feature_gate['key_result']}."
+            ),
+            "artifact": "results/candidate_breakthrough/candidate_breakthrough_decision_REPORT.md",
+            "decision": "Candidate F failed its predeclared fresh Can validation gate early, and later transition/object-anchor/router follow-ups also failed validation; keep them as scoped discovery / failed-development evidence.",
+        }
+    )
+
     bad_lift_rows = [row for row in lift_hn if row["candidate_id"] == "bad_aware_proxy_top40"]
     pos_lift_rows = [row for row in lift_hn if row["candidate_id"] == "state_action_positive_nn_top40"]
     bad_lift_success = sum(int(row["success_count"]) for row in bad_lift_rows)
@@ -293,7 +323,7 @@ def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
         "decision",
     ]
     with path.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 

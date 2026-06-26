@@ -1,0 +1,2 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/candidate_breakthrough/candidate_v_anchor_logprob_can505_w10_e20_train/candidate_v_anchor_logprob_can505_w10_e20/20260626101921/models/model_epoch_10.pth,model_epoch_10,0.8,0.8,170.15,20

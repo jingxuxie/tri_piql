@@ -1,0 +1,5 @@
+task,split_seed,below_count,below_fraction,candidate_g_choice,candidate_h_choice,support_method_for_h,g_support_hp,g_support_bad,note
+can_paired,606,0,0.0,candidate_e_gate,candidate_e_gate,positive_only_nn,31,9,
+can_paired,707,1,0.025,triage_bc,candidate_e_gate,positive_only_nn,29,18,H differs from G
+lift_mg,606,2,0.0125,triage_bc,triage_bc,triage_bc,144,32,
+lift_mg,707,4,0.025,triage_bc,triage_bc,triage_bc,149,23,

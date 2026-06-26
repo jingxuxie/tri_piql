@@ -1,5 +1,318 @@
 # Tri-PIQL Iteration Log
 
+## 2026-06-26: Candidate K GMM-confidence router screen
+
+Implemented:
+
+- Added first-step learned-scale GMM confidence features to
+  `scripts/evaluate_robomimic_router_policy.py` through
+  `initial_gmm_feature_force_alt`.
+- Added `scripts/summarize_candidate_k_lift_confidence_audit.py` to audit
+  first-step mixture confidence, learned scales, cross log-likelihoods, action
+  disagreement, and support margins on Lift 606.
+- Added `scripts/summarize_candidate_k_confidence_router_screen.py`.
+- Trained missing Lift 707 positive-only and triage epoch-200 BC-RNN-GMM
+  checkpoints, then evaluated the fixed Candidate K threshold on Lift 707.
+
+Result:
+
+- Lift 606 confidence audit found one-feature gates up to `16/20` versus
+  positive-only `14/20`.
+- Live Lift 606 router with threshold `6.269868` reached `18/20`, and `32/50`
+  on the broader endpoint, above positive-only `28/50`, triage `23/50`, and
+  weighted `16/50`.
+- Fresh Lift 707 rejected the fixed threshold: positive-only `12/20`, triage
+  `9/20`, Candidate K router `10/20`.
+
+Interpretation:
+
+- Learned GMM confidence is a more useful signal than nearest support-margin
+  routing, but a globally fixed Lift threshold is not stable enough for a
+  paper-method claim.
+- Candidate K should not be scaled as-is. Next router work should either
+  calibrate thresholds from labeled validation features or use temporal
+  confidence during rollout instead of a split-fixed initial threshold.
+
+Validation:
+
+- `python scripts/summarize_candidate_k_confidence_router_screen.py` passed.
+- `python -m py_compile scripts/evaluate_robomimic_router_policy.py scripts/summarize_candidate_k_lift_confidence_audit.py scripts/summarize_candidate_k_confidence_router_screen.py`
+  passed.
+
+## 2026-06-26: Candidate J Lift606 router screen
+
+Implemented:
+
+- Generalized `scripts/evaluate_robomimic_router_policy.py` so
+  `labeled_plus_positive_anchor` support can use an explicit
+  `--positive-anchor-diagnostics` file instead of the old hardcoded Can split.
+- Ran four bounded 20-episode Lift 606 router screens over the existing
+  positive-only, triage, and weighted epoch-200 policies.
+- Added `scripts/summarize_candidate_j_lift_router_screen.py`.
+- Generated
+  `results/candidate_g_fresh_preflight/candidate_j_lift_router_screen_REPORT.md`
+  plus baseline, router-summary, threshold-audit, and per-initial CSVs.
+
+Result:
+
+- Matched first-20 baselines: positive-only `14/20`, triage `13/20`,
+  weighted `6/20`.
+- Per-step labeled-support margin router: `11/20`.
+- Positive-anchor labeled-support margin router: `11/20`.
+- Positive-anchor router with Lift606 positive-NN anchor support: `10/20`.
+- Initial positive-distance gate at threshold `3.0`: `14/20`, but the gate
+  never opened, so it reproduced positive-only behavior.
+- A post-hoc threshold audit over first-step positive-action distance found no
+  threshold above positive-only; the best thresholds tie `14/20`.
+- The non-deployable oracle over positive, triage, and weighted is `17/20`.
+
+Interpretation:
+
+- There is branch-selection headroom, but nearest labeled/anchor state-action
+  support margins do not expose it on Lift 606.
+- Do not scale this Candidate J gate. The next router attempt needs richer
+  deployable features, likely temporal confidence or policy self-likelihood
+  features.
+
+Validation:
+
+- `python scripts/summarize_candidate_j_lift_router_screen.py` passed.
+- `python -m py_compile scripts/evaluate_robomimic_router_policy.py` passed.
+
+## 2026-06-26: Candidate I retained Lift-branch validation
+
+Implemented:
+
+- Trained the missing Lift 606 positive-only and weighted BC-RNN-GMM
+  comparators to the same epoch-200 endpoint as the existing triage run.
+- Evaluated Lift 606 triage, positive-only, and weighted on `50`
+  valid-positive endpoint starts.
+- Updated `scripts/summarize_candidate_i_can_mild_positive_router.py` so the
+  Candidate I report now includes a reproducible fresh endpoint validation CSV.
+- Updated `METHOD_FREEZE_CANDIDATE_I.md` to mark Candidate I as rejected as a
+  development candidate.
+
+Result:
+
+- Can 707 still supports Candidate I's Can mild-tail fix: positive-only
+  `15/20` beats Candidate E `13/20` and triage `10/20`.
+- Lift 606 rejects Candidate I's retained Lift mild-tail triage branch:
+  positive-only `28/50`, Candidate I triage `23/50`, weighted `16/50`.
+- The smaller Lift 606 first-20 smoke had the same positive-over-triage
+  ordering: `14/20` versus `13/20`.
+
+Interpretation:
+
+- Candidate I should not be scaled or promoted as-is. The completed-row assembly
+  remains `352/500` versus `346/500`, but that is not enough after fresh Lift
+  mild-tail validation failed.
+- The failure is useful: old completed Lift mild-tail splits favored triage,
+  while fresh Lift 606 favors positive-only. A global task/tail rule is unstable
+  for Lift mild tails.
+- Next target should be a deployable episode-level gate or a new score
+  diagnostic for Lift mild-tail cases, not another global branch swap.
+
+Validation:
+
+- `python scripts/summarize_candidate_i_can_mild_positive_router.py` passed and
+  regenerated `results/candidate_g_fresh_preflight/candidate_i_can_mild_positive_REPORT.md`.
+- New endpoint validation CSV:
+  `results/candidate_g_fresh_preflight/candidate_i_fresh_endpoint_validation.csv`.
+
+## 2026-06-26: Candidate B router screen
+
+Implemented:
+
+- Added `scripts/evaluate_robomimic_router_policy.py`.
+- The evaluator loads multiple trained Robomimic policies, calls all policies
+  every timestep so their RNN states stay synchronized, and selects one action
+  using labeled-support state-action margins.
+- Ran three `20`-episode Can split-404 router screens over positive-only and
+  weighted BC.
+- Added `scripts/summarize_candidate_b_router_screen.py`.
+- Generated
+  `results/candidate_breakthrough/candidate_b_router_screen_REPORT.md`
+  plus summary and per-initial CSV companions.
+
+Result:
+
+- Positive-only first-20 baseline is `17/20`; weighted BC is `13/20`, v0.1 is
+  `14/20`, v0.2 union is `7/20`, and Candidate A e200 is `12/20`.
+- Router with labeled support and positive bias `0.25`: `15/20`.
+- Router with labeled support and no bias: `16/20`.
+- Router with positive-anchor support and no bias: `16/20`.
+- Non-deployable per-initial oracle over these rows is `19/20`.
+
+Interpretation:
+
+- Current deployable margin routing has headroom but is not enough to beat the
+  positive-only anchor. It tends to recover `demo_99` and sometimes `demo_39`,
+  but loses `demo_189`.
+- Do not scale this router unchanged. The next Candidate B attempt needs a
+  better initial-state or confidence gate; otherwise shift to Candidate C
+  sequence masks.
+
+Validation:
+
+- `python scripts/summarize_candidate_b_router_screen.py` passed and asserted
+  the expected first-20 totals.
+- `python -m py_compile scripts/evaluate_robomimic_router_policy.py scripts/summarize_candidate_b_router_screen.py`
+  passed.
+
+## 2026-06-26: Candidate A endpoint screen
+
+Implemented:
+
+- Ran Candidate A transition-weighted BC-RNN-GMM on Can 40p/80b split 404 with
+  the generated transition-loss HDF5.
+- First bounded train/eval: `50` epochs, `100` steps/epoch, `20` valid-positive
+  endpoint episodes.
+- Parity train/eval: `200` epochs, checkpoints at epochs `100` and `200`,
+  first-20 endpoint screen plus a `50`-episode endpoint eval for epoch `200`.
+- Added `scripts/summarize_candidate_a_endpoint_screen.py`.
+- Generated
+  `results/candidate_breakthrough/candidate_a_endpoint_screen_REPORT.md`
+  plus 50-episode, first-20, and per-initial CSV companions.
+
+Result:
+
+- The `50`-epoch checkpoint reached only `1/20`, reinforcing that `5k` update
+  steps is too small for endpoint conclusions.
+- The `200`-epoch checkpoint reached `12/20` on the first-20 screen and
+  `30/50` on the comparable endpoint eval.
+- Against 50-episode split-404 baselines, Candidate A is `+3` over v0.2 hard
+  union (`27/50`) but below weighted BC (`33/50`), v0.1 (`36/50`), and
+  positive-only NN (`39/50`).
+- Per-initial counts show Candidate A rescues some union failures
+  (`demo_89`, `demo_39`, `demo_99`) but collapses on positive-only strengths
+  (`demo_45`, `demo_189`).
+
+Interpretation:
+
+- Current Candidate A is not a breakthrough and should not be scaled unchanged.
+- The useful lesson is architectural: we need a method that preserves strong
+  positive-only anchor behavior while selectively borrowing coverage. Candidate
+  C sequence masks or Candidate B state-level gating are better next targets.
+
+Validation:
+
+- `python scripts/summarize_candidate_a_endpoint_screen.py` passed and asserted
+  the expected 50-episode totals: positive-only `39`, weighted `33`, v0.1 `36`,
+  union `27`, Candidate A `30`.
+- `python -m py_compile scripts/summarize_candidate_a_endpoint_screen.py`
+  passed.
+
+## 2026-06-26: Candidate A transition-weighted trainer smoke
+
+Implemented:
+
+- Added `scripts/train_robomimic_official_transition_weighted.py`.
+- The script wraps the Robomimic `SequenceDataset` to add per-timestep
+  `loss_weight` arrays from the Candidate A HDF5 and patches BC GMM NLL inside
+  the script process, without editing `external/robomimic`.
+- The weighted NLL is `-(log_probs * loss_weight).sum() / loss_weight.sum()`;
+  the trainer also uses sequence-mean loss weights for the sampler.
+
+Result:
+
+- One-step CPU smoke passed on the Can split-404 v0.2 hard-union config.
+- Command shape:
+  `conda run -n tri-piql python scripts/train_robomimic_official_transition_weighted.py --config ... --transition-weights ... --num-epochs 1 --epoch-steps 1 --batch-size 16 --device cpu`.
+- Smoke telemetry confirmed the weighted path was active:
+  `Loss_Weight_Mean=0.647809`, `Loss_Weight_Min=0.298574`,
+  `Loss_Weight_Max=1.0`, `Loss=5.436787`.
+- Smoke output:
+  `results/candidate_breakthrough/candidate_a_transition_weighted_smoke_train/candidate_a_transition_weighted_smoke/20260626015303/`.
+  Kept `models/model_epoch_1.pth`; removed duplicate `last*.pth` files.
+
+Interpretation:
+
+- Candidate A now has an end-to-end trainable code path. The next result needs
+  a bounded GPU train/eval on Can split 404 before making any paper claim.
+
+Validation:
+
+- `python -m py_compile scripts/train_robomimic_official_transition_weighted.py` passed.
+- The one-step `conda run -n tri-piql ... --device cpu` smoke passed.
+
+## 2026-06-26: Candidate A transition-weight preflight
+
+Implemented:
+
+- Added `scripts/summarize_candidate_a_transition_weight_preflight.py`.
+- Generated transition-level loss-weight artifacts under
+  `results/candidate_breakthrough/candidate_a_transition_weight_preflight/`.
+- The main artifact is
+  `candidate_a_loss_weights.hdf5`, with per-demo arrays at
+  `data/<demo_id>/loss_weight`; companion files are
+  `candidate_a_transition_weight_summary.csv`,
+  `candidate_a_transition_weight_recipe.json`, and
+  `candidate_a_transition_weight_preflight_REPORT.md`.
+
+Result:
+
+- The preflight uses the Can 40p/80b split-404 v0.2 hard-union pool: `54` train
+  demos, `10` labeled positives, and `44` selected unlabeled demos.
+- Selected unlabeled support contains `39` hidden positives and `5` hidden bad
+  demos; all `4` union-only additions are hidden positives.
+- Transition-risk weighting reduces selected hidden-bad mass from `0.082`
+  unweighted transition fraction to `0.045` weighted mass fraction.
+- Weighted selected mass is `2074.8` hidden-positive transitions versus `98.3`
+  hidden-bad transitions, with `1118.0` labeled-positive anchor mass.
+
+Interpretation:
+
+- This is a viable Candidate A training input, not a policy result. It gives the
+  Robomimic trainer an explicit per-timestep loss-weight file that should
+  preserve the positive-only anchor while softening risky selected bad anchors.
+- Next step: wire `loss_weight` into the BC-RNN-GMM NLL and run a short Can
+  split-404 endpoint check.
+
+Validation:
+
+- `python scripts/summarize_candidate_a_transition_weight_preflight.py` passed.
+- `python -m py_compile scripts/summarize_candidate_a_transition_weight_preflight.py` passed.
+
+## 2026-06-26: Candidate-breakthrough split-404 audit
+
+Implemented:
+
+- Added `scripts/summarize_candidate_breakthrough_split404_audit.py` to turn
+  completed Can 40p/80b split-404 endpoint rollouts into a candidate
+  breakthrough preflight report.
+- Generated
+  `results/candidate_breakthrough/can40_split404_failure_audit_REPORT.md`
+  plus method-summary, pairwise, and per-initial-state CSV companions.
+- Updated `triage_bc_candidate_breakthrough_plan.md` to mark the Day 1-2
+  split-404 audit complete and record the decision implied by the evidence.
+
+Result:
+
+- Positive-only NN is the split-404 endpoint winner at `39/50`.
+- v0.2 hard union reaches only `27/50`, despite selecting `39/40` hidden
+  positives and `5/80` hidden bad demos versus positive-only `35/40` and
+  `5/80`.
+- v0.1 hard support reaches `36/50`, and weighted BC reaches `33/50`.
+- Per-initial-state accounting shows positive-only beats union on `6/10`
+  starts, union beats positive-only on `2/10`, and weighted BC beats union on
+  `6/10` starts.
+
+Interpretation:
+
+- The split-404 reversal is not explained by worse global support purity or
+  hidden-positive recall. The next candidate should target sequence/action
+  distribution and state-specific branch effects: transition weighting,
+  sequence masks, or state-level gating, not more global threshold tuning.
+
+Validation:
+
+- `python scripts/summarize_candidate_breakthrough_split404_audit.py` passed and
+  asserted the known endpoint totals: positive-only `39`, weighted `33`, v0.1
+  `36`, and union `27`.
+- `python -m py_compile scripts/summarize_candidate_breakthrough_split404_audit.py`
+  passed.
+- `git diff --check` passed, and no Robomimic train/eval jobs were running.
+
 ## 2026-06-26: ICLR claim wording and layout sync
 
 Implemented:
@@ -8996,3 +9309,1338 @@ python scripts/validate_paper_artifact_refs.py
 python scripts/validate_paper_structure.py
 make -C paper validate
 ```
+
+## 2026-06-26: Candidate C split-404 sequence-mask screen
+
+Continued the failure-focused `triage_bc_candidate_breakthrough_plan.md` branch
+on the Can 40p/80b split-404 reversal.
+
+Candidate B threshold follow-up:
+
+- Regenerated `results/candidate_breakthrough/candidate_b_router_screen_REPORT.md`
+  after adding two small switch-threshold screens to
+  `scripts/summarize_candidate_b_router_screen.py`.
+- Positive/weighted router first-20 results now include:
+  - labeled support, positive bias `0.25`: `15/20`;
+  - labeled support, no bias: `16/20`;
+  - positive-anchor support, no bias: `16/20`;
+  - labeled support, switch threshold `0.10`: `16/20`;
+  - labeled support, switch threshold `0.05`: `14/20`.
+- Interpretation: scalar thresholding does not solve the router tradeoff. The
+  `0.10` threshold recovers one `demo_189` rollout but loses one `demo_5`
+  rollout; `0.05` is worse. A useful router needs richer confidence or
+  initial-state features.
+
+Candidate C sequence-mask preflight and endpoint screen:
+
+- Added `scripts/summarize_candidate_c_sequence_mask_preflight.py`.
+- Generated
+  `results/candidate_breakthrough/candidate_c_sequence_mask_preflight/candidate_c_sequence_mask_weights.hdf5`
+  and
+  `results/candidate_breakthrough/candidate_c_sequence_mask_preflight/candidate_c_sequence_mask_preflight_REPORT.md`.
+- The mask keeps the full weighted training context (`130` demos), gives `50`
+  positive-anchor demos full loss mass, and admits only high-score,
+  positive-margin timesteps from extra weighted-pool demos. Extra selected mass
+  is `186` positive timestep mass and `36` bad timestep mass, or `0.040` of all
+  transitions.
+- Trained a parity `200`-epoch BC-RNN-GMM with checkpoints at
+  `results/candidate_breakthrough/candidate_c_mask_can404_e200_train/candidate_c_mask_can404_e200_seed0/20260626023458/models/`.
+- Endpoint first-20 results:
+  - epoch `100`: `8/20`;
+  - epoch `200`: `16/20`.
+- Added `scripts/summarize_candidate_c_endpoint_screen.py` and generated
+  `results/candidate_breakthrough/candidate_c_endpoint_screen_REPORT.md`.
+
+Decision:
+
+- Candidate C is not a breakthrough as implemented. Epoch `200` ties the best
+  Candidate B router at `16/20`, beats weighted BC (`13/20`) and Candidate A
+  (`12/20`), but remains below positive-only NN (`17/20`).
+- Do not scale this mask recipe unchanged. Next useful work should either add
+  explicit action-negative regularization or build a richer confidence-preserving
+  router; more global hard-support or scalar-threshold tuning is unlikely to
+  fix the split-404 bottleneck.
+
+## 2026-06-26: Candidate D split-404 negative-action screen
+
+Tested the next Candidate D branch from
+`triage_bc_candidate_breakthrough_plan.md`: use labeled bad demonstrations as
+local counterfactual actions rather than as more trajectory or timestep filters.
+
+Implementation:
+
+- Added `scripts/summarize_candidate_d_negative_action_preflight.py`.
+- Extended `scripts/train_robomimic_official_transition_weighted.py` with
+  optional `negative_action` and `negative_loss_weight` HDF5 datasets plus a
+  negative-action hinge:
+  `max(0, log pi(a_bad | s) - log pi(a_demo | s) + margin)`.
+- Kept the change local to the project trainer hook; `external/robomimic` was
+  not edited.
+
+Preflight:
+
+- Generated
+  `results/candidate_breakthrough/candidate_d_negative_action_preflight/candidate_d_negative_action_weights.hdf5`
+  and
+  `results/candidate_breakthrough/candidate_d_negative_action_preflight/candidate_d_negative_action_preflight_REPORT.md`.
+- The HDF5 uses the Candidate C mask: `5528` selected timesteps over `130`
+  train demos. Each selected timestep receives the nearest labeled-negative
+  action by low-dimensional observation distance.
+- Audit mass matches Candidate C: extra selected mass is `186` positive
+  timesteps and `36` bad timesteps; mean selected nearest-negative observation
+  distance is `3.494`.
+
+Smoke and endpoint:
+
+- One-step CPU smoke passed with hinge weight `0.1` and margin `0.5`; the log
+  included `Negative_Hinge_Loss`, `Negative_Hinge_Active`, and
+  `Negative_Log_Likelihood`.
+- Trained a bounded `200`-epoch split-404 GPU run:
+  `results/candidate_breakthrough/candidate_d_neg0p1_can404_e200_train/candidate_d_neg0p1_can404_e200_seed0/20260626030303/models/`.
+- First-20 endpoint results:
+  - epoch `100`: `14/20`;
+  - epoch `200`: `13/20`.
+- Added `scripts/summarize_candidate_d_endpoint_screen.py` and generated
+  `results/candidate_breakthrough/candidate_d_endpoint_screen_REPORT.md`.
+
+Decision:
+
+- Candidate D is negative in this full-anchor form. It is below Candidate C
+  (`16/20`) and positive-only NN (`17/20`), and its best checkpoint only matches
+  v0.1 hard support (`14/20`).
+- The per-initial table shows the hinge does not recover `demo_39`, while it
+  gives up anchor strengths on `demo_29`, `demo_89`, `demo_99`, or `demo_189`
+  depending on checkpoint.
+- Do not scale this recipe unchanged. If action-negative regularization is
+  revisited, restrict the hinge away from full-weight positive-anchor timesteps.
+  The stronger next route is a confidence-preserving router or initial-state
+  classifier that uses the observed per-initial oracle headroom without
+  sacrificing positive-only anchor states.
+
+## 2026-06-26: Candidate E split-404 initial support-distance gate
+
+Tested the confidence-preserving router implied by the Candidate B/D failure
+analysis: keep positive-only as the anchor policy, but switch to weighted BC for
+the whole episode when the positive-only policy's first action is far from
+labeled positive support.
+
+Implementation:
+
+- Added `scripts/summarize_candidate_e_initial_gate_audit.py`.
+- Extended `scripts/evaluate_robomimic_router_policy.py` with
+  `initial_anchor_pos_dist_force_alt` and `--initial-gate-threshold`.
+- The deployed rule for this screen is:
+  `positive_pos_dist > 3.0 -> weighted BC`, otherwise `positive-only NN`.
+
+Feature audit:
+
+- Generated
+  `results/candidate_breakthrough/candidate_e_initial_gate_feature_audit.csv`
+  and
+  `results/candidate_breakthrough/candidate_e_initial_gate_audit_REPORT.md`.
+- The high positive-support-distance case is `demo_39`
+  (`positive_pos_dist=3.179`); the other split-404 endpoint initials are at or
+  below about `2.586`.
+- First-20 ceiling from the audit: positive-only `17/20`, weighted `13/20`,
+  Candidate C `16/20`, best existing deployable router `16/20`, and
+  non-deployable per-initial oracle `19/20`.
+
+Endpoint:
+
+- Fixed `scripts/evaluate_robomimic_router_policy.py` to isolate per-policy RNG
+  streams. This matters because all policies are queried every timestep to keep
+  RNN states synchronized, and non-selected stochastic BC-RNN-GMM policies
+  should not perturb selected-policy samples.
+- First-20 Candidate E screen with isolated policy RNG: `19/20`; the gate
+  opened on the two `demo_39` episodes.
+- 50-episode Candidate E screen with isolated policy RNG: `46/50` with average
+  length `130.3`; the gate opened `5/50` times, all on `demo_39`.
+- Baseline/candidate comparison at 50 episodes:
+  - positive-only NN: `39/50`;
+  - weighted BC: `33/50`;
+  - TRIAGE-BC v0.1 hard support: `36/50`;
+  - v0.2 positive-NN/risk union: `27/50`;
+  - Candidate A transition-weighted: `30/50`;
+  - Candidate E initial support-distance gate: `46/50`.
+- Added `scripts/summarize_candidate_e_endpoint_screen.py` and generated
+  `results/candidate_breakthrough/candidate_e_endpoint_screen_REPORT.md`.
+
+Decision:
+
+- Candidate E is the first split-404 branch candidate to beat the positive-only
+  endpoint at 50 episodes (`+7/50` under isolated RNG).
+- This is promising enough to run the same deployable gate on the other Can
+  40p/80b split seeds.
+- Caveat: the threshold `3.0` was hand-set from split-404 diagnostics. Treat
+  this as a candidate-discovery result, not yet a paper claim; the next version
+  needs hidden-label-free calibration and multi-split validation.
+
+Multi-split follow-up:
+
+- Ran fresh first-20 Candidate E router screens on split seeds `101`, `202`,
+  `303`, and `505`; combined them with the existing split-404 first-20 screen.
+- Added `scripts/summarize_candidate_e_multisplit_screen.py`.
+- Generated
+  `results/candidate_breakthrough/candidate_e_multisplit_screen_REPORT.md`
+  and
+  `results/candidate_breakthrough/candidate_e_multisplit_screen_first20_summary.csv`.
+- First-20 aggregate against corrected baseline first-20 slices and isolated-RNG
+  router evals:
+  - positive-only NN: `71/100`;
+  - weighted BC: `60/100`;
+  - triage: `64/100`;
+  - Candidate E fixed threshold: `74/100`.
+- Per split Candidate E results:
+  - split 101: `7/20`, down `5` episodes versus weighted BC (`12/20`);
+  - split 202: `17/20`, tied with positive-only;
+  - split 303: `15/20`, tied with positive-only;
+  - split 404: `19/20`, up `2` episodes over positive-only in the first-20
+    screen and `46/50` in the 50-episode follow-up;
+  - split 505: `16/20`, up `1` episode over the best first-20 baseline.
+- The gate opens `10/100` episodes total. It never opens on splits `202` and
+  `303`, opens usefully on split `404`, opens with a small net gain on split
+  `505`, and opens on two long split-101 episodes without rescue while that
+  split would prefer broader weighted behavior overall.
+
+Revised decision:
+
+- Do not freeze the hand-set `positive_pos_dist > 3.0` gate.
+- Keep the initial support-distance feature, but calibrate it from training-only
+  split statistics or add a second confidence feature before spending 50-episode
+  budget across all splits.
+
+## 2026-06-26: Candidate F anchor calibration and RNG-corrected router screen
+
+Followed up on the Candidate E multi-split failure: split 101 wants broad
+weighted behavior, while split 404 wants positive-only with a narrow weighted
+fallback.
+
+Implementation:
+
+- Fixed `scripts/evaluate_robomimic_router_policy.py` so stochastic policies get
+  isolated per-policy RNG streams. The evaluator still calls every policy every
+  timestep for RNN-state synchronization, but non-selected policies no longer
+  perturb selected-policy samples.
+- Added `scripts/summarize_candidate_f_teacher_forced_anchor_audit.py`.
+- Added `scripts/summarize_candidate_f_anchor_calibration_screen.py`.
+- Regenerated Candidate E summaries with isolated-RNG router artifacts.
+
+Negative anchor audit:
+
+- Labeled-positive teacher-forced action fit does not identify the right split
+  101 anchor. The best teacher-forced rules choose positive or triage on split
+  101, while weighted BC is the best completed first-20 endpoint baseline.
+- This suggests split 101 is a coverage/generalization failure, not an imitation
+  loss failure on labeled positives.
+
+Candidate F rule:
+
+- Compute classifier probabilities for the positive-NN selected unlabeled
+  support set.
+- Set the tail threshold to `0.5 * unlabeled_prob_mean`, where
+  `unlabeled_prob_mean` is the full unlabeled pool's classifier-probability
+  mean for that split.
+- If any selected demo falls below that threshold, use weighted BC as the
+  split-level anchor; otherwise use Candidate E's positive anchor with initial
+  support-distance fallback.
+- The calibrated rule flags only split 101: min selected probability `0.125`
+  versus tail threshold `0.203`.
+- The normalized tail ratio is `0.309` on split 101 versus at least `0.692` on
+  the other splits, so any tail fraction in roughly `[0.35, 0.65]` gives the
+  same anchor decision.
+
+Results:
+
+- Candidate E isolated first-20: `74/100`; split 404 improves to `19/20`.
+- Candidate F first-20: `79/100`, beating positive-only (`71/100`), weighted
+  (`60/100`), triage (`64/100`), Candidate E (`74/100`), and the completed
+  per-split baseline oracle (`76/100`).
+- Candidate F assembled 50-episode estimate: `198/250`, versus positive-only
+  `174/250`, weighted `158/250`, triage `171/250`, and per-split baseline
+  oracle `192/250`.
+- The assembled 50-episode result uses weighted BC on split 101 (`37/50`),
+  Candidate E isolated-RNG on split 404 (`46/50`) and split 505 (`39/50`), and
+  positive-only substitution on no-gate splits 202/303.
+
+Decision:
+
+- Candidate F is the strongest candidate so far. It now has an endpoint-free,
+  score-scale-normalized anchor rule, but the tail fraction `0.5` is still a
+  hyperparameter.
+- Next step: rerun a single frozen Candidate F matrix with this calibrated rule
+  instead of relying on assembled artifacts.
+
+Frozen matrix follow-up:
+
+- Ran the missing frozen Candidate F 50-episode components:
+  - split 101 weighted-sampler anchor:
+    `results/candidate_breakthrough/candidate_f_frozen_split101_weighted_sampler_anchor_eval50`;
+  - split 202 Candidate E gate:
+    `results/candidate_breakthrough/candidate_f_frozen_split202_candidate_e_gate_eval50`;
+  - split 303 Candidate E gate:
+    `results/candidate_breakthrough/candidate_f_frozen_split303_candidate_e_gate_eval50`.
+- Reused the already completed isolated-RNG Candidate E 50-episode runs for
+  splits 404 and 505.
+- Added `scripts/summarize_candidate_f_frozen_matrix.py` and generated
+  `results/candidate_breakthrough/candidate_f_frozen_matrix_REPORT.md`.
+- Frozen Candidate F reaches `198/250`, versus positive-only `174/250`,
+  weighted `158/250`, triage `171/250`, and the completed per-split baseline
+  oracle `192/250`.
+- Split-level accounting:
+  - split 101: weighted anchor `37/50`, ties best baseline;
+  - split 202: Candidate E gate `40/50`, ties best baseline, gate opens `0`;
+  - split 303: Candidate E gate `36/50`, ties best baseline, gate opens `0`;
+  - split 404: Candidate E gate `46/50`, `+7/50` over best baseline;
+  - split 505: Candidate E gate `39/50`, `-1/50` below best baseline.
+- Checkpoint provenance correction: an attempted split-101 rerun with root
+  `last.pth` reached only `1/50`; this was the wrong non-sampler checkpoint.
+  The frozen split-101 row uses the weighted-sampler `model_epoch_200.pth`
+  checkpoint under `external/robomimic/...`, which reproduces the existing
+  weighted baseline.
+
+Revised decision:
+
+- Candidate F is now frozen for the Can 40p/80b matrix and is the first branch
+  here to beat the completed per-split baseline oracle.
+- It is still not a full top-tier method result: the next question is whether
+  the same anchor/gate idea transfers to Lift or whether the paper should scope
+  Candidate F as a Can-specific method improvement.
+
+Lift transfer audit:
+
+- Added `scripts/summarize_candidate_f_lift_transfer_audit.py`.
+- Generated
+  `results/candidate_breakthrough/candidate_f_lift_transfer_audit_REPORT.md`
+  and `results/candidate_breakthrough/candidate_f_lift_transfer_audit.csv`.
+- Reused completed Lift MG endpoint rows only; no new Lift rollouts are claimed.
+- Direct Can-style transfer of Candidate F's binary tail rule
+  (`any low tail -> weighted`, otherwise positive) reaches `145/250` on Lift,
+  versus positive-only `125/250`, weighted `143/250`, triage `143/250`, and
+  the per-split baseline oracle `154/250`.
+- A diagnostic tail-severity interpretation matches the Lift oracle:
+  - no low tail -> positive-only;
+  - mild low tail -> triage/hard support;
+  - severe low tail -> weighted.
+  This reaches `154/250` on Lift.
+- Combining frozen Can Candidate F (`198/250`) with the Lift tail-severity
+  diagnostic gives `352/500`, versus the combined completed baseline oracle
+  `346/500`.
+
+Updated decision:
+
+- Candidate F should be scoped as frozen for Can 40p/80b, not as an unchanged
+  Can-to-Lift transfer result.
+- The next broader candidate is a tail-severity router that chooses among
+  positive-only, triage/hard support, and weighted BC from train/support
+  statistics before spending fresh endpoint budget.
+
+Validation:
+
+- `python -m py_compile scripts/summarize_candidate_f_lift_transfer_audit.py`
+  passed.
+- `python scripts/summarize_candidate_f_lift_transfer_audit.py` regenerated the
+  report and CSV.
+
+Candidate G follow-up:
+
+- Added `scripts/summarize_candidate_g_tail_severity_router.py`.
+- Generated
+  `results/candidate_breakthrough/candidate_g_tail_severity_router_REPORT.md`,
+  `results/candidate_breakthrough/candidate_g_tail_severity_router_summary.csv`,
+  and
+  `results/candidate_breakthrough/candidate_g_tail_severity_router_sensitivity.csv`.
+- Added `METHOD_FREEZE_CANDIDATE_G.md` to fix the next-validation rule before
+  any additional endpoint budget is spent.
+- Candidate G uses the same low-tail threshold as Candidate F:
+  `0.5 * unlabeled_prob_mean`.
+- Its branch rule is:
+  - no low-probability tail -> clean positive anchor;
+  - mild low tail (`below_fraction < 0.03`) -> triage/hard support;
+  - severe low tail -> weighted BC.
+- The clean positive anchor is Candidate E's initial-distance gate on Can and
+  positive-only on Lift.
+
+Result:
+
+- Candidate G reaches `352/500` on completed Can+Lift rows, versus the combined
+  completed per-split baseline oracle `346/500`.
+- On Can, it is identical to frozen Candidate F: `198/250` versus oracle
+  `192/250`.
+- On Lift, it matches the completed baseline oracle: `154/250`.
+- Mild-cutoff sensitivity:
+  - cutoff `0.000`: `343/500`;
+  - cutoff `0.020` or `0.025`: `348/500`;
+  - cutoff `0.026` through strict `0.050`: `352/500`;
+  - cutoff `0.051` or `0.060`: `342/500`.
+
+Decision:
+
+- Candidate G is the best next method candidate to freeze, but it is not yet a
+  clean paper claim because the `0.03` mild-tail cutoff was chosen after
+  inspecting completed Lift endpoint rows.
+- The correct next endpoint spend is a pre-registered Candidate G freeze, with
+  the mild-tail cutoff justified from support statistics or fixed before
+  evaluation.
+
+Validation:
+
+- `python -m py_compile scripts/summarize_candidate_g_tail_severity_router.py`
+  passed.
+- `python scripts/summarize_candidate_g_tail_severity_router.py` regenerated the
+  report and CSVs.
+
+## 2026-06-26: Candidate G fresh preflight and Candidate H task-aware tail router
+
+Continued from the Candidate G freeze by testing whether the frozen branch rule
+looks sane on held-out split seeds before spending a broad endpoint budget.
+
+Fresh support preflight:
+
+- Added `scripts/summarize_candidate_g_fresh_preflight.py`.
+- Prepared support/config artifacts for held-out split seeds `606` and `707` on
+  Can 40p/80b and Lift MG under `results/candidate_g_fresh_preflight/`.
+- Generated
+  `results/candidate_g_fresh_preflight/candidate_g_fresh_preflight_REPORT.md`
+  and `candidate_g_fresh_preflight_summary.csv`.
+- Candidate G branch choices:
+  - Can 606: Candidate E gate, positive-only support `31/9` hidden
+    positive/bad;
+  - Can 707: triage, selected because mild tail `1/40 = 0.025`, but triage
+    support is only `29/18`;
+  - Lift 606: triage, support `144/32`;
+  - Lift 707: triage, support `149/23`.
+
+Can 707 endpoint smoke:
+
+- Trained the Candidate G-selected Can 707 triage branch to epoch 200 and ran a
+  20-episode endpoint eval:
+  `results/candidate_g_fresh_preflight/can707_triage_epoch200_eval20/REPORT.md`.
+- Trained the Can 707 positive-only branch to epoch 200 and ran the same
+  20-episode endpoint eval:
+  `results/candidate_g_fresh_preflight/can707_positive_epoch200_eval20/REPORT.md`.
+- Result:
+  - Candidate G triage branch: `10/20`, avg length `251.8`;
+  - positive-only clean-anchor lower bound: `15/20`, avg length `181.9`.
+
+Decision:
+
+- Candidate G is not safe enough as a task-agnostic mild-tail router. The first
+  fresh Can mild-tail case routes away from a cleaner positive support set and
+  loses `5/20` endpoint successes.
+- Added `scripts/summarize_candidate_h_task_aware_tail_router.py` and generated
+  `results/candidate_g_fresh_preflight/candidate_h_task_aware_tail_REPORT.md`.
+- Added `METHOD_FREEZE_CANDIDATE_H.md`.
+- Candidate H keeps Lift mild-tail triage but changes Can mild-tail handling:
+  Can no/mild tail uses Candidate E's clean anchor; only severe Can tails
+  (`below_fraction >= 0.03`) use weighted BC.
+- Candidate H is identical to Candidate G on completed Can+Lift rows
+  (`352/500` versus completed oracle `346/500`), because completed Can rows had
+  no mild-tail case, but Candidate H fixes the fresh Can 707 branch decision.
+
+Validation:
+
+- `python -m py_compile scripts/summarize_candidate_g_fresh_preflight.py`
+  passed.
+- `python scripts/summarize_candidate_g_fresh_preflight.py --out-dir results/candidate_g_fresh_preflight --split-seeds 606 707`
+  regenerated the fresh preflight report.
+- `python -m py_compile scripts/summarize_candidate_h_task_aware_tail_router.py`
+  passed.
+- `python scripts/summarize_candidate_h_task_aware_tail_router.py` regenerated
+  the Candidate H report.
+
+## 2026-06-26: Candidates I-L, Lift branch repair attempts
+
+Continued the fresh preflight after Candidate H fixed the Can 707 mild-tail
+branch but retained Lift mild-tail triage.
+
+Candidate I:
+
+- Candidate I replaced Candidate H's Can mild-tail branch with positive-only,
+  matching the fresh Can 707 endpoint result:
+  - positive-only: `15/20`;
+  - Candidate E gate: `13/20`;
+  - triage: `10/20`.
+- Candidate I was rejected because the retained Lift mild-tail triage branch
+  fails on fresh Lift 606:
+  - positive-only: `28/50`;
+  - triage: `23/50`;
+  - weighted BC: `16/50`.
+- Report:
+  `results/candidate_g_fresh_preflight/candidate_i_can_mild_positive_REPORT.md`.
+
+Candidate J:
+
+- Tested whether a deployable support-distance router could repair the Lift 606
+  branch choice using existing positive-only, triage, and weighted policies.
+- First-20 baselines:
+  - positive-only: `14/20`;
+  - triage: `13/20`;
+  - weighted BC: `6/20`.
+- Router screens:
+  - per-step labeled-support margin: `11/20`;
+  - positive-anchor margin: `11/20`;
+  - positive-anchor plus Lift anchor support: `10/20`;
+  - initial positive-distance gate: `14/20`, because the gate never opens.
+- The non-deployable oracle over positive, triage, and weighted is `17/20`, so
+  the policy set has headroom, but nearest-support margins do not expose it.
+- Report:
+  `results/candidate_g_fresh_preflight/candidate_j_lift_router_screen_REPORT.md`.
+
+Candidate K:
+
+- Added first-step learned-scale GMM feature support to
+  `scripts/evaluate_robomimic_router_policy.py` via
+  `--router-mode initial_gmm_feature_force_alt`.
+- Added `scripts/summarize_candidate_k_lift_confidence_audit.py` and
+  `scripts/summarize_candidate_k_confidence_router_screen.py`.
+- The selected feature was the positive top-mode action log probability under
+  the triage policy, with a positive-to-triage gate when that value is low.
+- Tuned Lift 606 result:
+  - threshold `6.269868`: `18/20`;
+  - same threshold at 50 episodes: `32/50`, versus positive-only `28/50`,
+    triage `23/50`, and weighted `16/50`.
+- Fresh Lift 707 transfer failed:
+  - positive-only: `12/20`;
+  - triage: `9/20`;
+  - fixed-threshold confidence router: `10/20`.
+- Report:
+  `results/candidate_g_fresh_preflight/candidate_k_confidence_router_screen_REPORT.md`.
+
+Candidate L:
+
+- Extended `scripts/evaluate_robomimic_router_policy.py` with labeled-data
+  calibrated initial feature thresholds:
+  `--initial-feature-threshold-source labeled_positive_quantile`.
+- Ran the q25 labeled-positive calibration on Lift 606 and Lift 707:
+  - Lift 606: calibrated threshold `6.180339`, router `18/20`;
+  - Lift 707: calibrated threshold `4.164663`, router `10/20`.
+- Added `scripts/summarize_candidate_l_calibrated_confidence_router.py` to
+  audit Lift606-selected one-feature thresholds on fresh Lift707 traces and to
+  write
+  `results/candidate_g_fresh_preflight/candidate_l_calibrated_confidence_router_REPORT.md`.
+- The transfer audit shows the best Lift606-selected initial feature thresholds
+  top out at `11/20` on Lift 707, below positive-only `12/20`. A leaky
+  Lift707-only upper bound is only `13/20`.
+
+Decision:
+
+- Candidate L is rejected. Split-calibrating the initial GMM-confidence
+  threshold preserves the tuned Lift 606 win but does not transfer to fresh
+  Lift 707.
+- Do not spend more endpoint budget on scalar initial-threshold tuning. The
+  next useful direction is temporal confidence during rollout or a candidate
+  that changes the trained policy rather than a fixed initial router.
+
+Validation:
+
+- `python -m py_compile scripts/evaluate_robomimic_router_policy.py
+  scripts/summarize_candidate_l_calibrated_confidence_router.py` passed.
+- `XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql
+  python scripts/summarize_candidate_l_calibrated_confidence_router.py`
+  regenerated the Candidate L report and CSV audits.
+
+Candidate M:
+
+- Added `--router-mode temporal_gmm_feature` to
+  `scripts/evaluate_robomimic_router_policy.py`. This computes the learned
+  GMM confidence feature at the current rollout RNN state on every timestep and
+  switches only for the current step.
+- Added sequence-timestep calibration sources:
+  `labeled_positive_sequence_quantile` and
+  `labeled_negative_sequence_quantile`, so temporal thresholds can be calibrated
+  from labeled demonstration sequences instead of only initial states.
+- Ran two bounded Lift 606 first-20 screens:
+  - temporal initial-q25 threshold `6.180339`: `7/20`, with triage chosen for
+    `2146/2253` executed timesteps;
+  - temporal sequence-q25 threshold `1.762162`: `7/20`, with triage chosen for
+    `1847/2165` executed timesteps.
+- Added `scripts/summarize_candidate_m_temporal_confidence_router.py` and
+  generated
+  `results/candidate_g_fresh_preflight/candidate_m_temporal_confidence_router_REPORT.md`.
+
+Decision:
+
+- Candidate M is rejected at the Lift 606 development gate. Direct per-step
+  temporal confidence routing is too twitchy and collapses below positive-only
+  (`14/20`) and the initial confidence q25 gate (`18/20`).
+- A fresh Lift 707 eval was intentionally skipped. The next useful direction is
+  either a policy-training change or a predeclared hysteresis/persistence gate,
+  not raw per-step confidence switching.
+
+Validation:
+
+- `python -m py_compile scripts/evaluate_robomimic_router_policy.py
+  scripts/summarize_candidate_m_temporal_confidence_router.py` passed.
+- `python scripts/summarize_candidate_m_temporal_confidence_router.py`
+  regenerated the Candidate M report and summary CSV.
+
+Candidate N:
+
+- Extended `scripts/evaluate_robomimic_router_policy.py` with
+  `--router-mode temporal_gmm_feature_persistent` and
+  `--temporal-persistence-steps`.
+- Candidate N starts from positive-only, requires a run of consecutive
+  low-confidence temporal GMM feature values, then switches to triage for the
+  rest of the episode.
+- Ran two bounded Lift 606 first-20 screens with the sequence-q25 threshold
+  `1.762162`:
+  - persistence `10`: `13/20`, with `13/20` episodes switching;
+  - persistence `20`: `11/20`, with `9/20` episodes switching.
+- Added `scripts/summarize_candidate_n_persistent_confidence_router.py` and
+  generated
+  `results/candidate_g_fresh_preflight/candidate_n_persistent_confidence_router_REPORT.md`.
+
+Decision:
+
+- Candidate N is rejected at the Lift 606 development gate. Persistence repairs
+  much of the raw temporal-router collapse, but it still does not beat
+  positive-only (`14/20`) and remains far below the initial confidence q25 gate
+  (`18/20`).
+- A fresh Lift 707 eval was intentionally skipped. The current router family
+  should stop unless a learned gate gives a stronger development-split signal.
+  The higher-value path is now policy-training changes.
+
+Validation:
+
+- `python -m py_compile scripts/evaluate_robomimic_router_policy.py
+  scripts/summarize_candidate_n_persistent_confidence_router.py` passed.
+- `python scripts/summarize_candidate_n_persistent_confidence_router.py`
+  regenerated the Candidate N report and summary CSV.
+
+Candidate O:
+
+- Added `scripts/summarize_candidate_o_lift_anchor_union_preflight.py`.
+- Prepared a Lift 606 positive-anchored union training filter in
+  `data/robomimic/v1.5/lift/mg/low_dim_sparse_v15.hdf5`:
+  `candidate_o_lift606_positive_anchor_union_train`.
+- Candidate O keeps labeled positives and positive-NN selected demos at loss
+  weight `1.0`, then adds triage-only extra demos at loss weight `0.25`.
+- Support composition:
+  - labeled positives: `10`;
+  - positive-NN selected unlabeled demos: `160`;
+  - triage selected unlabeled demos: `176`;
+  - overlap selected demos: `103`;
+  - triage-only extra demos: `73`;
+  - total train demos: `243`.
+- Trained a bounded `100`-epoch / `100`-steps-per-epoch BC-RNN-GMM with
+  `scripts/train_robomimic_official_transition_weighted.py`.
+- Evaluated the saved epoch `50` and `100` checkpoints on the Lift 606 first-20
+  valid-positive starts:
+  - epoch `50`: `1/20`;
+  - epoch `100`: `5/20`.
+- Added `scripts/summarize_candidate_o_lift_anchor_union_screen.py` and
+  generated
+  `results/candidate_g_fresh_preflight/candidate_o_lift_anchor_union_screen_REPORT.md`.
+
+Decision:
+
+- Candidate O is rejected at the Lift 606 development gate. The low-weight
+  triage extras do not preserve positive-only anchor behavior; the recipe
+  collapses below positive-only (`14/20`), triage (`13/20`), weighted (`6/20`),
+  and the initial confidence gate (`18/20`).
+- Do not spend a 200-epoch continuation on this constant-demo-weight union
+  recipe. A future training-side attempt needs stronger anchor protection or a
+  different loss, not simply adding triage support at a smaller constant weight.
+
+Validation:
+
+- `python -m py_compile scripts/summarize_candidate_o_lift_anchor_union_preflight.py
+  scripts/summarize_candidate_o_lift_anchor_union_screen.py` passed.
+- `python scripts/summarize_candidate_o_lift_anchor_union_screen.py`
+  regenerated the Candidate O report and summary CSV.
+
+Candidate P:
+
+- Extended `scripts/train_robomimic_official_transition_weighted.py` with
+  `--init-checkpoint`, loading model weights from a Robomimic checkpoint before
+  training when requested.
+- Candidate P tests whether positive-only initialization can prevent the
+  Candidate O from-scratch anchor-union collapse.
+- Initialized from the Lift 606 positive-only NN epoch-200 checkpoint:
+  `results/candidate_g_fresh_preflight/per_seed/lift_mg_mg_sparse_split606_positive_only_nn_policy0/train/lift_mg_mg_sparse_split606_positive_only_nn_policy0_official_bc_rnn/20260626054343/models/model_epoch_200.pth`.
+- Fine-tuned for a bounded `20` epochs / `100` steps per epoch on the same
+  Candidate O positive-anchor union training set and transition weights.
+- Evaluated the epoch `20` checkpoint on Lift 606 first-20 valid-positive
+  starts:
+  - Candidate P: `11/20`;
+  - Candidate O epoch 100 from scratch: `5/20`;
+  - positive-only: `14/20`;
+  - triage: `13/20`;
+  - weighted: `6/20`;
+  - initial confidence q25 router: `18/20`.
+- Added `scripts/summarize_candidate_p_posinit_anchor_union_screen.py` and
+  generated
+  `results/candidate_g_fresh_preflight/candidate_p_posinit_anchor_union_screen_REPORT.md`.
+
+Decision:
+
+- Candidate P is rejected at the Lift 606 development gate. Positive-only
+  initialization prevents the severe Candidate O collapse, but the fine-tune
+  still damages the anchor policy and remains below positive-only, triage, and
+  the best recent initial confidence router.
+- Do not continue this anchor-union fine-tune recipe to more epochs. The
+  failure mode is not only random initialization; treating triage-only extras
+  as lower-weight positive BC targets still moves the policy in the wrong
+  direction.
+
+Candidate Q/R:
+
+- Candidate Q tested whether the positive-initialized anchor-union recipe has a
+  useful very-early checkpoint before the 20-epoch Candidate P degradation.
+- Trained from the same positive-only init for only `5` epochs, saving every
+  epoch, then evaluated all five checkpoints on Lift 606 first-20
+  valid-positive starts:
+  - epoch `1`: `10/20`;
+  - epoch `2`: `10/20`;
+  - epoch `3`: `9/20`;
+  - epoch `4`: `11/20`;
+  - epoch `5`: `10/20`.
+- Added `scripts/interpolate_robomimic_checkpoints.py` for cheap checkpoint
+  anchor-drift screens.
+- Candidate R interpolated model weights from the positive-only NN checkpoint
+  toward the Candidate P 20-epoch fine-tuned checkpoint:
+  - alpha `0.05`: `11/20`;
+  - alpha `0.10`: `10/20`;
+  - alpha `0.20`: `10/20`;
+  - alpha `0.35`: `10/20`.
+- Added `scripts/summarize_candidate_qr_anchor_protection_screens.py` and
+  generated
+  `results/candidate_g_fresh_preflight/candidate_qr_anchor_protection_screen_REPORT.md`.
+
+Decision:
+
+- Candidates Q and R are rejected at the Lift 606 development gate. There is no
+  early fine-tuning sweet spot, and even a small parameter move toward the
+  anchor-union fine-tune fails to beat positive-only NN (`14/20`).
+- Stop this anchor-union rescue line. Positive initialization, shorter
+  fine-tuning, and checkpoint interpolation all point to the same conclusion:
+  lower-weight triage-only positive BC targets are directionally wrong on this
+  Lift screen.
+
+Candidate S:
+
+- Added `scripts/summarize_candidate_s_labeled_initial_risk_router.py`.
+- Candidate S tests a deployable learned initial-risk selector without spending
+  new endpoint rollouts. It trains a small balanced logistic classifier from
+  labeled positive versus labeled negative initial states, then keeps
+  positive-only unless the classifier score falls below a labeled-positive
+  quantile.
+- The primary predeclared recipe is policy-feature logistic q25. Diagnostic
+  rows also test observation-only and observation-plus-policy features at q10,
+  q25, and q50.
+- Generated:
+  `results/candidate_g_fresh_preflight/candidate_s_labeled_initial_risk_router_REPORT.md`,
+  `candidate_s_labeled_initial_risk_summary.csv`,
+  `candidate_s_labeled_initial_risk_per_initial.csv`, and
+  `candidate_s_labeled_initial_risk_features.csv`.
+
+Result:
+
+- Lift 606 primary q25 policy-feature gate: `12/20`, below positive-only
+  `14/20`, triage `13/20`, and oracle `17/20`.
+- Lift 707 primary q25 policy-feature gate: `12/20`, tying positive-only
+  `12/20` and above triage `9/20`, but not improving the split.
+- Best diagnostic Lift 606 rows only tie positive-only at `14/20`; no
+  diagnostic row improves Lift 707 above positive-only.
+
+Decision:
+
+- Candidate S is rejected. A labeled positive/negative initial-state classifier
+  is not a sufficient policy-quality proxy for the current Lift positive-vs-
+  triage branch choice.
+- Do not spend live endpoint budget on this learned initial-risk gate. The Lift
+  evidence now rejects scalar confidence thresholds, temporal confidence,
+  persistence, constant-weight anchor unions, checkpoint interpolation, and this
+  labeled initial-risk proxy.
+
+Fresh Can606 Candidate F no-tail smoke:
+
+- Trained the missing Can606 positive-only NN and weighted-BC epoch-200
+  BC-RNN-GMM policies under `results/candidate_g_fresh_preflight/per_seed/`.
+- Candidate F's Can rule would use Candidate E on this split because the fresh
+  preflight has no positive-NN support tail (`below_count = 0`).
+- Evaluated a bounded first-20 valid-positive smoke:
+  - positive-only NN: `16/20`;
+  - weighted BC: `14/20`;
+  - Candidate E gate: `16/20`, with `2/20` initial gates opening.
+- Added `scripts/summarize_candidate_f_can606_fresh_smoke.py` and generated
+  `results/candidate_g_fresh_preflight/candidate_f_can606_fresh_smoke_REPORT.md`.
+
+Decision:
+
+- This is a neutral fresh Can no-tail check, not a Candidate F validation win.
+  Candidate E ties the positive-only anchor and beats weighted, so it does not
+  expose a fresh Can no-tail failure, but it also does not add first-20 headroom.
+- Do not spend a standalone 50-episode Can606 continuation unless it is part of
+  a broader predeclared fresh Can-only matrix.
+
+Fresh Can707 Candidate F tail-branch smoke:
+
+- Evaluated the already-trained Can707 weighted-BC epoch-200 policy on the same
+  first-20 valid-positive starts used by the fresh positive-only, triage, and
+  Candidate E checks.
+- Results:
+  - positive-only NN: `15/20`;
+  - weighted BC: `15/20`;
+  - Candidate E gate: `13/20`;
+  - triage BC: `10/20`.
+- Under Candidate F's frozen Can rule, Can707 is a mild-tail case and selects
+  weighted BC. Added `scripts/summarize_candidate_f_fresh_can_smokes.py` and
+  generated
+  `results/candidate_g_fresh_preflight/candidate_f_fresh_can_smokes_REPORT.md`.
+
+Decision:
+
+- Candidate F is neutral across the two held-out Can first-20 smokes:
+  Candidate F `31/40`, positive-only `31/40`, weighted `29/40` over its two
+  available rows, Candidate E `29/40`, and triage `10/20` on Can707.
+- This does not invalidate the completed Can discovery result, but it weakens
+  the case for spending broad endpoint budget on Candidate F as a fresh
+  high-impact Can method. If continued, the next compute should be a
+  predeclared fresh Can-only validation matrix, not another ad hoc split.
+
+Candidate-breakthrough decision consolidation:
+
+- Added `scripts/summarize_candidate_breakthrough_decision.py`.
+- Generated
+  `results/candidate_breakthrough/candidate_breakthrough_decision_REPORT.md`
+  and `results/candidate_breakthrough/candidate_breakthrough_decision_summary.csv`.
+- The report separates the completed Can discovery from fresh validation:
+  Candidate F remains strong but scoped on Can 40p/80b (`198/250` versus
+  positive-only `174/250`, weighted `158/250`, triage `171/250`, and per-split
+  oracle `192/250`), while fresh Can606+707 first-20 smokes are neutral
+  (`31/40` tie versus positive-only).
+- It also locks in the Lift decision: direct Can-style transfer is below the
+  Lift per-split oracle (`145/250` versus `154/250`), the tail-severity Lift
+  row is diagnostic rather than frozen, scalar/temporal/persistent routers are
+  rejected, anchor-union training and positive-init rescues are rejected, and
+  the labeled initial-risk proxy is rejected.
+- Current stop rule: do not run more ad hoc endpoint variants. The only
+  justified Candidate F continuation is a predeclared fresh Can-only validation
+  matrix; otherwise move forward with the precision-coverage paper framing and
+  treat Lift as a limitation/abstention case.
+
+Paper validation gate after Candidate F decision:
+
+- Ran the full paper gate:
+  `make -C paper validate`.
+- The gate regenerated paper tables and figures, rebuilt both PDFs, and passed:
+  - `paper/triage_bc_paper.pdf` compiled at `18` pages;
+  - `paper/iclr2026/main.pdf` compiled at `15` pages;
+  - `scripts/validate_paper_claim_numbers.py`;
+  - `scripts/validate_paper_structure.py`;
+  - `scripts/validate_paper_artifact_refs.py`;
+  - `scripts/validate_method_freeze_v02.py`;
+  - LaTeX log scans for undefined references, warnings, overfull boxes, and
+    disallowed underfull warnings.
+- The updated readiness audit now includes Candidate F as an explicit
+  top-tier-methods criterion: scoped Can discovery is strong, but fresh Can
+  smokes are neutral and Lift transfer fails, so general methods dominance is
+  still not met.
+- Current paper-package status: internally validated for the cautious
+  precision/coverage empirical submission framing. It remains short of the
+  objective's high-impact methods-dominance bar unless the next evidence is a
+  predeclared fresh validation matrix or a genuinely new proxy/objective that
+  changes the current Lift/Can generalization picture.
+
+Candidate F fresh Can-only validation freeze:
+
+- Added `METHOD_FREEZE_CANDIDATE_F_CAN_FRESH.md`.
+- Added `scripts/summarize_candidate_f_can_fresh_validation_status.py`.
+- Generated
+  `results/candidate_f_can_fresh_validation/tables/candidate_f_can_fresh_validation_STATUS.md`,
+  `candidate_f_can_fresh_validation_status.csv`, and
+  `candidate_f_can_fresh_pilot_rows.csv`.
+- The frozen claim-bearing validation split seeds are
+  `808/909/1001/1112/1213`. Discovery seeds `101/202/303/404/505` and pilot
+  smoke seeds `606/707` are explicitly excluded from claim-bearing validation.
+- The claim gate requires Candidate F to beat the best completed non-oracle
+  baseline per split in pooled success, be no worse than the best baseline on
+  at least `4/5` validation seeds, and beat pooled positive-only NN and
+  weighted BC.
+- Prepared the first frozen validation seed, `808`, through setup only:
+  - positive-only NN top40 support: `37/40` hidden positives, `3/40` hidden bad;
+  - weighted BC support: full `40/80` positive/bad unlabeled pool;
+  - triage/v0.1 adaptive masscap support: `40` hidden positives and `33` hidden
+    bad demos selected (`73` unlabeled demos total);
+  - Candidate F tail statistic: `below_count = 0`, `below_fraction = 0.000`,
+    so the frozen branch for seed `808` is `candidate_e_gate`.
+- No validation endpoints or trained epoch-200 checkpoints have been run for
+  seed `808` yet. The next GPU step should train/evaluate the required
+  positive-only, weighted, and triage branches for seed `808`, then run the
+  Candidate E gate eval because the frozen branch is no-tail.
+
+Candidate F fresh Can-only validation seed 808:
+
+- Completed epoch-200 BC-RNN-GMM training for the required seed-808 baselines
+  under `results/candidate_f_can_fresh_validation/per_seed/`:
+  - positive-only NN;
+  - weighted BC;
+  - triage/v0.1 adaptive masscap BC.
+- Ran endpoint-only 50-episode valid-positive evaluations at epoch 200:
+  - positive-only NN: `43/50` success (`0.860`, avg len `148.4`);
+  - weighted BC: `25/50` success (`0.500`, avg len `258.3`);
+  - triage/v0.1 adaptive masscap BC: `16/50` success (`0.320`, avg len
+    `306.7`);
+  - Candidate F selected branch, which is Candidate E gate for this no-tail
+    split: `42/50` success (`0.840`, avg len `154.7`).
+- Candidate E gate details:
+  - router mode: `initial_anchor_pos_dist_force_alt`;
+  - support mode: `labeled`;
+  - initial gate threshold: `3.0`;
+  - isolated policy RNG: `True`;
+  - action choices: positive `4536`, weighted `3197`.
+- Updated
+  `results/candidate_f_can_fresh_validation/tables/candidate_f_can_fresh_validation_STATUS.md`
+  so the dashboard now reports baseline endpoint success counts, Candidate F
+  selected-branch success, and claim-ready split count.
+
+Decision:
+
+- Seed `808` is the first claim-ready fresh validation row and does not support
+  the breakthrough gate: Candidate F/Candidate E is `42/50`, one success below
+  positive-only NN at `43/50`.
+- Weighted BC is very weak on this seed (`25/50`), so the no-tail router did
+  protect against the bad weighted baseline, but it did not improve over the
+  positive-only anchor.
+- Under the frozen gate, Candidate F is currently `0/1` on per-split best
+  non-oracle improvement and cannot be promoted from this row. Continue only if
+  the goal is to finish the predeclared five-seed validation audit; otherwise
+  this row is an early negative signal for the high-impact breakthrough path.
+
+Candidate F fresh Can-only validation seed 909 and early gate failure:
+
+- Completed setup/training for seed `909`:
+  - positive-only NN support selected `39/40` hidden positives and `1/40`
+    hidden bad;
+  - weighted BC used the full unlabeled pool (`40` hidden positives and `80`
+    hidden bad demos);
+  - triage/v0.1 adaptive masscap selected `79` unlabeled demos: `39` hidden
+    positives and `40` hidden bad demos.
+- Candidate F tail statistic for seed `909` is again no-tail:
+  `below_count = 0`, `below_fraction = 0.000`, so the frozen selected branch is
+  Candidate E gate.
+- Ran endpoint-only 50-episode valid-positive evaluations at epoch 200:
+  - positive-only NN: `41/50` success (`0.820`, avg len `157.2`);
+  - weighted BC: `18/50` success (`0.360`, avg len `295.0`);
+  - triage/v0.1 adaptive masscap BC: `22/50` success (`0.440`, avg len
+    `272.3`);
+  - Candidate F selected branch / Candidate E gate: `39/50` success (`0.780`,
+    avg len `168.9`).
+- Updated
+  `scripts/summarize_candidate_f_can_fresh_validation_status.py` to report the
+  best completed baseline, Candidate F delta versus best, no-worse indicator,
+  and early frozen-gate failure.
+- Regenerated
+  `results/candidate_f_can_fresh_validation/tables/candidate_f_can_fresh_validation_STATUS.md`.
+
+Decision:
+
+- Candidate F is now worse than the best completed non-oracle baseline on both
+  claim-ready fresh validation rows:
+  - seed `808`: Candidate F `42/50` versus positive-only `43/50`;
+  - seed `909`: Candidate F `39/50` versus positive-only `41/50`.
+- The frozen validation gate required Candidate F to be no worse than the best
+  baseline on at least `4/5` validation seeds, which allows at most one worse
+  row. With two worse rows already observed, the Candidate F methods-dominance
+  claim is no longer satisfiable even before seeds `1001/1112/1213`.
+- Stop scaling Candidate F for the high-impact breakthrough claim. The current
+  evidence supports returning to the cautious precision/coverage empirical
+  paper framing, or starting a genuinely new candidate rather than spending more
+  GPU on this frozen Candidate F audit.
+
+Paper-package sync after Candidate F validation failure:
+
+- Updated `scripts/summarize_candidate_breakthrough_decision.py` so the
+  candidate-breakthrough decision report now reads the fresh Can validation
+  status table and includes an explicit failed-validation row:
+  Candidate F `81/100` versus best completed baselines `84/100`, worse on
+  `2/2` completed validation rows.
+- Updated `scripts/summarize_submission_readiness_audit.py` and
+  `scripts/validate_paper_claim_numbers.py` so the submission-readiness audit
+  and claim validator require the failed fresh-validation evidence.
+- Updated `triage_bc_candidate_breakthrough_plan.md` to replace the old
+  "run a predeclared fresh Can-only matrix" next step with the current result:
+  the matrix was started and failed early, so Candidate F endpoint spending
+  should stop for the methods-dominance claim.
+- Regenerated:
+  - `results/candidate_breakthrough/candidate_breakthrough_decision_REPORT.md`;
+  - `results/candidate_breakthrough/candidate_breakthrough_decision_summary.csv`;
+  - `results/final_paper/tables/submission_readiness_audit.csv`;
+  - `results/final_paper/tables/submission_readiness_audit_REPORT.md`.
+- Ran the full paper gate:
+  `make -C paper validate`.
+  It regenerated staged paper artifacts, compiled
+  `paper/triage_bc_paper.pdf` (`18` pages) and `paper/iclr2026/main.pdf`
+  (`15` pages), validated claim numbers, structure, artifact references, and
+  the v0.2 method freeze, and passed the LaTeX log scans.
+
+Decision:
+
+- The paper package is again internally synchronized with the latest negative
+  Candidate F evidence.
+- Current recommended posture remains the precision/coverage empirical paper.
+  A renewed high-impact methods attempt needs a genuinely different candidate,
+  not more Candidate F routing or threshold tuning.
+
+Candidate T policy-interpolation screen:
+
+- Tested the cheapest training-side/composition alternative after Candidate F
+  failed: interpolate the Can split-404 positive-only NN epoch-200 checkpoint
+  toward the weighted-BC epoch-200 checkpoint, then run a matched first-20
+  endpoint screen.
+- Generated interpolated checkpoints under
+  `results/candidate_breakthrough/candidate_t_policy_interpolation_can404/`
+  for alphas `0.05`, `0.10`, and `0.20`.
+- Endpoint first-20 results on Can 40p/80b split `404`:
+  - positive-only anchor baseline: `17/20`;
+  - weighted baseline: `13/20`;
+  - alpha `0.05`: `16/20`;
+  - alpha `0.10`: `13/20`;
+  - alpha `0.20`: `3/20`.
+- Added `scripts/summarize_candidate_t_policy_interpolation_screen.py` and
+  generated
+  `results/candidate_breakthrough/candidate_t_policy_interpolation_screen_REPORT.md`.
+- Regenerated
+  `results/candidate_breakthrough/candidate_breakthrough_decision_REPORT.md`
+  and `candidate_breakthrough_decision_summary.csv`; the decision table now
+  includes Candidate T as rejected.
+
+Decision:
+
+- Candidate T is rejected at the split-404 first-20 gate. Even a small
+  parameter move toward weighted BC damages the positive-only anchor, and larger
+  interpolation collapses.
+- This closes the cheap "maybe just blend the two policies" idea. A future
+  training-side candidate needs an explicit anchor-preservation objective, not
+  parameter averaging.
+
+Candidate U anchor-L2 fine-tuning screen:
+
+- Extended `scripts/train_robomimic_official_transition_weighted.py` with
+  optional normalized parameter-space anchor L2 around the initialized policy
+  checkpoint.
+- One-step CPU smoke passed on the Can split-404 weighted-pool setup with the
+  Candidate C sequence-mask weights, positive-only initialization, and
+  `--anchor-l2-weight 1000`; the training log emitted `Anchor_L2_Loss` and
+  `Anchor_L2_Weighted_Loss`.
+- Ran a bounded 20-epoch GPU screen:
+  `results/candidate_breakthrough/candidate_u_anchor_l2_can404_w1000_e20_train/candidate_u_anchor_l2_can404_w1000_e20/20260626095223/`.
+- First-20 endpoint results on Can split `404`:
+  - epoch `5`: `17/20`;
+  - epoch `10`: `16/20`;
+  - epoch `15`: `14/20`;
+  - epoch `20`: `16/20`.
+- Baselines on the matched screen are positive-only `17/20`, weighted `13/20`,
+  and Candidate C sequence-mask epoch `200` `16/20`.
+- Added `scripts/summarize_candidate_u_anchor_l2_screen.py` and generated
+  `results/candidate_breakthrough/candidate_u_anchor_l2_screen_REPORT.md`.
+- Regenerated
+  `results/candidate_breakthrough/candidate_breakthrough_decision_REPORT.md`
+  and `candidate_breakthrough_decision_summary.csv`; the decision table now
+  includes Candidate U as neutral/rejected.
+
+Decision:
+
+- Candidate U is not a breakthrough. The best checkpoint matches but does not
+  improve the positive-only anchor, and later checkpoints drift down.
+- Normalized parameter L2 is not the right preservation mechanism for this
+  Robomimic policy. A future training-side attempt should use local
+  output/distribution anchoring on positive states or a different objective,
+  not only parameter drift.
+
+Candidate V output-anchor fine-tuning screen:
+
+- Extended `scripts/train_robomimic_official_transition_weighted.py` with
+  optional frozen-policy output anchoring. After optional checkpoint
+  initialization, the trainer deep-copies the policy, keeps it in training mode
+  to avoid low-noise eval GMM scales, and penalizes
+  `max(0, log pi_anchor(a|s) - log pi_train(a|s))` on high-weight timesteps.
+- One-step CPU smoke passed with `--anchor-logprob-weight 1.0`; telemetry
+  emitted `Anchor_LogProb_Loss`, `Anchor_LogProb_Weighted_Loss`,
+  `Anchor_LogProb_Active`, and `Anchor_LogProb_Weight_Mean`.
+- Ran a bounded GPU screen with anchor-logprob weight `10.0`:
+  `results/candidate_breakthrough/candidate_v_anchor_logprob_can404_w10_e20_train/candidate_v_anchor_logprob_can404_w10_e20/20260626100527/`.
+- First-20 endpoint results on Can split `404`:
+  - epoch `5`: `15/20`;
+  - epoch `10`: `18/20`;
+  - epoch `15`: `15/20`;
+  - epoch `20`: `16/20`.
+- The epoch-10 checkpoint is the first training-side candidate in this branch
+  to beat the matched positive-only first-20 anchor (`17/20`).
+- Ran a 50-episode check for epoch `10`:
+  `results/candidate_breakthrough/candidate_v_anchor_logprob_can404_w10_e10_eval50/REPORT.md`.
+  It reached `39/50`, tying positive-only (`39/50`) and below Candidate E's
+  router result (`46/50`).
+- Added `scripts/summarize_candidate_v_anchor_logprob_screen.py` and generated
+  `results/candidate_breakthrough/candidate_v_anchor_logprob_screen_REPORT.md`.
+- Regenerated
+  `results/candidate_breakthrough/candidate_breakthrough_decision_REPORT.md`
+  and `candidate_breakthrough_decision_summary.csv`; the decision table now
+  includes Candidate V as promising but not validated.
+
+Decision:
+
+- Candidate V is the strongest training-side lead so far because it improves
+  the first-20 split-404 screen, but the 50-episode result is neutral.
+- Do not scale it as a claim yet. The next reasonable step is a frozen,
+  small validation plan over anchor-logprob weight / checkpoint selection and
+  at least one additional split seed, with no hidden-label or endpoint-tuned
+  selection.
+
+Candidate V frozen split-505 validation:
+
+- Added `METHOD_FREEZE_CANDIDATE_V.md`.
+- Frozen recipe:
+  - Candidate C mask thresholds: score `0.20`, margin `2.0`;
+  - positive-only epoch-200 initialization;
+  - anchor-logprob weight `10.0`;
+  - anchor applied where `loss_weight >= 0.999`;
+  - train `20` epochs with `100` batches per epoch;
+  - validate only checkpoint epoch `10`.
+- Generated split-505 sequence-mask weights at
+  `results/candidate_breakthrough/candidate_v_split505_sequence_mask_preflight/candidate_c_sequence_mask_weights.hdf5`.
+  Preflight mass: `50` anchor demos, `80` extra demos, `187` selected
+  hidden-positive extra transition mass, `9` selected hidden-bad extra
+  transition mass, total selected mass `5382`.
+- Trained split-505 Candidate V at
+  `results/candidate_breakthrough/candidate_v_anchor_logprob_can505_w10_e20_train/candidate_v_anchor_logprob_can505_w10_e20/20260626101921/`.
+- Frozen first-20 eval for epoch `10`:
+  `results/candidate_breakthrough/candidate_v_anchor_logprob_can505_w10_e10_eval20/REPORT.md`.
+  Candidate V reached `16/20`; positive-only first-20 is `15/20`, so the
+  stability screen passed.
+- Frozen 50-episode eval for epoch `10`:
+  `results/candidate_breakthrough/candidate_v_anchor_logprob_can505_w10_e10_eval50/REPORT.md`.
+  Candidate V reached `38/50`, below positive-only `40/50` and below the best
+  completed non-oracle baseline on this split.
+- Regenerated
+  `results/candidate_breakthrough/candidate_v_anchor_logprob_screen_REPORT.md`
+  and
+  `results/candidate_breakthrough/candidate_breakthrough_decision_REPORT.md`;
+  Candidate V is now marked as failed on first validation.
+
+Decision:
+
+- Do not scale Candidate V unchanged. It improves the split-404 first-20 screen
+  and passes split-505 first-20, but the 50-episode split-505 result is
+  negative.
+- Output-level anchoring remains a better direction than parameter L2, but the
+  current recipe is not enough for a top-tier methods claim.
+
+Candidate V failure analysis:
+
+- Added `scripts/summarize_candidate_v_failure_analysis.py`.
+- Generated:
+  - `results/candidate_breakthrough/candidate_v_failure_analysis_REPORT.md`;
+  - `results/candidate_breakthrough/candidate_v_failure_analysis_summary.csv`;
+  - `results/candidate_breakthrough/candidate_v_failure_analysis_per_initial.csv`.
+- Aggregate over Can splits `404` and `505`:
+  - positive-only: `79/100`;
+  - weighted BC: `63/100`;
+  - triage: `72/100`;
+  - Candidate E router: `85/100`;
+  - Candidate V: `77/100`;
+  - positive-or-Candidate-V per-initial oracle: `85/100`;
+  - positive-or-Candidate-E-or-Candidate-V per-initial oracle: `93/100`.
+- Candidate V has only `6/100` unique per-initial gains over positive-only and
+  only `2/100` unique gains beyond positive-only plus Candidate E.
+- It still fails the split-404 `demo_39` weighted-coverage rescue case:
+  Candidate V `0/5`, positive-only `0/5`, weighted `3/5`, Candidate E `5/5`.
+- The frozen split-505 failure is concentrated in anchor regressions, including
+  `demo_89`, where Candidate V is `0/5` while positive-only is `2/5`,
+  weighted is `5/5`, and triage is `5/5`.
+- Regenerated
+  `results/candidate_breakthrough/candidate_v_anchor_logprob_screen_REPORT.md`
+  and `results/candidate_breakthrough/candidate_breakthrough_decision_REPORT.md`
+  so the failure-analysis artifact is linked.
+
+Decision:
+
+- Candidate V does not provide enough unique deployable headroom to justify
+  more GPU unchanged.
+- The open problem is now sharply identified: find a state-specific weighted
+  rescue selector that catches cases like split-404 `demo_39` without damaging
+  anchors like split-505 `demo_89`. Without that, the publishable result remains
+  the precision/coverage empirical paper rather than a dominance-method paper.
+
+Candidate W two-feature weighted-rescue gate:
+
+- Added router mode `initial_anchor_pos_dist_margin_force_alt` to
+  `scripts/evaluate_robomimic_router_policy.py`.
+- Rule: use positive-only by default; force weighted BC for the full episode
+  only when the positive-policy initial action has positive-support distance
+  `> 3.0` and support margin `> 0.0`.
+- Matched the Candidate E eval protocol: Can 40p/80b splits `404` and `505`,
+  50 valid-positive starts, horizon 400, labeled support, isolated policy RNG.
+- Split `404` eval:
+  `results/candidate_breakthrough/candidate_w_two_feature_gate_split404_eval50/REPORT.md`.
+  Candidate W reaches `46/50`, matching Candidate E and preserving the
+  split-404 `demo_39` rescue.
+- Split `505` eval:
+  `results/candidate_breakthrough/candidate_w_two_feature_gate_split505_eval50/REPORT.md`.
+  Candidate W reaches `39/50`, below positive-only `40/50`.
+- Added `scripts/summarize_candidate_w_two_feature_gate.py` and generated:
+  - `results/candidate_breakthrough/candidate_w_two_feature_gate_REPORT.md`;
+  - `results/candidate_breakthrough/candidate_w_two_feature_gate_summary.csv`;
+  - `results/candidate_breakthrough/candidate_w_two_feature_gate_per_initial.csv`.
+- Aggregate over splits `404` and `505`:
+  - positive-only: `79/100`;
+  - weighted BC: `63/100`;
+  - triage: `72/100`;
+  - Candidate E: `85/100`;
+  - Candidate V: `77/100`;
+  - Candidate W: `85/100`.
+- Candidate W closes Candidate E's harmful split-505 `demo_29` gate, but the
+  frozen endpoint result still does not beat positive-only on split `505`.
+- Regenerated
+  `results/candidate_breakthrough/candidate_breakthrough_decision_REPORT.md`
+  so Candidate W is listed as diagnostic/rejected.
+
+Decision:
+
+- Do not promote Candidate W as a method. It ties Candidate E over the two
+  analyzed splits and fails the split-505 validation comparison.
+- Stop scalar initial support-distance/margin variants. The remaining gap needs
+  a more stable state-conditional policy-quality signal or a different
+  training objective.
+
+Candidate X extra-only negative-action hinge:
+
+- Motivation: Candidate D's full-anchor negative-action hinge damaged anchor
+  behavior. The smallest non-threshold follow-up was to keep the same
+  Candidate C BC sequence mask and nearest labeled-negative action targets, but
+  set `negative_loss_weight = 0` on all positive-anchor demos.
+- Extended `scripts/summarize_candidate_d_negative_action_preflight.py` with
+  `--negative-loss-scope {selected,extra_selected}`.
+- Generated extra-only negative-action weights at
+  `results/candidate_breakthrough/candidate_x_extra_negative_action_preflight/candidate_d_negative_action_weights.hdf5`.
+- Audit:
+  - train demos: `130`;
+  - full-weight anchor demos: `50`;
+  - total BC selected mass: `5528`;
+  - extra-only negative-loss mass: `222`;
+  - extra selected hidden-positive mass: `186`;
+  - extra selected hidden-bad mass: `36`.
+- Trained a bounded `200`-epoch / `100`-steps-per-epoch split-404 policy with
+  hinge weight `0.1` and margin `0.5`:
+  `results/candidate_breakthrough/candidate_x_extra_neg0p1_can404_e200_train/candidate_x_extra_neg0p1_can404_e200_seed0/20260626105045/`.
+- First-20 endpoint results:
+  - epoch `100`: `10/20`;
+  - epoch `200`: `14/20`.
+- Regenerated
+  `results/candidate_breakthrough/candidate_d_endpoint_screen_REPORT.md`.
+  The transition-level comparison is now: positive-only `17/20`, Candidate C
+  sequence mask `16/20`, full-anchor Candidate D best `14/20`, and extra-only
+  Candidate X best `14/20`.
+- Regenerated
+  `results/candidate_breakthrough/candidate_breakthrough_decision_REPORT.md`
+  so transition-level objectives are listed as rejected.
+
+Decision:
+
+- Do not run a 50-episode continuation for Candidate X. It is below Candidate C
+  and positive-only on the matched first-20 gate, and it still does not recover
+  the split-404 `demo_39` coverage case.
+- Stop nearest-negative hinge variants unchanged. The next non-paper-cleanup
+  attempt needs a materially different bad-action target, a better
+  state-conditional policy-quality signal, or a new anchor-preserving objective.
+
+Submission-readiness audit refresh:
+
+- Updated `scripts/summarize_submission_readiness_audit.py` so the
+  top-tier-methods dominance row for the latest candidate-breakthrough search
+  now includes the post-Candidate-F evidence:
+  - transition-level objectives: Candidate C `16/20` and best negative-action
+    hinge `14/20` remain below positive-only `17/20`;
+  - output-anchor fine-tuning: split-404 50-episode check ties positive-only
+    at `39/50`, and split-505 validation is `38/50` versus positive-only
+    `40/50`;
+  - two-feature weighted-rescue gate: Candidate W ties Candidate E at `85/100`
+    over splits `404` and `505`, but loses split `505` to positive-only
+    (`39/50` versus `40/50`).
+- Regenerated:
+  - `results/final_paper/tables/submission_readiness_audit.csv`;
+  - `results/final_paper/tables/submission_readiness_audit_REPORT.md`.
+
+Decision:
+
+- The submission-readiness audit now matches the current state of the method
+  search: high-quality empirical-submission criteria are still green, while
+  methods/SOTA dominance remains explicitly not met.
+- This strengthens the publishable precision/coverage framing and lowers the
+  risk that stale Candidate F-only evidence understates the later failed
+  follow-ups.
+
+Full paper validation gate:
+
+- Ran `make -C paper validate` after refreshing the submission-readiness audit.
+- The target regenerated the staged final-paper tables and figures, compiled
+  both paper PDFs, and ran the claim, structure, artifact-reference, and
+  v0.2 method-freeze validators.
+- Standalone PDF result:
+  `paper/triage_bc_paper.pdf`, `18` pages.
+- Provisional ICLR PDF result:
+  `paper/iclr2026/main.pdf`, `15` pages.
+- Validators passed:
+  - `scripts/validate_paper_claim_numbers.py`;
+  - `scripts/validate_paper_structure.py`;
+  - `scripts/validate_paper_artifact_refs.py`;
+  - `scripts/validate_method_freeze_v02.py`.
+- LaTeX warning scans in the Makefile passed for both logs.
+
+Decision:
+
+- The current paper package clears its declared pre-submission validation gate.
+- This does not change the scientific posture: the right submission remains a
+  careful precision/coverage empirical study with a cautious v0.2
+  portfolio-router component, not a methods/SOTA dominance claim.
+
+Reviewer-facing claim-package synchronization:
+
+- Added the latest candidate-breakthrough no-go evidence to the paper handoff
+  docs without promoting it to main evidence:
+  - `paper/REVIEWER_CLAIM_SUMMARY.md`;
+  - `paper/MANUSCRIPT_CHECKLIST.md`;
+  - `paper/REPRODUCE_PAPER.md`;
+  - `FINAL_CLAIM_CONTRACT.md`.
+- The synced boundary is that Candidate F remains a scoped Can discovery
+  (`198/250`) but failed the predeclared fresh validation gate (`81/100`
+  versus `84/100` best completed baselines), while the output-anchor,
+  two-feature weighted-rescue, and transition-objective variants did not clear
+  their first validation checks.
+- Linked
+  `results/candidate_breakthrough/candidate_breakthrough_decision_REPORT.md`
+  as development-audit evidence for avoiding stronger methods-dominance
+  claims.
+
+Validation:
+
+- `conda run -n tri-piql python scripts/validate_paper_claim_numbers.py`
+  passed.
+- `conda run -n tri-piql python scripts/validate_paper_artifact_refs.py`
+  passed, checking `136` unique artifact references.
+- `git diff --check` passed.
+
+Paper-completion plan synchronization:
+
+- Updated `tri_piql_paper_completion_plan.md` to match the current validated
+  claim package rather than the earlier 2026-06-25 state.
+- The plan now records that:
+  - `make -C paper validate` is the current pre-submission gate and has passed
+    after the latest claim-package refresh;
+  - the submission-readiness audit marks the high-quality empirical submission
+    criteria as `6` pass / `0` caution, while methods/SOTA dominance remains
+    `1` caution / `4` not met;
+  - the Lift hard-negative/action-conflict endpoint diagnostic is complete over
+    split seeds `101/202/303` at `15/150` versus `5/150`, but remains
+    exploratory because absolute success is low;
+  - Candidate F/V/W/X follow-ups are development-audit evidence that bounds the
+    paper claims, not a path to a promoted methods-dominance result.
+
+Decision:
+
+- Future compute should not be spent on unchanged scalar gates,
+  nearest-negative hinges, or output-anchor variants. The current best path
+  remains a cautious precision/coverage empirical submission unless a genuinely
+  new state-conditional policy-quality signal or transition-level objective is
+  proposed and predeclared.

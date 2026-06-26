@@ -1202,7 +1202,7 @@ def main() -> None:
         ("high_quality_empirical_submission", "pass"): 6,
         ("high_quality_empirical_submission", "caution"): 0,
         ("top_tier_methods_dominance", "caution"): 1,
-        ("top_tier_methods_dominance", "not_met"): 3,
+        ("top_tier_methods_dominance", "not_met"): 4,
     }
     for (required_for, status), expected_count in readiness_counts.items():
         got = sum(
@@ -1216,14 +1216,18 @@ def main() -> None:
                 f"{required_for}/{status}, got {got}",
                 failures,
             )
-    if len(submission_readiness) != 10:
-        fail(f"submission-readiness audit expected 10 criteria rows, got {len(submission_readiness)}", failures)
+    if len(submission_readiness) != 11:
+        fail(f"submission-readiness audit expected 11 criteria rows, got {len(submission_readiness)}", failures)
 
     readiness_expected = {
         "empirical_v02_fresh_gate": ("pass", ["340/500", "338/500", "197/250", "192/250", "143/250", "146/250"]),
         "empirical_regime_probes": ("pass", ["104/150", "91/150", "120/150", "103/150", "119/150", "6/150"]),
         "methods_fixed_branch_dominance": ("not_met", ["23/500"]),
         "methods_uncertainty_above_zero": ("not_met", ["[-0.074, 0.120]"]),
+        "methods_candidate_breakthrough_validation": (
+            "not_met",
+            ["198/250", "31/40", "81/100", "84/100", "worse on 2/2", "145/250", "154/250"],
+        ),
         "methods_second_non_can_task": ("caution", ["15/150", "5/150"]),
         "methods_validated_policy_proxy": ("not_met", ["2/11"]),
     }

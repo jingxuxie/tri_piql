@@ -1,0 +1,39 @@
+{
+  "split_path": "results/final_paper_v02/splits/can_paired_pos40_bad80_split404/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "score_rankings": "results/final_paper_v02/score_diagnostics/can_paired_pos40_bad80_split404_policy0/demo_rankings.csv",
+  "positive_only_diagnostics": "results/final_paper_v02/per_seed/can_paired_pos40_bad80_split404_positive_only_nn_policy0/setup/diagnostics.json",
+  "union_diagnostics": "results/final_paper_v02/ablations/v02_fresh_endpoint_200ep_can40/split404/positive_nn_risk_union_top40/setup/diagnostics.json",
+  "obs_keys": [
+    "robot0_eef_pos",
+    "robot0_eef_quat",
+    "robot0_gripper_qpos",
+    "object"
+  ],
+  "recipe": {
+    "anchor_base_floor": 0.4,
+    "coverage_base_floor": 0.15,
+    "anchor_risk_floor": 0.1,
+    "coverage_risk_floor": 0.05
+  },
+  "summary": {
+    "train_demo_count": 54,
+    "labeled_positive_count": 10,
+    "selected_unlabeled_count": 44,
+    "positive_anchor_unlabeled_count": 40,
+    "union_only_unlabeled_count": 4,
+    "hidden_positive_selected": 39,
+    "hidden_bad_selected": 5,
+    "hidden_positive_transition_count": 4258,
+    "hidden_bad_transition_count": 379,
+    "labeled_positive_weight_mass": 1118.0,
+    "hidden_positive_weight_mass": 2074.839855194092,
+    "hidden_bad_weight_mass": 98.29228210449219,
+    "hidden_bad_unweighted_transition_fraction": 0.08173387966357559,
+    "hidden_bad_weighted_mass_fraction": 0.04523069739637605,
+    "obs_dim": 23,
+    "action_dim": 7,
+    "positive_reference_transitions": 1118,
+    "negative_reference_transitions": 848
+  }
+}

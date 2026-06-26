@@ -1,0 +1,13 @@
+split,method,successes,episodes,avg_len,protocol,report
+lift606,positive_only_nn,14,20,70.25,20 valid-positive starts,results/candidate_g_fresh_preflight/lift606_positive_epoch200_eval20/REPORT.md
+lift606,triage_bc,13,20,78.45,20 valid-positive starts,results/candidate_g_fresh_preflight/lift606_triage_epoch200_eval20/REPORT.md
+lift606,weighted_bc,6,20,124.75,20 valid-positive starts,results/candidate_g_fresh_preflight/lift606_weighted_epoch200_eval50/REPORT.md
+lift606,confidence_router_thr5p93,15,20,63.95,20 valid-positive starts,results/candidate_g_fresh_preflight/lift606_router_confidence_poslogp_triage_eval20/REPORT.md
+lift606,confidence_router_thr6p27,18,20,44.8,20 valid-positive starts,results/candidate_g_fresh_preflight/lift606_router_confidence_poslogp_triage_thr6p27_eval20/REPORT.md
+lift606,positive_only_nn,28,50,85.18,50 valid-positive starts,results/candidate_g_fresh_preflight/lift606_positive_epoch200_eval50/REPORT.md
+lift606,triage_bc,23,50,100.12,50 valid-positive starts,results/candidate_g_fresh_preflight/lift606_triage_epoch200_eval50/REPORT.md
+lift606,weighted_bc,16,50,122.46,50 valid-positive starts,results/candidate_g_fresh_preflight/lift606_weighted_epoch200_eval50/REPORT.md
+lift606,confidence_router_thr6p27,32,50,78.12,50 valid-positive starts,results/candidate_g_fresh_preflight/lift606_router_confidence_poslogp_triage_thr6p27_eval50/REPORT.md
+lift707,positive_only_nn,12,20,82.05,20 valid-positive starts,results/candidate_g_fresh_preflight/lift707_positive_epoch200_eval20/REPORT.md
+lift707,triage_bc,9,20,98.1,20 valid-positive starts,results/candidate_g_fresh_preflight/lift707_triage_epoch200_eval20/REPORT.md
+lift707,confidence_router_thr6p27,10,20,92.25,20 valid-positive starts,results/candidate_g_fresh_preflight/lift707_router_confidence_poslogp_triage_thr6p27_eval20/REPORT.md

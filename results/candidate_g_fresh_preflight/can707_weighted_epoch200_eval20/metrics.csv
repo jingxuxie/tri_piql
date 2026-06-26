@@ -1,0 +1,2 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/candidate_g_fresh_preflight/per_seed/can_paired_pos40_bad80_split707_weighted_bc_policy0/train/can_paired_pos40_bad80_split707_weighted_bc_policy0_official_bc_rnn/20260626052855/models/model_epoch_200.pth,model_epoch_200,0.75,0.75,183.55,20
