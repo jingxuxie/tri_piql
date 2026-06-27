@@ -6,9 +6,9 @@ It is evidence accounting only; it does not introduce new endpoint data.
 ## Summary
 
 - Required branch-selection rows complete: `7/7`.
-- Optional diagnostic rows run in the fresh five-split gate: `0/4`.
+- Optional diagnostic rows run in the fresh five-split gate: `4/4`.
 - The current v0.2 fresh-gate claim is a branch-selection comparison over selected, positive-only, weighted, and v0.1 fixed branches.
-- Fresh all-demo and all-positive rows would be useful diagnostic controls, but they are not required for the current validated branch-selection claim and should not be implied as completed fresh-gate evidence.
+- Fresh all-demo and all-positive diagnostic categories are represented by at least one split, but they are not required for the current validated branch-selection claim and should not be implied as a complete five-split leaderboard.
 
 ## Row Coverage
 
@@ -18,16 +18,16 @@ It is evidence accounting only; it does not introduce new endpoint data.
 | Can 40p/80b | positive-only NN | required_branch_selection | complete | 101/202/303/404/505 |  | 174 | 250 | 0.696 |
 | Can 40p/80b | weighted BC | required_branch_selection | complete | 101/202/303/404/505 |  | 158 | 250 | 0.632 |
 | Can 40p/80b | v0.1 TRIAGE-BC | required_branch_selection | complete | 101/202/303/404/505 |  | 171 | 250 | 0.684 |
-| Can 40p/80b | all-demo BC | optional_diagnostic | optional_not_run |  | 101/202/303/404/505 |  |  |  |
-| Can 40p/80b | all-positive oracle | optional_diagnostic | optional_not_run |  | 101/202/303/404/505 |  |  |  |
+| Can 40p/80b | all-demo BC | optional_diagnostic | partial | 404 | 101/202/303/505 | 27 | 50 | 0.540 |
+| Can 40p/80b | all-positive oracle | optional_diagnostic | partial | 404 | 101/202/303/505 | 49 | 50 | 0.980 |
 | Lift MG | v0.2 selected weighted BC | required_branch_selection | complete | 101/202/303/404/505 |  | 143 | 250 | 0.572 |
 | Lift MG | positive-only NN | required_branch_selection | complete | 101/202/303/404/505 |  | 125 | 250 | 0.500 |
 | Lift MG | v0.1 TRIAGE-BC | required_branch_selection | complete | 101/202/303/404/505 |  | 143 | 250 | 0.572 |
-| Lift MG | all-demo BC | optional_diagnostic | optional_not_run |  | 101/202/303/404/505 |  |  |  |
-| Lift MG | all-positive oracle | optional_diagnostic | optional_not_run |  | 101/202/303/404/505 |  |  |  |
+| Lift MG | all-demo BC | optional_diagnostic | partial | 505 | 101/202/303/404 | 8 | 50 | 0.160 |
+| Lift MG | all-positive oracle | optional_diagnostic | partial | 505 | 101/202/303/404 | 39 | 50 | 0.780 |
 
 ## Interpretation
 
 - A3 now closes the required v0.1 fixed-branch objection for the fresh five-split Can/Lift gate.
 - The paper should describe the fresh gate as a complete selected-vs-strong-baseline/v0.1 audit, not as a full SOTA leaderboard with all possible diagnostic controls.
-- If more GPU budget is spent, the highest-value optional fresh rows are all-demo and all-positive oracle controls, clearly labeled as diagnostics.
+- If more GPU budget is spent, optional all-demo and all-positive controls should be expanded across additional splits only as diagnostics.

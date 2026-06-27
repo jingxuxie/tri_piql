@@ -1,0 +1,4 @@
+setting_id,setting_label,row_role,split_count,candidate_id,candidate_branch,selected_unlabeled,hidden_positive_selected,hidden_bad_selected,total_hidden_positive,total_hidden_bad,support_purity,hidden_positive_recall,hidden_bad_admission,selected_contamination,classifier_score_mean,audit_oracle_score
+can40,Can 40p/80b,primary,2,positive_nn_risk_fusion_top40,risk_fusion_component,80,73,7,80,160,0.912,0.912,0.044,0.087,0.688,0.869
+can40,Can 40p/80b,primary,2,positive_nn_risk_union_top40,hard_risk_union,95,75,20,80,160,0.789,0.938,0.125,0.211,0.665,0.812
+can40,Can 40p/80b,primary,2,positive_nn_top40,positive_only_component,80,63,17,80,160,0.787,0.787,0.106,0.212,0.678,0.681

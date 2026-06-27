@@ -1,0 +1,2 @@
+gate_id,direction,threshold,episodes,positive_successes,cau_successes,routed_successes,delta_vs_positive,gains_vs_positive,losses_vs_positive,opened_episodes,opened_initial_demo_ids
+labeled_positive_q25,lt,15.074509,20,16,15,16,0,0,0,4,demo_39;demo_53;demo_39;demo_53

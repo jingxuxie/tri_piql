@@ -1,0 +1,9 @@
+split,episodes,positive_successes,cau_successes,oracle_switch_successes,cau_delta_vs_positive,oracle_delta_vs_positive
+101,50,19,33,40,14,21
+202,50,40,42,46,2,6
+303,50,36,40,46,4,10
+404,50,39,35,41,-4,2
+505,50,40,43,46,3,6
+606,20,16,15,18,-1,2
+707,50,36,50,50,14,14
+808,50,43,38,44,-5,1

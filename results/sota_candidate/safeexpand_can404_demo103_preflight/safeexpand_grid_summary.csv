@@ -1,0 +1,21 @@
+score_threshold_name,score_threshold,risk_cap_name,risk_cap,added_demo_count,added_hidden_positive,added_hidden_bad,added_purity,added_demo_ids
+pos_min,0.830569,anchor_q50,0.208133,1,1,0,1.000000,demo_103
+pos_min,0.830569,anchor_q75,0.221187,1,1,0,1.000000,demo_103
+pos_min,0.830569,anchor_q90,0.274953,1,1,0,1.000000,demo_103
+pos_min,0.830569,none,inf,1,1,0,1.000000,demo_103
+pos_p10,0.840707,anchor_q50,0.208133,1,1,0,1.000000,demo_103
+pos_p10,0.840707,anchor_q75,0.221187,1,1,0,1.000000,demo_103
+pos_p10,0.840707,anchor_q90,0.274953,1,1,0,1.000000,demo_103
+pos_p10,0.840707,none,inf,1,1,0,1.000000,demo_103
+mid_minpos_maxneg,0.548671,anchor_q50,0.208133,1,1,0,1.000000,demo_103
+mid_minpos_maxneg,0.548671,anchor_q75,0.221187,1,1,0,1.000000,demo_103
+mid_minpos_maxneg,0.548671,anchor_q90,0.274953,2,1,1,0.500000,demo_103 demo_22
+mid_minpos_maxneg,0.548671,none,inf,18,1,17,0.055556,demo_103 demo_48 demo_62 demo_86 demo_102 demo_140 demo_74 demo_22 demo_66 demo_138 demo_112 demo_116 demo_148 demo_18 demo_166 demo_64 demo_54 demo_32
+score_0p60,0.600000,anchor_q50,0.208133,1,1,0,1.000000,demo_103
+score_0p60,0.600000,anchor_q75,0.221187,1,1,0,1.000000,demo_103
+score_0p60,0.600000,anchor_q90,0.274953,2,1,1,0.500000,demo_103 demo_22
+score_0p60,0.600000,none,inf,13,1,12,0.076923,demo_103 demo_48 demo_62 demo_86 demo_102 demo_140 demo_74 demo_22 demo_66 demo_138 demo_112 demo_116 demo_148
+score_0p50,0.500000,anchor_q50,0.208133,1,1,0,1.000000,demo_103
+score_0p50,0.500000,anchor_q75,0.221187,1,1,0,1.000000,demo_103
+score_0p50,0.500000,anchor_q90,0.274953,2,1,1,0.500000,demo_103 demo_22
+score_0p50,0.500000,none,inf,23,1,22,0.043478,demo_103 demo_48 demo_62 demo_86 demo_102 demo_140 demo_74 demo_22 demo_66 demo_138 demo_112 demo_116 demo_148 demo_18 demo_166 demo_64 demo_54 demo_32 demo_30 demo_170 demo_134 demo_84 demo_174

@@ -1,5 +1,106 @@
 # Tri-PIQL Iteration Log
 
+## 2026-06-26: CAU/GMM router follow-up on Can606/707/808
+
+Implemented:
+
+- Ran a split606 GMM-confidence CAU router screen using positive-only as the
+  anchor and CAU as the alternate. The deployable q25 threshold was calibrated
+  from labeled-positive initial states.
+- Added `scripts/summarize_sota_can606_gmm_confidence_cau_router.py` to audit
+  the calibrated gate and same-screen post-hoc thresholds.
+- Trained a fresh split707 CAU action-conflict policy with the same anchor-filter
+  CAU path used by the existing CAU branch:
+  - Candidate C mask:
+    `results/sota_candidate/candidate_c_split707_sequence_mask_preflight/`.
+  - CAU weights:
+    `results/sota_candidate/cau_action_conflict_can707_preflight/`.
+  - CAU train:
+    `results/sota_candidate/cau_action_conflict_can707_b005_m05_e200_train/`.
+- Evaluated split707 CAU first-20, the frozen split606 GMM threshold, and a
+  50-episode confirmation over positive-only, weighted BC, and CAU.
+- Trained a fixed CAU action-conflict policy on older unused validation split
+  808 using the same anchor-filter CAU path:
+  - Candidate C mask:
+    `results/sota_candidate/candidate_c_split808_sequence_mask_preflight/`.
+  - CAU weights:
+    `results/sota_candidate/cau_action_conflict_can808_preflight/`.
+  - CAU train:
+    `results/sota_candidate/cau_action_conflict_can808_b005_m05_e200_train/`.
+  - CAU eval:
+    `results/sota_candidate/cau_action_conflict_can808_b005_m05_eval50/`.
+- Added `scripts/summarize_sota_cau_gmm_router_followup.py` and generated
+  `results/sota_candidate/CAU_GMM_ROUTER_FOLLOWUP_REPORT.md`.
+
+Result:
+
+- Split606 labeled-positive q25 GMM calibration is neutral: router `16/20`
+  versus positive-only `16/20` and CAU `15/20`.
+- A post-hoc split606 threshold over the same feature can reach `18/20` with
+  zero anchor losses, but this is hypothesis-only.
+- The frozen split606 GMM threshold fails split707: router `15/20`, opening no
+  CAU episodes, while CAU alone reaches `20/20`.
+- Split707 50-episode confirmation is strong for CAU-alone: `50/50` versus
+  positive-only `36/50` and weighted BC `39/50`.
+- Split808 is negative for fixed CAU: epoch 200 reaches `38/50`, below
+  positive-only `43/50` and Candidate E `42/50`, but above weighted BC `25/50`
+  and TRIAGE-BC v0.1 `16/50`.
+
+Interpretation:
+
+- GMM confidence is not the hidden-label-free CAU selector in this form.
+- CAU action-conflict is useful but inconsistent. The unresolved research
+  problem remains selecting CAU without losing anchors or overfitting
+  split-specific thresholds.
+
+Validation:
+
+- `conda run -n tri-piql make -C paper validate` passed after adding the
+  split808 fixed-CAU validation to the GMM/CAU follow-up report.
+- `python scripts/validate_paper_artifact_refs.py` reports `151` unique artifact
+  references.
+- `git diff --check` passed, and no Robomimic train/eval jobs were running.
+
+## 2026-06-26: Expanded-mask CAU split606 audit
+
+Implemented:
+
+- Audited the split606 CAU transition-weight run and found the earlier training
+  config used a 50-demo positive-only Robomimic filter while the CAU transition
+  weight file covered 130 demos.
+- Added `scripts/prepare_transition_weighted_config.py` to build a Robomimic
+  train filter directly from a transition-weight HDF5 key set, preserving the
+  base BC-RNN-GMM config while making the dataset mask explicit.
+- Built the expanded split606 CAU setup at
+  `results/sota_candidate/cau_action_conflict_can606_expanded_mask_b005_m05_e200/`;
+  diagnostics confirm `130` training demos.
+- Trained the expanded-mask CAU checkpoint to 200 epochs and evaluated epochs
+  100 and 200 on the same 20 valid-positive split606 endpoint starts.
+
+Result:
+
+- Expanded-mask CAU reaches `9/20` at epoch 100 and `12/20` at epoch 200.
+- This is below the earlier anchor-filter CAU result (`15/20`), positive-only
+  (`16/20`), weighted BC (`14/20`), frozen v0.2 union (`14/20`), and the
+  risk-fusion diagnostic (`15/20`) on the same fresh split606 screen.
+
+Interpretation:
+
+- The negative split606 CAU-plus-v0.2 validation is not just a config/mask
+  mismatch. Training CAU over the full conservative transition-weight support
+  makes the endpoint worse.
+- Close the unchanged CAU/sequence-mask branch as a SOTA-candidate path unless
+  a genuinely stronger state-conditional policy-quality signal is introduced.
+
+Artifacts:
+
+- Setup/report:
+  `results/sota_candidate/cau_action_conflict_can606_expanded_mask_b005_m05_e200/REPORT.md`.
+- Eval report:
+  `results/sota_candidate/cau_action_conflict_can606_expanded_mask_b005_m05_eval20/REPORT.md`.
+- Updated summary:
+  `results/sota_candidate/CAU_V02_FRESH606_ENDPOINT_VALIDATION_REPORT.md`.
+
 ## 2026-06-26: Candidate K GMM-confidence router screen
 
 Implemented:
@@ -10644,3 +10745,1989 @@ Decision:
   remains a cautious precision/coverage empirical submission unless a genuinely
   new state-conditional policy-quality signal or transition-level objective is
   proposed and predeclared.
+
+## 2026-06-26: SOTA Candidate 1 SM-RWBC Can404 screen
+
+Continued the new `triage_bc_sota_candidate_plan.md` branch, which asks for a
+top-tier methods candidate that can subsume positive-only NN and weighted BC.
+
+Implemented:
+
+- Added `scripts/summarize_sota_sm_rwbc_preflight.py`.
+- The preflight builds broad-pool per-timestep loss weights for
+  Sequence-Masked Risk-Weighted BC:
+  - train pool: the weighted-BC Can404 pool (`130` demos);
+  - labeled positives: full weight;
+  - unlabeled transitions: classifier score times an exponential penalty from
+    local bad-action / bad-neighbor risk;
+  - grid: `m_min` in `{0.03,0.05,0.10}`, `lambda` in `{1,2,4}`, and risk
+    features `{bad_neighbor_action,bad_neighbor_state_action,combined}`.
+- Generated the selected recipe artifact:
+  `results/sota_candidate/sm_rwbc_can404_m003_lam2_combined_preflight/sm_rwbc_loss_weights.hdf5`.
+- Added `scripts/summarize_sota_sm_rwbc_screen.py`.
+
+Preflight result:
+
+- Selected recipe: `m_min=0.03`, `lambda=2`, `combined`.
+- Broad-pool hidden-bad transition fraction before weighting: `0.620`.
+- Hidden-bad weighted mass fraction after SM-RWBC weighting: `0.376`.
+- Hidden-positive weighted mass: `1966.9`.
+- Hidden-bad weighted mass: `1184.8`.
+- Transition ESS: `7481.5`.
+
+Training / endpoint screen:
+
+- CPU one-step trainer smoke passed with active `Loss_Weight_*` telemetry.
+- Trained the bounded parity screen:
+  `200` epochs, `100` gradient steps per epoch, checkpoints at epochs `100`
+  and `200`, CUDA device.
+- Train directory:
+  `results/sota_candidate/sm_rwbc_can404_m003_lam2_combined_e200_train/sm_rwbc_can404_m003_lam2_combined_e200_seed0/20260626130140/`.
+- Evaluated both checkpoints on Can404, `20` valid-positive starts, horizon
+  `400`:
+  - epoch `100`: `10/20`;
+  - epoch `200`: `10/20`.
+- Matched screen baselines:
+  - positive-only NN: `17/20`;
+  - weighted BC: `13/20`;
+  - Candidate C sequence mask: `16/20`;
+  - Candidate X extra-only negative action: `14/20`.
+
+Decision:
+
+- Reject this broad-pool SM-RWBC recipe. It reduces hidden-bad transition mass
+  but still collapses the endpoint policy below the positive-only anchor.
+- Do not scale this recipe unchanged to Can505, Lift, or generated probes.
+- The next SOTA-candidate branch should be CAU-BC or a materially different
+  anchor-preserving local objective; smoother broad-pool timestep weights alone
+  are not enough for the split-404 bottleneck.
+
+Validation:
+
+- `conda run -n tri-piql python -m py_compile scripts/summarize_sota_sm_rwbc_preflight.py scripts/summarize_sota_sm_rwbc_screen.py`
+  passed.
+- `conda run -n tri-piql python scripts/summarize_sota_sm_rwbc_screen.py`
+  passed and asserted the expected screen totals.
+
+## 2026-06-26: SOTA Candidate 2 CAU-BC Can404 screen
+
+Continued the `triage_bc_sota_candidate_plan.md` branch after the SM-RWBC
+no-go. This screen tests whether explicit negative-action unlikelihood can
+recover the split-404 positive-only anchor.
+
+Implemented:
+
+- Added `scripts/summarize_sota_cau_preflight.py`.
+- The preflight reuses Candidate C's sequence-mask support and writes a
+  trainable HDF5 for the existing transition-weighted Robomimic trainer's
+  negative-hinge path.
+- Compared negative-action retrieval modes:
+  - `nearest_state`;
+  - `nearest_state_action`;
+  - `action_conflict`.
+- Selected `action_conflict` with selected-scope negative loss and top-k `16`
+  local negative states.
+- Added `scripts/summarize_sota_cau_screen.py`.
+
+Preflight result:
+
+- Selected negative-loss mass: `5528` transitions.
+- Hidden-positive mass: `5113`.
+- Hidden-bad mass: `415`.
+- Mean negative-action distance:
+  - `nearest_state`: `2.669399`;
+  - `nearest_state_action`: `1.961322`;
+  - `action_conflict`: `3.683328`.
+- The selected target is materially different from the rejected Candidate D/X
+  nearest-state hinge, but remains a bounded screen candidate rather than a
+  claim.
+
+Training / endpoint screen:
+
+- CPU one-step trainer smoke passed with active negative-hinge telemetry.
+- Trained the bounded parity screen:
+  `200` epochs, `100` gradient steps per epoch, checkpoints at epochs `100`
+  and `200`, CUDA device.
+- Train directory:
+  `results/sota_candidate/cau_action_conflict_can404_b005_m05_e200_train/cau_action_conflict_can404_b005_m05_e200_seed0/20260626131712/`.
+- Evaluated both checkpoints on Can404, `20` valid-positive starts, horizon
+  `400`:
+  - epoch `100`: `6/20`;
+  - epoch `200`: `16/20`.
+- Matched screen baselines:
+  - positive-only NN: `17/20`;
+  - weighted BC: `13/20`;
+  - Candidate C sequence mask: `16/20`;
+  - Candidate D nearest-negative hinge: `14/20` at epoch `100`, `13/20` at
+    epoch `200`;
+  - Candidate X extra-only nearest-negative hinge: `10/20` at epoch `100`,
+    `14/20` at epoch `200`.
+
+Decision:
+
+- Reject this action-conflict `beta=0.05`, `margin=0.5` CAU recipe as a SOTA
+  candidate.
+- It fixes the worst nearest-negative hinge regression and ties Candidate C,
+  but it still does not beat the positive-only anchor on split 404.
+- Do not scale this recipe unchanged to Can505, Lift, or generated probes.
+- The next SOTA-candidate branch should be a materially different mechanism,
+  such as calibrated specialist distillation or conservative support expansion,
+  rather than another unchanged broad-pool weighting or nearest-negative hinge.
+
+Validation:
+
+- `conda run -n tri-piql python scripts/summarize_sota_cau_screen.py`
+  passed and asserted the expected screen totals.
+
+## 2026-06-26: SOTA Candidate 4 SafeExpand-BC Can404 screen
+
+Continued the `triage_bc_sota_candidate_plan.md` branch after the CAU no-go.
+This screen tests whether conservative support expansion can preserve the
+positive-only anchor while adding a small amount of certified coverage.
+
+Implemented:
+
+- Added `scripts/summarize_sota_safeexpand_preflight.py`.
+- The preflight starts from the positive-only NN top40 support and combines:
+  - classifier score calibration from labeled positives;
+  - per-demo local bad-action risk from the SM-RWBC preflight;
+  - positive-only anchor support membership.
+- The script writes a custom HDF5 mask and Robomimic config for official
+  BC-RNN-GMM training.
+- Added `scripts/summarize_sota_safeexpand_screen.py`.
+
+Preflight result:
+
+- Selected certificate:
+  - classifier score at least labeled-positive minimum: `0.830569`;
+  - combined local risk no higher than the anchor support's 75th percentile:
+    `0.221187`.
+- The certificate adds exactly one demo, `demo_103`.
+- Diagnostic hidden-label support:
+  - positive-only anchor: `35` hidden-positive, `5` hidden-bad out of `40`;
+  - SafeExpand: `36` hidden-positive, `5` hidden-bad out of `41`.
+- Relaxing the certificate admits hidden-bad demos immediately:
+  `mid_minpos_maxneg` with `anchor_q90` already adds `demo_22` as hidden-bad,
+  and no-risk variants add mostly hidden-bad demos.
+
+Training / endpoint screen:
+
+- Trained official BC-RNN-GMM on the custom SafeExpand mask:
+  `200` epochs, `100` gradient steps per epoch, checkpoints at epochs `100`
+  and `200`, CUDA device.
+- Train directory:
+  `results/sota_candidate/safeexpand_can404_demo103_e200_train/safeexpand_can404_demo103_e200_seed0/20260626133452/`.
+- Evaluated both checkpoints on Can404, `20` valid-positive starts, horizon
+  `400`:
+  - epoch `100`: `10/20`;
+  - epoch `200`: `12/20`.
+- Matched screen references:
+  - positive-only NN: `17/20`;
+  - weighted BC: `13/20`;
+  - Candidate C sequence mask: `16/20`;
+  - CAU action-conflict: `16/20`.
+
+Decision:
+
+- Reject this one-demo SafeExpand recipe as a SOTA candidate.
+- It improves the hidden-label support audit slightly, but endpoint behavior
+  drops below weighted BC and far below the positive-only anchor.
+- Do not scale this recipe unchanged.
+- Future support-expansion variants need an explicit policy-output anchor or a
+  different objective; a cleaner support set alone is not sufficient on split
+  404.
+
+Validation:
+
+- `conda run -n tri-piql python -m py_compile scripts/summarize_sota_safeexpand_preflight.py scripts/summarize_sota_safeexpand_screen.py`
+  passed.
+- `conda run -n tri-piql python scripts/summarize_sota_safeexpand_screen.py`
+  passed and asserted the expected screen totals.
+
+## 2026-06-26: SOTA Candidate 5 Demo-DPO Can404 screen
+
+Continued the `triage_bc_sota_candidate_plan.md` branch after the SafeExpand
+no-go. This screen tests whether a preference-style sequence objective can use
+labeled bad demos without changing support selection.
+
+Implemented:
+
+- Extended `scripts/train_robomimic_official_transition_weighted.py` with a
+  disabled-by-default demo-preference path:
+  - HDF5 `sample_weight` controls sequence sampling separately from BC
+    `loss_weight`;
+  - HDF5 `preference_label` marks `+1` positives, `-1` negatives, and `0`
+    ignored demos;
+  - `--demo-preference-*` enables the preference loss;
+  - `--demo-preference-reference-centered` uses DPO-style
+    `log pi - log pi_ref` scores when the frozen anchor policy is available.
+- Added `scripts/summarize_sota_demo_preference_preflight.py`.
+- Added `scripts/summarize_sota_demo_preference_screen.py`.
+
+Preflight / smoke result:
+
+- Setup:
+  - initialize from positive-only NN epoch-200 checkpoint;
+  - keep BC loss on the positive-NN support (`50` train demos);
+  - add the `10` labeled negatives only for sampling / preference loss
+    (`loss_weight=0`, `sample_weight=1`, `preference_label=-1`);
+  - use the `10` labeled positives as positive preference demos.
+- Non-reference preference was saturated at initialization:
+  - one-step smoke positive log-prob: `25.44`;
+  - negative log-prob: `-271.94`;
+  - ordinary positive-minus-negative gap: `297.38`;
+  - preference loss: `0.0`.
+- Reference-centered DPO smoke was active:
+  - reference-centered gap approximately `0.0`;
+  - preference loss `0.693`;
+  - both positive and negative preference samples present in the batch.
+
+Training / endpoint screen:
+
+- Trained the bounded reference-centered recipe:
+  - preference weight `1.0`;
+  - temperature `1.0`;
+  - margin `0.0`;
+  - output anchor weight `10.0`;
+  - `20` fine-tuning epochs;
+  - `100` gradient steps per epoch;
+  - checkpoints at epochs `5/10/15/20`;
+  - CUDA device.
+- Train directory:
+  `results/sota_candidate/demo_pref_refcenter_can404_w1_e20_train/demo_pref_refcenter_can404_w1_e20_seed0/20260626135305/`.
+- Evaluated checkpoints on Can404, `20` valid-positive starts, horizon `400`:
+  - epoch `5`: `16/20`;
+  - epoch `10`: `2/20`;
+  - epoch `15`: `16/20`;
+  - epoch `20`: `16/20`.
+- Matched references:
+  - positive-only NN: `17/20`;
+  - weighted BC: `13/20`;
+  - Candidate C sequence mask: `16/20`;
+  - CAU action-conflict: `16/20`;
+  - SafeExpand: `12/20`.
+
+Decision:
+
+- Reject this reference-centered labeled-demo preference recipe as a SOTA
+  candidate.
+- The preference term is active, but it does not improve the positive-only
+  endpoint anchor and introduces an unstable checkpoint at epoch `10`.
+- Do not scale this recipe unchanged.
+- If preference learning is revisited, it needs harder hidden-label-free
+  preference pairs or a stronger local action/state construction; labeled
+  negatives alone are too easy for the positive-only reference and do not
+  expose the split-404 failure mode.
+
+Validation:
+
+- `conda run -n tri-piql python -m py_compile scripts/summarize_sota_demo_preference_preflight.py scripts/summarize_sota_demo_preference_screen.py scripts/train_robomimic_official_transition_weighted.py`
+  passed.
+- `conda run -n tri-piql python scripts/summarize_sota_demo_preference_screen.py`
+  passed and asserted the expected screen totals.
+
+## 2026-06-26: SOTA Candidate 3 CCG-Distill Lift preflight
+
+Continued the `triage_bc_sota_candidate_plan.md` sweep after the Demo-DPO
+no-go. Instead of launching a fresh distillation train/eval cycle, first
+audited whether the existing Lift teacher/gate evidence is strong enough to
+justify CCG-Distill.
+
+Implemented:
+
+- Added `scripts/summarize_sota_ccg_distill_preflight.py`.
+- Generated
+  `results/sota_candidate/ccg_distill_lift_preflight_REPORT.md`.
+- Generated
+  `results/sota_candidate/ccg_distill_lift_preflight_summary.csv`.
+
+Evidence consolidated:
+
+- Candidate K tuned confidence router on Lift606: `18/20` versus positive-only
+  `14/20`.
+- Same fixed confidence threshold on Lift707: `10/20` versus positive-only
+  `12/20`.
+- Candidate L best Lift606-selected one-feature threshold transferred to
+  Lift707: `11/20`.
+- Candidate L leaky Lift707 one-feature upper bound: `13/20`, only `+1` over
+  positive-only and diagnostic only.
+- Candidate M/N temporal and persistent confidence gates fail the Lift606
+  development gate; best persistent result is `13/20` versus positive-only
+  `14/20`.
+- Candidate O/P/Q/R single-policy anchor-union proxies also fail Lift606; the
+  best positive-initialized/interpolated result is `11/20`.
+- Candidate S labeled initial-risk gate reaches `12/20` on Lift606 and ties
+  positive-only at `12/20` on Lift707.
+
+Decision:
+
+- Mark CCG-Distill as a preflight no-go for this sweep.
+- The policy set has local headroom, but the hidden-label-free teacher
+  selection signal is too weak/non-transferring on Lift707, and the closest
+  single-policy training proxies damage the positive-only anchor.
+- Do not spend GPU budget on a fresh CCG-Distill implementation until the
+  teacher-selection signal improves on both Lift606 and Lift707.
+- The next SOTA-candidate branch should move to a genuinely different
+  objective, most likely the Offline RL/IQL revisit.
+
+Validation:
+
+- `conda run -n tri-piql python -m py_compile scripts/summarize_sota_ccg_distill_preflight.py`
+  passed.
+- `conda run -n tri-piql python scripts/summarize_sota_ccg_distill_preflight.py`
+  passed and asserted the expected screen totals.
+
+## 2026-06-26: SOTA Candidate 6 IQL-AWBC Can404 screen
+
+Continued the `triage_bc_sota_candidate_plan.md` sweep after the CCG-Distill
+preflight no-go. This branch revisits Offline RL / IQL with a stronger
+Robomimic BC-RNN-GMM extractor instead of the earlier feed-forward Minari actor
+extraction.
+
+Implemented:
+
+- Added `scripts/summarize_sota_iql_awbc_preflight.py`.
+- Added `scripts/summarize_sota_iql_awbc_screen.py`.
+- Generated
+  `results/sota_candidate/iql_awbc_can404_preflight/iql_awbc_preflight_REPORT.md`.
+- Generated
+  `results/sota_candidate/iql_awbc_can404_screen_REPORT.md`.
+
+Preflight:
+
+- Trained a small state-action classifier on labeled positives versus labeled
+  negatives, then trained a conservative classifier-reward Q/V model on the
+  Can404 weighted-BC broad pool.
+- Selected the `norm_topq` advantage-weight extraction recipe.
+- Offline diagnostics were encouraging:
+  - state-action classifier labeled accuracy: `0.997`;
+  - learned advantage means, positive / negative / unlabeled: `1.232` /
+    `-1.184` / `-0.123`;
+  - selected hidden-bad weighted mass fraction: `0.326`;
+  - rejected SM-RWBC reference hidden-bad weighted mass fraction: `0.376`;
+  - selected hidden-positive mass: `1100.7`.
+
+Training / endpoint screen:
+
+- Trained official Robomimic BC-RNN-GMM on the selected IQL-AWBC transition
+  weights:
+  - `100` epochs;
+  - `100` gradient steps per epoch;
+  - checkpoints at epochs `50` and `100`;
+  - CUDA device.
+- Train directory:
+  `results/sota_candidate/iql_awbc_can404_norm_topq_e100_train/iql_awbc_can404_norm_topq_e100_seed0/20260626141519/`.
+- Evaluated checkpoints on Can404, `20` valid-positive starts, horizon `400`:
+  - epoch `50`: `0/20`;
+  - epoch `100`: `4/20`.
+- Matched references:
+  - positive-only NN: `17/20`;
+  - weighted BC: `13/20`;
+  - Candidate C sequence mask: `16/20`;
+  - CAU action-conflict: `16/20`;
+  - Demo-DPO ref-centered: `16/20`.
+
+Decision:
+
+- Reject this classifier-reward IQL-AWBC norm-topq recipe as a SOTA candidate.
+- The Q/V module gives a better offline mass diagnostic and separates labeled
+  advantages, but the BC-RNN-GMM endpoint policy collapses. The extraction step
+  still fails to preserve the positive-only control anchor.
+- Do not scale this recipe unchanged. Future Offline RL work needs a stronger
+  extraction mechanism, likely positive-anchor initialization/output anchoring
+  or a sequence-aware critic, before more endpoint budget is justified.
+
+Validation:
+
+- `conda run -n tri-piql python -m py_compile scripts/summarize_sota_iql_awbc_preflight.py scripts/summarize_sota_iql_awbc_screen.py`
+  passed.
+- `JAX_PLATFORMS=cpu conda run -n tri-piql python scripts/summarize_sota_iql_awbc_preflight.py`
+  passed and wrote the selected transition-weight HDF5.
+- `conda run -n tri-piql python scripts/summarize_sota_iql_awbc_screen.py`
+  passed and asserted the expected screen totals.
+
+## 2026-06-26: Anchored IQL-AWBC Can404 follow-up
+
+Followed up the unanchored SOTA Candidate 6 collapse with the missing
+anchor-preserving extraction test: initialize from the positive-only policy and
+apply output-level anchor-logprob regularization while training on the selected
+IQL-AWBC norm-topq transition weights.
+
+Implemented:
+
+- Added `scripts/summarize_sota_anchored_iql_awbc_screen.py`.
+- Generated
+  `results/sota_candidate/anchored_iql_awbc_can404_screen_REPORT.md`.
+- Generated
+  `results/sota_candidate/anchored_iql_awbc_can404_screen_summary.csv`.
+
+Training / endpoint screen:
+
+- Trained official Robomimic BC-RNN-GMM with:
+  - IQL-AWBC norm-topq transition weights from
+    `results/sota_candidate/iql_awbc_can404_preflight/iql_awbc_loss_weights.hdf5`;
+  - positive-only epoch-200 initialization from split 404;
+  - output anchor-logprob weight `10.0`;
+  - anchor applied where `loss_weight >= 0.999`;
+  - `20` epochs, `100` gradient steps per epoch;
+  - checkpoints at epochs `5/10/15/20`;
+  - CUDA device.
+- Train directory:
+  `results/sota_candidate/anchored_iql_awbc_can404_w10_e20_train/anchored_iql_awbc_can404_w10_e20_seed0/20260626142620/`.
+- Evaluated checkpoints on Can404, `20` valid-positive starts, horizon `400`:
+  - epoch `5`: `10/20`;
+  - epoch `10`: `13/20`;
+  - epoch `15`: `11/20`;
+  - epoch `20`: `12/20`.
+
+Matched references:
+
+- positive-only NN: `17/20`;
+- weighted BC: `13/20`;
+- Candidate C sequence mask: `16/20`;
+- CAU action-conflict: `16/20`;
+- Demo-DPO ref-centered: `16/20`;
+- unanchored IQL-AWBC epoch `100`: `4/20`;
+- prior Candidate V output-anchor epoch `10`: `18/20`.
+
+Decision:
+
+- Reject this anchored IQL-AWBC recipe.
+- Output anchoring repairs the catastrophic unanchored IQL-AWBC collapse, but
+  the IQL-derived weights still underperform both the positive-only anchor and
+  the earlier non-IQL output-anchor recipe.
+- Do not spend more endpoint budget on simple IQL advantage weighting with the
+  current transition-level critic. A future Offline RL direction needs a
+  genuinely sequence-aware critic or a policy-quality objective, not only
+  anchor-preserved AWBC extraction.
+
+Validation:
+
+- `conda run -n tri-piql python -m py_compile scripts/summarize_sota_anchored_iql_awbc_screen.py`
+  passed.
+- `conda run -n tri-piql python scripts/summarize_sota_anchored_iql_awbc_screen.py`
+  passed and asserted the expected screen totals.
+
+## 2026-06-26: SOTA candidate sweep consolidation
+
+Consolidated the completed short SOTA-candidate sweep into a single
+paper-facing no-go artifact so the result is visible and reproducible rather
+than scattered across per-candidate reports.
+
+Implemented:
+
+- Added `scripts/summarize_sota_candidate_sweep.py`.
+- Generated `results/sota_candidate/SOTA_CANDIDATE_SWEEP_REPORT.md`.
+- Generated `results/sota_candidate/sota_candidate_sweep_summary.csv`.
+- Updated `triage_bc_sota_candidate_plan.md` to treat the sweep as complete
+  negative evidence rather than future work.
+- Updated `tri_piql_paper_completion_plan.md` with the same claim boundary.
+
+Aggregate decision:
+
+- The focused sweep is negative: no branch clears its first-stage gate.
+- Can404 endpoint candidates:
+  - SM-RWBC: best `10/20` versus positive-only `17/20`;
+  - CAU-BC: best `16/20` versus positive-only `17/20`;
+  - SafeExpand: best `12/20` versus positive-only `17/20`;
+  - Demo-DPO: best `16/20` versus positive-only `17/20`, with an unstable
+    `2/20` checkpoint;
+  - anchored IQL-AWBC: best `13/20` versus positive-only `17/20`, after
+    unanchored IQL-AWBC reached only `4/20`.
+- CCG-Distill has development-router headroom on Lift606 (`18/20` versus
+  positive-only `14/20`) but fails the Lift707 transfer gate (`10/20` versus
+  positive-only `12/20`).
+
+Decision:
+
+- Do not promote or scale any of these short-screen recipes unchanged.
+- Use the sweep as claim-boundary evidence for the precision/coverage paper.
+- A future SOTA-method attempt needs a new state-conditional policy-quality
+  signal, sequence-aware critic, or policy-level objective before more endpoint
+  budget is justified.
+
+Validation:
+
+- `conda run -n tri-piql python -m py_compile scripts/summarize_sota_candidate_sweep.py`
+  passed.
+- `conda run -n tri-piql python scripts/summarize_sota_candidate_sweep.py`
+  passed and asserted the expected aggregate totals.
+
+## 2026-06-26: Paper claim package integration for SOTA sweep
+
+Promoted the completed SOTA-candidate sweep from a standalone development
+artifact into the paper-facing claim-boundary package.
+
+Implemented:
+
+- Updated `paper/Makefile` so `make -C paper validate` py-compiles and runs
+  `scripts/summarize_sota_candidate_sweep.py` before the submission-readiness
+  audit.
+- Updated `scripts/summarize_submission_readiness_audit.py` to add
+  `methods_sota_candidate_sweep` as a top-tier methods/SOTA `not_met`
+  criterion.
+- Updated `scripts/validate_paper_claim_numbers.py` to assert the six-row SOTA
+  sweep summary and the new readiness counts.
+- Updated claim-facing docs:
+  - `FINAL_CLAIM_CONTRACT.md`;
+  - `paper/REVIEWER_CLAIM_SUMMARY.md`;
+  - `paper/MANUSCRIPT_CHECKLIST.md`;
+  - `paper/REPRODUCE_PAPER.md`;
+  - `PAPER_DRAFT_OUTLINE.md`;
+  - `results/PAPER_CLAIM_PACKAGE.md`;
+  - `triage_bc_top_tier_completion_plan.md`;
+  - `tri_piql_paper_completion_plan.md`.
+- Kept the compiled LaTeX drafts at their prior validated page counts by
+  placing the SOTA-sweep no-go in the claim/reproducibility docs instead of
+  adding a longer appendix item.
+
+Current validated readiness summary:
+
+- High-quality empirical submission criteria: `6` pass, `0` caution.
+- Top-tier methods/SOTA dominance criteria: `1` caution, `5` not met.
+- New SOTA-sweep criterion evidence:
+  - best Can404 short-screen candidates: `16/20` versus positive-only `17/20`;
+  - CCG transfer: `10/20` versus positive-only `12/20`;
+  - anchored IQL-AWBC: `13/20`.
+
+Validation:
+
+- `conda run -n tri-piql python -m py_compile scripts/summarize_sota_candidate_sweep.py scripts/summarize_submission_readiness_audit.py scripts/validate_paper_claim_numbers.py scripts/validate_paper_artifact_refs.py`
+  passed.
+- `conda run -n tri-piql python scripts/summarize_sota_candidate_sweep.py`
+  passed.
+- `conda run -n tri-piql python scripts/summarize_submission_readiness_audit.py`
+  passed.
+- `conda run -n tri-piql python scripts/validate_paper_claim_numbers.py`
+  passed.
+- `conda run -n tri-piql python scripts/validate_paper_artifact_refs.py`
+  passed and checked `138` unique artifact references.
+- `conda run -n tri-piql python scripts/validate_paper_structure.py`
+  passed.
+- First full `conda run -n tri-piql make -C paper validate` run failed only
+  because a longer compiled appendix note increased PDF page counts; after
+  moving that note out of the compiled LaTeX, the second full run passed.
+- Final full validation:
+  `conda run -n tri-piql make -C paper validate` passed, compiling the
+  standalone PDF at `18` pages and the provisional ICLR PDF at `15` pages.
+
+## 2026-06-26: Can404 all-positive oracle fresh diagnostic
+
+Ran one bounded optional fresh diagnostic to quantify whether the severe
+Can split-404 v0.2 reversal is due to task unsolvability or method/support
+selection.
+
+Command:
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/run_final_matrix.py \
+  --task can_paired --split-type pos40_bad80 --split-seed 404 \
+  --method all_train_positive_oracle --policy-seed 0 --stage all \
+  --out-dir results/final_paper_v02 --eval-episodes 50 --device cuda
+```
+
+Artifacts:
+
+- Run directory:
+  `results/final_paper_v02/per_seed/can_paired_pos40_bad80_split404_all_train_positive_oracle_policy0/`.
+- Endpoint metrics:
+  `results/final_paper_v02/per_seed/can_paired_pos40_bad80_split404_all_train_positive_oracle_policy0/eval/metrics.csv`.
+- Coverage audit:
+  `results/final_paper_v02/tables/v02_fresh_baseline_coverage_REPORT.md`.
+- Can endpoint summary:
+  `results/final_paper_v02/tables/v02_fresh_can_endpoint_REPORT.md`.
+
+Result:
+
+- The all-positive oracle trained on `90` positive demos.
+- Endpoint success by checkpoint:
+  - epoch 50: `9/50`;
+  - epoch 100: `42/50`;
+  - epoch 150: `48/50`;
+  - epoch 200: `49/50`.
+- At that point, fresh optional all-demo/all-positive diagnostic coverage was
+  `1/4` rows run: Can all-positive oracle was partial with split `404`
+  complete; Can all-demo, Lift all-demo, and Lift all-positive remained unrun.
+  The later all-demo companion below updated the coverage to `2/4`; the
+  subsequent Lift505 all-positive oracle diagnostic updates current coverage
+  to `3/4`.
+
+Interpretation:
+
+- Split 404 is clearly solvable with all positive demonstrations, so the v0.2
+  reversal is a support-selection / hidden-label-free conversion failure rather
+  than an environment impossibility.
+- This is an oracle diagnostic only. It should not be used as a deployable
+  method row or as completed fresh leaderboard evidence.
+- Updated `scripts/summarize_v02_router_regret_table.py` so optional
+  mixed-log and all-positive oracle diagnostics remain excluded from the
+  fresh Can/Lift branch-selection regret oracle. The router-regret claim stays
+  at `23/500` for v0.2 versus `64/500` positive-only and `62/500` weighted.
+
+Validation:
+
+- Regenerated:
+  - `scripts/summarize_v02_fresh_can_endpoint.py`;
+  - `scripts/summarize_v02_fresh_baseline_coverage.py`;
+  - `scripts/summarize_v02_router_regret_table.py`;
+  - `scripts/summarize_submission_readiness_audit.py`.
+- Updated claim wording from optional diagnostics "unrun" to the then-current
+  incomplete status. The later all-demo companion below updates that count to
+  `2/4` run.
+- `conda run -n tri-piql make -C paper validate` passed, compiling the
+  standalone PDF at `18` pages and the provisional ICLR PDF at `15` pages.
+
+## 2026-06-26: Can404 all-demo fresh diagnostic companion
+
+Ran the matching optional fresh all-demo BC diagnostic for the same severe
+Can split-404 reversal. This pairs the all-positive oracle headroom check with
+a mixed-log cloning check.
+
+Command:
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/run_final_matrix.py \
+  --task can_paired --split-type pos40_bad80 --split-seed 404 \
+  --method bc_all_mixed --policy-seed 0 --stage all \
+  --out-dir results/final_paper_v02 --eval-episodes 50 --device cuda
+```
+
+Artifacts:
+
+- Run directory:
+  `results/final_paper_v02/per_seed/can_paired_pos40_bad80_split404_bc_all_mixed_policy0/`.
+- Endpoint metrics:
+  `results/final_paper_v02/per_seed/can_paired_pos40_bad80_split404_bc_all_mixed_policy0/eval/metrics.csv`.
+- Coverage audit:
+  `results/final_paper_v02/tables/v02_fresh_baseline_coverage_REPORT.md`.
+- Can endpoint summary:
+  `results/final_paper_v02/tables/v02_fresh_can_endpoint_REPORT.md`.
+
+Result:
+
+- All-demo BC trained on all `180` train demos.
+- Endpoint success by checkpoint:
+  - epoch 50: `15/50`;
+  - epoch 100: `19/50`;
+  - epoch 150: `15/50`;
+  - epoch 200: `27/50`.
+- At that point, fresh optional all-demo/all-positive diagnostic coverage was
+  `2/4` rows run: Can all-demo and Can all-positive were complete on split
+  `404`; Lift all-demo and Lift all-positive remained unrun. The subsequent
+  Lift505 all-positive oracle diagnostic updates current coverage to `3/4`.
+
+Interpretation:
+
+- On Can404, all-demo BC reaches `27/50`, equal to frozen v0.2 hard union and
+  below positive-only NN `39/50`, weighted BC `33/50`, v0.1 TRIAGE-BC `36/50`,
+  and all-positive oracle `49/50`.
+- This sharpens the split-404 diagnosis: the split is solvable with true
+  positive coverage, but naive mixed-log cloning and the frozen hard-union
+  support both fail badly. Positive-only remains the strongest deployable row.
+- The row is an optional diagnostic, not part of the claimed fresh
+  branch-selection leaderboard.
+
+Validation:
+
+- Regenerated:
+  - `scripts/summarize_v02_fresh_can_endpoint.py`;
+  - `scripts/summarize_v02_fresh_baseline_coverage.py`;
+  - `scripts/summarize_v02_router_regret_table.py`;
+  - `scripts/summarize_submission_readiness_audit.py`.
+- Updated claim-facing exact optional-diagnostic counts from `1/4` to `2/4`
+  at that time; the subsequent Lift505 all-positive oracle diagnostic updates
+  those counts to `3/4`.
+- `conda run -n tri-piql make -C paper validate` passed, compiling the
+  standalone PDF at `18` pages and the provisional ICLR PDF at `15` pages.
+
+## 2026-06-26: Lift505 all-positive oracle fresh diagnostic
+
+Ran one bounded non-Can optional diagnostic on fresh Lift MG split `505`, where
+the frozen v0.2 router selects weighted BC and weighted BC is the strongest
+completed non-oracle row.
+
+Command:
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/run_final_matrix.py \
+  --task lift_mg --split-type mg_sparse --split-seed 505 \
+  --method all_train_positive_oracle --policy-seed 0 --stage all \
+  --out-dir results/final_paper_v02 --eval-episodes 50 --device cuda
+```
+
+Artifacts:
+
+- Run directory:
+  `results/final_paper_v02/per_seed/lift_mg_mg_sparse_split505_all_train_positive_oracle_policy0/`.
+- Endpoint metrics:
+  `results/final_paper_v02/per_seed/lift_mg_mg_sparse_split505_all_train_positive_oracle_policy0/eval/metrics.csv`.
+- Lift endpoint summary:
+  `results/final_paper_v02/tables/v02_fresh_lift_endpoint_REPORT.md`.
+- Coverage audit:
+  `results/final_paper_v02/tables/v02_fresh_baseline_coverage_REPORT.md`.
+
+Result:
+
+- The all-positive oracle trained on `286` true-positive train demos.
+- Endpoint success by checkpoint:
+  - epoch 50: `7/50`;
+  - epoch 100: `33/50`;
+  - epoch 150: `37/50`;
+  - epoch 200: `39/50`.
+- At that point, fresh optional all-demo/all-positive diagnostic coverage was
+  `3/4` rows run: Can all-demo, Can all-positive, and Lift all-positive had at
+  least one split complete; the subsequent Lift505 all-demo companion updates
+  current coverage to `4/4`.
+
+Interpretation:
+
+- Lift505 all-positive oracle reaches `39/50`, exceeding the matched
+  non-oracle rows on the same split: weighted BC `33/50`, positive-only NN
+  `26/50`, and v0.1 TRIAGE-BC `24/50`.
+- This is useful non-Can headroom evidence. Lift is not inherently capped at
+  the weighted-BC success level; the remaining issue is hidden-label-free
+  support conversion / branch selection.
+- The row is oracle-only and should not be presented as a deployable method or
+  as completed fresh leaderboard evidence.
+
+Validation:
+
+- Regenerated:
+  - `scripts/summarize_v02_fresh_lift_endpoint.py`;
+  - `scripts/summarize_v02_fresh_baseline_coverage.py`;
+  - `scripts/summarize_submission_readiness_audit.py`.
+- Updated claim-facing exact optional-diagnostic counts to `3/4` at that time;
+  the subsequent Lift505 all-demo companion updates those counts to `4/4`.
+- `conda run -n tri-piql make -C paper validate` passed, compiling the
+  standalone PDF at `18` pages and the provisional ICLR PDF at `15` pages.
+
+## 2026-06-26: Lift505 all-demo fresh diagnostic companion
+
+Ran the matching optional all-demo BC diagnostic on fresh Lift MG split `505`.
+This pairs the same-split all-positive oracle headroom check with naive
+mixed-log cloning.
+
+Command:
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/run_final_matrix.py \
+  --task lift_mg --split-type mg_sparse --split-seed 505 \
+  --method bc_all_mixed --policy-seed 0 --stage all \
+  --out-dir results/final_paper_v02 --eval-episodes 50 --device cuda
+```
+
+Artifacts:
+
+- Run directory:
+  `results/final_paper_v02/per_seed/lift_mg_mg_sparse_split505_bc_all_mixed_policy0/`.
+- Endpoint metrics:
+  `results/final_paper_v02/per_seed/lift_mg_mg_sparse_split505_bc_all_mixed_policy0/eval/metrics.csv`.
+- Lift endpoint summary:
+  `results/final_paper_v02/tables/v02_fresh_lift_endpoint_REPORT.md`.
+- Coverage audit:
+  `results/final_paper_v02/tables/v02_fresh_baseline_coverage_REPORT.md`.
+
+Result:
+
+- All-demo BC trained on all `1440` train demos.
+- Endpoint success by checkpoint:
+  - epoch 50: `1/50`;
+  - epoch 100: `1/50`;
+  - epoch 150: `5/50`;
+  - epoch 200: `8/50`.
+- Current fresh optional all-demo/all-positive diagnostic category coverage is
+  now `4/4`: Can all-demo, Can all-positive, Lift all-demo, and Lift
+  all-positive each have at least one split represented. These rows remain
+  partial-by-split diagnostics, not a full five-split diagnostic leaderboard.
+
+Interpretation:
+
+- On Lift505, naive all-demo BC is far below weighted BC `33/50`,
+  positive-only NN `26/50`, v0.1 TRIAGE-BC `24/50`, and the all-positive oracle
+  `39/50`.
+- This strengthens the precision/coverage story: simply cloning the mixed log
+  can be much worse than broad weighted coverage, and the oracle positive row
+  shows substantial headroom when true labels are available.
+- The row is an optional diagnostic and should not be presented as a deployable
+  improvement or as completed fresh leaderboard evidence.
+
+Validation:
+
+- Regenerated:
+  - `scripts/summarize_v02_fresh_lift_endpoint.py`;
+  - `scripts/summarize_v02_fresh_baseline_coverage.py`;
+  - `scripts/summarize_submission_readiness_audit.py`.
+- Updated claim-facing exact optional-diagnostic category coverage to `4/4`,
+  with the caveat that these remain partial-by-split diagnostic controls.
+- `conda run -n tri-piql make -C paper validate` passed, compiling the
+  standalone PDF at `18` pages and the provisional ICLR PDF at `15` pages.
+
+## 2026-06-26: Can404 SOTA-candidate anchor-overlap diagnostic
+
+Added a matched-start diagnostic for the focused SOTA-candidate Can404 screens.
+The goal was to test whether the near-miss candidates preserve the positive-only
+anchor or merely trade off successes across the same first-20 valid-positive
+starts.
+
+Command:
+
+```bash
+conda run -n tri-piql python scripts/summarize_sota_can404_anchor_overlap.py
+```
+
+Artifacts:
+
+- Report:
+  `results/sota_candidate/CAN404_ANCHOR_OVERLAP_REPORT.md`.
+- Summary CSV:
+  `results/sota_candidate/can404_anchor_overlap_summary.csv`.
+- Aggregate SOTA sweep report:
+  `results/sota_candidate/SOTA_CANDIDATE_SWEEP_REPORT.md`.
+
+Result:
+
+- Positive-only NN top40 solves `17/20`; the all-positive oracle solves
+  `19/20`.
+- Best focused SOTA candidates still reach only `16/20`.
+- CAU action-conflict reaches `16/20`, gaining `2` starts over positive-only
+  but losing `3` starts positive-only solves.
+- Demo-DPO ref-centered reaches `16/20`, gaining `1` start but losing `2`
+  positive-only starts.
+- Broad/coverage variants show larger anchor damage: weighted BC loses `6`
+  positive-only successes, all-demo BC loses `9`, SM-RWBC loses `9`, and
+  SafeExpand loses `6`.
+
+Interpretation:
+
+- The no-go mechanism is now sharper: failed candidates are not just missing
+  a little coverage. They damage the positive-only anchor on starts that are
+  feasible and often solved by the oracle.
+- Do not scale another Can404 candidate unless a preflight first demonstrates
+  explicit anchor preservation, such as `losses_vs_positive = 0`, or a
+  predeclared abstain/fallback rule.
+
+Validation:
+
+- Added `scripts/summarize_sota_can404_anchor_overlap.py` to the paper
+  validation target.
+- Regenerated:
+  - `scripts/summarize_sota_can404_anchor_overlap.py`;
+  - `scripts/summarize_sota_candidate_sweep.py`;
+  - `scripts/summarize_submission_readiness_audit.py`.
+- `conda run -n tri-piql make -C paper validate` passed, compiling the
+  standalone PDF at `18` pages and the provisional ICLR PDF at `15` pages.
+
+## 2026-06-26: Can404 anchor feature-gate preflight
+
+Ran a post-hoc upper-bound audit over the same first-20 Can404 screen to ask
+whether simple hidden-label-free initial-state features could route from the
+positive-only anchor to a near-miss candidate without losing positive-only
+successes.
+
+Command:
+
+```bash
+conda run -n tri-piql python scripts/summarize_sota_anchor_feature_gate_preflight.py
+```
+
+Artifacts:
+
+- Report:
+  `results/sota_candidate/CAN404_ANCHOR_FEATURE_GATE_PREFLIGHT_REPORT.md`.
+- Summary CSV:
+  `results/sota_candidate/can404_anchor_feature_gate_preflight.csv`.
+- Aggregate SOTA sweep report:
+  `results/sota_candidate/SOTA_CANDIDATE_SWEEP_REPORT.md`.
+
+Result:
+
+- Positive-only anchor remains `17/20`.
+- A same-screen CAU-plus-positive feature gate reaches `18/20` with `1` gain
+  and `0` anchor losses by opening only on `demo_39` using
+  `initial_anchor_pos_dist_mean > 2.883`.
+- Demo-DPO and Candidate C have no zero-loss gain gate in this small feature
+  family.
+
+Interpretation:
+
+- This is a useful hypothesis generator, not a method result. The gate threshold
+  is selected on the same Can404 endpoint outcomes.
+- The only defensible follow-up would be a predeclared fresh validation: freeze
+  the CAU-plus-positive fallback rule, train the corresponding candidate policy
+  on a fresh split, and stop immediately if it incurs any positive-only anchor
+  loss.
+- Do not report the same-screen `18/20` as validated SOTA evidence.
+
+Validation:
+
+- Added `scripts/summarize_sota_anchor_feature_gate_preflight.py` to the paper
+  validation target.
+- Regenerated:
+  - `scripts/summarize_sota_anchor_feature_gate_preflight.py`;
+  - `scripts/summarize_sota_candidate_sweep.py`;
+  - `scripts/summarize_submission_readiness_audit.py`.
+- `conda run -n tri-piql make -C paper validate` passed, compiling the
+  standalone PDF at `18` pages and the provisional ICLR PDF at `15` pages.
+
+## 2026-06-26: Can505 frozen CAU fallback fresh screen
+
+Ran the predeclared fresh follow-up from the Can404 anchor feature-gate
+preflight. The fallback rule was frozen before looking at split-505 endpoint
+outcomes: route to the CAU action-conflict policy only when
+`initial_anchor_pos_dist_mean > 2.883`; otherwise use the positive-only anchor.
+
+Commands:
+
+```bash
+conda run -n tri-piql python scripts/summarize_sota_cau_preflight.py \
+  --split-path results/final_paper_v02/splits/can_paired_pos40_bad80_split505/split_indices.json \
+  --base-weights results/candidate_breakthrough/candidate_v_split505_sequence_mask_preflight/candidate_c_sequence_mask_weights.hdf5 \
+  --out-dir results/sota_candidate/cau_action_conflict_can505_preflight
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/train_robomimic_official_transition_weighted.py \
+  --config results/final_paper_v02/per_seed/can_paired_pos40_bad80_split505_weighted_bc_policy0/setup/config.json \
+  --transition-weights results/sota_candidate/cau_action_conflict_can505_preflight/cau_negative_action_weights.hdf5 \
+  --experiment-name cau_action_conflict_can505_b005_m05_e200_seed0 \
+  --output-dir results/sota_candidate/cau_action_conflict_can505_b005_m05_e200_train \
+  --num-epochs 200 --epoch-steps 100 --save-every-epochs 100 \
+  --batch-size 100 --device cuda --negative-hinge-weight 0.05 \
+  --negative-margin 0.5
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/evaluate_robomimic_official_policy.py \
+  --split-path results/final_paper_v02/splits/can_paired_pos40_bad80_split505/split_indices.json \
+  --out-dir results/sota_candidate/cau_action_conflict_can505_b005_m05_eval20 \
+  --checkpoint results/sota_candidate/cau_action_conflict_can505_b005_m05_e200_train/cau_action_conflict_can505_b005_m05_e200_seed0/20260626172232/models/model_epoch_100.pth \
+  --checkpoint results/sota_candidate/cau_action_conflict_can505_b005_m05_e200_train/cau_action_conflict_can505_b005_m05_e200_seed0/20260626172232/models/model_epoch_200.pth \
+  --eval-episodes 20 --eval-horizon 400 \
+  --eval-init-mode valid_positive_states --device cuda --seed 0
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/evaluate_robomimic_official_policy.py \
+  --split-path results/final_paper_v02/splits/can_paired_pos40_bad80_split505/split_indices.json \
+  --out-dir results/sota_candidate/cau_action_conflict_can505_b005_m05_eval50 \
+  --checkpoint results/sota_candidate/cau_action_conflict_can505_b005_m05_e200_train/cau_action_conflict_can505_b005_m05_e200_seed0/20260626172232/models/model_epoch_200.pth \
+  --eval-episodes 50 --eval-horizon 400 \
+  --eval-init-mode valid_positive_states --device cuda --seed 0
+
+conda run -n tri-piql python scripts/summarize_sota_cau_fallback_fresh505.py
+```
+
+Artifacts:
+
+- Preflight report:
+  `results/sota_candidate/cau_action_conflict_can505_preflight/cau_preflight_REPORT.md`.
+- Eval report:
+  `results/sota_candidate/cau_action_conflict_can505_b005_m05_eval20/REPORT.md`.
+- 50-episode eval report:
+  `results/sota_candidate/cau_action_conflict_can505_b005_m05_eval50/REPORT.md`.
+- Fallback summary:
+  `results/sota_candidate/CAN505_CAU_FALLBACK_FRESH_VALIDATION_REPORT.md`.
+
+Result:
+
+- Split-505 CAU action-conflict alone reaches `12/20` at epoch `100` and
+  `15/20` at epoch `200`.
+- Positive-only first-20 split-505 anchor is `15/20`.
+- The frozen fallback opens on `demo_29`, `demo_39`, and `demo_53`.
+- Epoch-200 fallback reaches `16/20`, with `1` gain and `0` anchor losses.
+- On the 50-episode confirmation, CAU action-conflict alone reaches `43/50`
+  versus positive-only `40/50`.
+- The same frozen fallback reaches `41/50`, with `1` gain and `0` anchor
+  losses.
+
+Interpretation:
+
+- This is the first positive fresh screen for the CAU-plus-positive fallback and
+  it is cleaner than the earlier same-screen Can404 threshold selection.
+- It is still only one fresh split. Treat it as a live follow-up path, not as
+  paper-facing methods/SOTA evidence.
+- The next defensible gate is another predeclared fresh split with the same
+  frozen threshold and a hard stop on any anchor loss.
+
+Validation:
+
+- Added `scripts/summarize_sota_cau_fallback_fresh505.py` to the paper
+  validation target.
+- Regenerated:
+  - `scripts/summarize_sota_cau_fallback_fresh505.py`;
+  - `scripts/summarize_sota_candidate_sweep.py`;
+  - `scripts/summarize_submission_readiness_audit.py`.
+- `conda run -n tri-piql make -C paper validate` passed, compiling the
+  standalone PDF at `18` pages and the provisional ICLR PDF at `15` pages, with
+  `141` unique artifact references checked.
+
+## 2026-06-26: Split303 CAU fallback fresh screen
+
+Commands:
+
+```bash
+conda run -n tri-piql python scripts/summarize_candidate_c_sequence_mask_preflight.py \
+  --split-path results/final_paper_v02/splits/can_paired_pos40_bad80_split303/split_indices.json \
+  --weighted-diagnostics results/final_paper_v02/per_seed/can_paired_pos40_bad80_split303_weighted_bc_policy0/setup/diagnostics.json \
+  --positive-diagnostics results/final_paper_v02/per_seed/can_paired_pos40_bad80_split303_positive_only_nn_policy0/setup/diagnostics.json \
+  --score-rankings results/final_paper_v02/score_diagnostics/can_paired_pos40_bad80_split303_policy0/demo_rankings.csv \
+  --out-dir results/sota_candidate/candidate_c_split303_sequence_mask_preflight
+
+conda run -n tri-piql python scripts/summarize_sota_cau_preflight.py \
+  --split-path results/final_paper_v02/splits/can_paired_pos40_bad80_split303/split_indices.json \
+  --base-weights results/sota_candidate/candidate_c_split303_sequence_mask_preflight/candidate_c_sequence_mask_weights.hdf5 \
+  --out-dir results/sota_candidate/cau_action_conflict_can303_preflight
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/train_robomimic_official_transition_weighted.py \
+  --config results/final_paper_v02/per_seed/can_paired_pos40_bad80_split303_weighted_bc_policy0/setup/config.json \
+  --transition-weights results/sota_candidate/cau_action_conflict_can303_preflight/cau_negative_action_weights.hdf5 \
+  --experiment-name cau_action_conflict_can303_b005_m05_e200_seed0 \
+  --output-dir results/sota_candidate/cau_action_conflict_can303_b005_m05_e200_train \
+  --num-epochs 200 --epoch-steps 100 --save-every-epochs 100 \
+  --batch-size 100 --device cuda --negative-hinge-weight 0.05 \
+  --negative-margin 0.5
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/evaluate_robomimic_official_policy.py \
+  --split-path results/final_paper_v02/splits/can_paired_pos40_bad80_split303/split_indices.json \
+  --out-dir results/sota_candidate/cau_action_conflict_can303_b005_m05_eval20 \
+  --checkpoint results/sota_candidate/cau_action_conflict_can303_b005_m05_e200_train/cau_action_conflict_can303_b005_m05_e200_seed0/20260626175322/models/model_epoch_100.pth \
+  --checkpoint results/sota_candidate/cau_action_conflict_can303_b005_m05_e200_train/cau_action_conflict_can303_b005_m05_e200_seed0/20260626175322/models/model_epoch_200.pth \
+  --eval-episodes 20 --eval-horizon 400 \
+  --eval-init-mode valid_positive_states --device cuda --seed 0
+
+conda run -n tri-piql python scripts/summarize_sota_cau_fallback_fresh303.py
+```
+
+Artifacts:
+
+- Split303 sequence-mask preflight:
+  `results/sota_candidate/candidate_c_split303_sequence_mask_preflight/candidate_c_sequence_mask_preflight_REPORT.md`.
+- Split303 CAU preflight:
+  `results/sota_candidate/cau_action_conflict_can303_preflight/cau_preflight_REPORT.md`.
+- Split303 CAU eval:
+  `results/sota_candidate/cau_action_conflict_can303_b005_m05_eval20/REPORT.md`.
+- Split303 fallback report:
+  `results/sota_candidate/CAN303_CAU_FALLBACK_FRESH_VALIDATION_REPORT.md`.
+
+Result:
+
+- The split303 sequence mask kept `50` anchor demos and selected only `260`
+  extra transitions (`219` hidden-positive, `41` hidden-bad).
+- CAU action-conflict first-20 results were `14/20` at epoch `100` and `17/20`
+  at epoch `200`, versus positive-only `15/20`.
+- The frozen Can404 threshold `initial_anchor_pos_dist_mean > 2.883` opens only
+  `demo_39` on split303.
+- The deployable CAU-plus-positive fallback is neutral: `15/20` routed versus
+  `15/20` positive-only, with `0` gains and `0` losses.
+
+Decision:
+
+- Stop before a 50-episode confirmation. The predeclared first-20 fallback did
+  not improve the anchor, so a longer run would only test an unchanged neutral
+  gate.
+- The useful technical signal is that CAU alone can help on split303, but the
+  current hidden-label-free fallback feature does not identify the CAU-helped
+  starts. Do not scale or promote the unchanged fallback.
+
+## 2026-06-26: Two-feature CAU gate fresh validation
+
+Development audit:
+
+- Added `scripts/summarize_sota_cau_gate_feature_audit.py`.
+- The audit uses completed split `303/404/505` first-20 CAU screens and
+  existing hidden-label-free initial features.
+- Per-split headroom:
+  - split303: positive-only `15/20`, CAU `17/20`, oracle `17/20`, CAU gains
+    `2`, losses `0`;
+  - split404: positive-only `17/20`, CAU `16/20`, oracle `19/20`, CAU gains
+    `2`, losses `3`;
+  - split505: positive-only `15/20`, CAU `15/20`, oracle `16/20`, CAU gains
+    `1`, losses `1`.
+- Best pooled development gate:
+  `initial_anchor_pos_dist_mean <= 1.273665 or initial_anchor_neg_dist_mean >
+  3.131861`.
+- Pooled development result: routed `51/60` versus positive-only `47/60`, CAU
+  alone `48/60`, with `4` gains and `0` losses.
+- Leave-one-split-out remains fragile: the held-out split404 check preserves
+  total success (`17/20`) but incurs `1` anchor loss.
+
+Split101 fresh validation commands:
+
+```bash
+conda run -n tri-piql python scripts/summarize_candidate_c_sequence_mask_preflight.py \
+  --split-path results/final_paper_v02/splits/can_paired_pos40_bad80_split101/split_indices.json \
+  --weighted-diagnostics results/final_paper_v02/per_seed/can_paired_pos40_bad80_split101_weighted_bc_policy0/setup/diagnostics.json \
+  --positive-diagnostics results/final_paper_v02/per_seed/can_paired_pos40_bad80_split101_positive_only_nn_policy0/setup/diagnostics.json \
+  --score-rankings results/final_paper_v02/score_diagnostics/can_paired_pos40_bad80_split101_policy0/demo_rankings.csv \
+  --out-dir results/sota_candidate/candidate_c_split101_sequence_mask_preflight
+
+conda run -n tri-piql python scripts/summarize_sota_cau_preflight.py \
+  --split-path results/final_paper_v02/splits/can_paired_pos40_bad80_split101/split_indices.json \
+  --base-weights results/sota_candidate/candidate_c_split101_sequence_mask_preflight/candidate_c_sequence_mask_weights.hdf5 \
+  --out-dir results/sota_candidate/cau_action_conflict_can101_preflight
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/train_robomimic_official_transition_weighted.py \
+  --config results/final_paper_v02/per_seed/can_paired_pos40_bad80_split101_weighted_bc_policy0/setup/config.json \
+  --transition-weights results/sota_candidate/cau_action_conflict_can101_preflight/cau_negative_action_weights.hdf5 \
+  --experiment-name cau_action_conflict_can101_b005_m05_e200_seed0 \
+  --output-dir results/sota_candidate/cau_action_conflict_can101_b005_m05_e200_train \
+  --num-epochs 200 --epoch-steps 100 --save-every-epochs 100 \
+  --batch-size 100 --device cuda --negative-hinge-weight 0.05 \
+  --negative-margin 0.5
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/evaluate_robomimic_official_policy.py \
+  --split-path results/final_paper_v02/splits/can_paired_pos40_bad80_split101/split_indices.json \
+  --out-dir results/sota_candidate/cau_action_conflict_can101_b005_m05_eval20 \
+  --checkpoint results/sota_candidate/cau_action_conflict_can101_b005_m05_e200_train/cau_action_conflict_can101_b005_m05_e200_seed0/20260626181515/models/model_epoch_100.pth \
+  --checkpoint results/sota_candidate/cau_action_conflict_can101_b005_m05_e200_train/cau_action_conflict_can101_b005_m05_e200_seed0/20260626181515/models/model_epoch_200.pth \
+  --eval-episodes 20 --eval-horizon 400 \
+  --eval-init-mode valid_positive_states --device cuda --seed 0
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/evaluate_robomimic_official_policy.py \
+  --split-path results/final_paper_v02/splits/can_paired_pos40_bad80_split101/split_indices.json \
+  --out-dir results/sota_candidate/cau_action_conflict_can101_b005_m05_eval50 \
+  --checkpoint results/sota_candidate/cau_action_conflict_can101_b005_m05_e200_train/cau_action_conflict_can101_b005_m05_e200_seed0/20260626181515/models/model_epoch_200.pth \
+  --eval-episodes 50 --eval-horizon 400 \
+  --eval-init-mode valid_positive_states --device cuda --seed 0
+```
+
+Split202 fresh validation commands:
+
+```bash
+conda run -n tri-piql python scripts/summarize_candidate_c_sequence_mask_preflight.py \
+  --split-path results/final_paper_v02/splits/can_paired_pos40_bad80_split202/split_indices.json \
+  --weighted-diagnostics results/final_paper_v02/per_seed/can_paired_pos40_bad80_split202_weighted_bc_policy0/setup/diagnostics.json \
+  --positive-diagnostics results/final_paper_v02/per_seed/can_paired_pos40_bad80_split202_positive_only_nn_policy0/setup/diagnostics.json \
+  --score-rankings results/final_paper_v02/score_diagnostics/can_paired_pos40_bad80_split202_policy0/demo_rankings.csv \
+  --out-dir results/sota_candidate/candidate_c_split202_sequence_mask_preflight
+
+conda run -n tri-piql python scripts/summarize_sota_cau_preflight.py \
+  --split-path results/final_paper_v02/splits/can_paired_pos40_bad80_split202/split_indices.json \
+  --base-weights results/sota_candidate/candidate_c_split202_sequence_mask_preflight/candidate_c_sequence_mask_weights.hdf5 \
+  --out-dir results/sota_candidate/cau_action_conflict_can202_preflight
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/train_robomimic_official_transition_weighted.py \
+  --config results/final_paper_v02/per_seed/can_paired_pos40_bad80_split202_weighted_bc_policy0/setup/config.json \
+  --transition-weights results/sota_candidate/cau_action_conflict_can202_preflight/cau_negative_action_weights.hdf5 \
+  --experiment-name cau_action_conflict_can202_b005_m05_e200_seed0 \
+  --output-dir results/sota_candidate/cau_action_conflict_can202_b005_m05_e200_train \
+  --num-epochs 200 --epoch-steps 100 --save-every-epochs 100 \
+  --batch-size 100 --device cuda --negative-hinge-weight 0.05 \
+  --negative-margin 0.5
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/evaluate_robomimic_official_policy.py \
+  --split-path results/final_paper_v02/splits/can_paired_pos40_bad80_split202/split_indices.json \
+  --out-dir results/sota_candidate/cau_action_conflict_can202_b005_m05_eval20 \
+  --checkpoint results/sota_candidate/cau_action_conflict_can202_b005_m05_e200_train/cau_action_conflict_can202_b005_m05_e200_seed0/20260626182949/models/model_epoch_100.pth \
+  --checkpoint results/sota_candidate/cau_action_conflict_can202_b005_m05_e200_train/cau_action_conflict_can202_b005_m05_e200_seed0/20260626182949/models/model_epoch_200.pth \
+  --eval-episodes 20 --eval-horizon 400 \
+  --eval-init-mode valid_positive_states --device cuda --seed 0
+```
+
+Artifacts:
+
+- Gate audit:
+  `results/sota_candidate/CAU_GATE_FEATURE_AUDIT_REPORT.md`.
+- Fresh validation report:
+  `results/sota_candidate/CAU_TWO_FEATURE_GATE_FRESH_VALIDATION_REPORT.md`.
+- Split101 evals:
+  `results/sota_candidate/cau_action_conflict_can101_b005_m05_eval20/REPORT.md`
+  and
+  `results/sota_candidate/cau_action_conflict_can101_b005_m05_eval50/REPORT.md`.
+- Split202 first-20 eval:
+  `results/sota_candidate/cau_action_conflict_can202_b005_m05_eval20/REPORT.md`.
+
+Result:
+
+- Split101 first20: positive-only `7/20`, CAU alone `15/20`, routed `9/20`,
+  with `2` gains and `0` losses.
+- Split101 50-episode confirmation: positive-only `19/50`, CAU alone `33/50`,
+  routed `24/50`, with `5` gains and `0` losses.
+- Split202 first20: positive-only `17/20`, CAU alone `16/20`, routed `17/20`,
+  with `0` gains and `0` losses at epoch `200`. Epoch `100` was mixed
+  (`15/20`, `2` losses), so fixed endpoint epoch `200` matters.
+
+Decision:
+
+- The two-feature CAU gate is the strongest current follow-up: one positive
+  fresh split with 50-episode confirmation plus one neutral fresh split.
+- It is still not methods/SOTA-dominance evidence because the gate was selected
+  on completed 303/404/505 screens and the routed split202 check adds no gain.
+
+Follow-up split202 50-episode confirmation command:
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/evaluate_robomimic_official_policy.py \
+  --split-path results/final_paper_v02/splits/can_paired_pos40_bad80_split202/split_indices.json \
+  --out-dir results/sota_candidate/cau_action_conflict_can202_b005_m05_eval50 \
+  --checkpoint results/sota_candidate/cau_action_conflict_can202_b005_m05_e200_train/cau_action_conflict_can202_b005_m05_e200_seed0/20260626182949/models/model_epoch_200.pth \
+  --eval-episodes 50 --eval-horizon 400 \
+  --eval-init-mode valid_positive_states --device cuda --seed 0
+```
+
+Follow-up result:
+
+- Split202 50-episode confirmation: positive-only `40/50`, CAU alone `42/50`,
+  routed `40/50`, with `0` gains and `0` losses.
+- The longer split202 eval keeps the routed gate neutral, but it reveals a
+  CAU-alone endpoint gain that the frozen two-feature gate does not capture.
+- Updated `scripts/summarize_sota_cau_two_feature_gate_validation.py` and
+  regenerated the CAU gate report, SOTA sweep report, and readiness audit so
+  split202 is now represented by the 50-episode confirmation rather than only
+  the first-20 screen.
+
+## 2026-06-26: CAU-alone five-split Can endpoint follow-up
+
+Motivation:
+
+- The split101, split202, and split505 50-episode checks showed CAU-alone
+  endpoint signal, while the frozen CAU gate missed some helped starts.
+- To test whether the original Can404 first-20 rejection was too pessimistic,
+  completed the missing split303 and split404 CAU-alone 50-episode endpoint
+  checks without new training.
+
+Commands:
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/evaluate_robomimic_official_policy.py \
+  --split-path results/final_paper_v02/splits/can_paired_pos40_bad80_split303/split_indices.json \
+  --out-dir results/sota_candidate/cau_action_conflict_can303_b005_m05_eval50 \
+  --checkpoint results/sota_candidate/cau_action_conflict_can303_b005_m05_e200_train/cau_action_conflict_can303_b005_m05_e200_seed0/20260626175322/models/model_epoch_200.pth \
+  --eval-episodes 50 --eval-horizon 400 \
+  --eval-init-mode valid_positive_states --device cuda --seed 0
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/evaluate_robomimic_official_policy.py \
+  --split-path results/final_paper_v02/splits/can_paired_pos40_bad80_split404/split_indices.json \
+  --out-dir results/sota_candidate/cau_action_conflict_can404_b005_m05_eval50 \
+  --checkpoint results/sota_candidate/cau_action_conflict_can404_b005_m05_e200_train/cau_action_conflict_can404_b005_m05_e200_seed0/20260626131712/models/model_epoch_200.pth \
+  --eval-episodes 50 --eval-horizon 400 \
+  --eval-init-mode valid_positive_states --device cuda --seed 0
+
+conda run -n tri-piql python scripts/summarize_sota_cau_five_split_endpoint.py
+```
+
+Artifacts:
+
+- Split303 CAU eval:
+  `results/sota_candidate/cau_action_conflict_can303_b005_m05_eval50/REPORT.md`.
+- Split404 CAU eval:
+  `results/sota_candidate/cau_action_conflict_can404_b005_m05_eval50/REPORT.md`.
+- Five-split CAU report:
+  `results/sota_candidate/CAU_ACTION_CONFLICT_CAN_FIVE_SPLIT_ENDPOINT_REPORT.md`.
+
+Result:
+
+- Split303: CAU `40/50` versus positive-only `36/50`.
+- Split404: CAU `35/50` versus positive-only `39/50`.
+- Five-split Can aggregate: CAU `193/250`, positive-only `174/250`, weighted
+  BC `158/250`, TRIAGE-BC v0.1 `171/250`, best old baseline per split
+  `192/250`, v0.2 selected union `197/250`, and best non-oracle per split
+  including v0.2 `209/250`.
+
+Decision:
+
+- CAU action-conflict is no longer a hard rejection; it is the strongest
+  current method seed and beats the old baselines in aggregate.
+- It is still not SOTA-dominance evidence because it loses split101 to weighted
+  by `4/50`, loses split404 to positive-only by `4/50`, and remains `4/250`
+  below v0.2 selected union.
+- Next high-value route should build from CAU but needs a policy-quality signal
+  or portfolio rule that avoids the split101/v0.2 gap and split404 anchor loss.
+
+## 2026-06-26: CAU-plus-v0.2 portfolio post-hoc preflight
+
+Motivation:
+
+- CAU-alone is now a real Can method seed (`193/250`), but it still trails
+  v0.2 selected union (`197/250`) and loses individual splits.
+- Test whether existing hidden-label-free v0.2 setup diagnostics can separate
+  the CAU-helped splits from the v0.2-helped splits before spending fresh GPU.
+
+Command:
+
+```bash
+conda run -n tri-piql python scripts/summarize_sota_cau_v02_portfolio_preflight.py
+```
+
+Artifacts:
+
+- Portfolio preflight report:
+  `results/sota_candidate/CAU_V02_PORTFOLIO_PREFLIGHT_REPORT.md`.
+- Per-split CSV:
+  `results/sota_candidate/cau_v02_portfolio_preflight.csv`.
+- Gate scan CSV:
+  `results/sota_candidate/cau_v02_portfolio_preflight_gate_scan.csv`.
+
+Result:
+
+- Best one-feature setup gate: `estimated_positive_mass > 47.631032`.
+- The gate selects v0.2 on splits `101/202` and CAU on splits `303/404/505`.
+- Portfolio score: `208/250`, versus always-v0.2 `197/250`, always-CAU
+  `193/250`, and best old baseline per split `192/250`.
+- Best non-oracle per split including old baselines, v0.2, and CAU remains
+  `212/250` because positive-only beats CAU on split404.
+
+Decision:
+
+- This is the strongest current next hypothesis, but it is post-hoc on the
+  same five endpoint splits and must not be promoted as a method result.
+- Next high-value validation is a fresh Can split test of the CAU-plus-v0.2
+  setup gate, with a hard stop if the rule does not preserve the anchor.
+
+## 2026-06-26: CAU-plus-v0.2 fresh split606 endpoint validation
+
+Motivation:
+
+- The post-hoc CAU-plus-v0.2 portfolio gate reached `208/250` on the five
+  completed Can endpoint splits, but it was selected after seeing those splits.
+- Can split606 is a fresh candidate-g split with existing positive-only,
+  weighted, and Candidate E endpoint baselines. The fitted portfolio gate would
+  select CAU on this split because estimated positive mass is `56.395` versus
+  threshold `47.631`.
+
+Commands:
+
+```bash
+conda run -n tri-piql python scripts/summarize_candidate_c_sequence_mask_preflight.py \
+  --split-path results/candidate_g_fresh_preflight/splits/can_paired_pos40_bad80_split606/split_indices.json \
+  --weighted-diagnostics results/candidate_g_fresh_preflight/per_seed/can_paired_pos40_bad80_split606_weighted_bc_policy0/setup/diagnostics.json \
+  --positive-diagnostics results/candidate_g_fresh_preflight/per_seed/can_paired_pos40_bad80_split606_positive_only_nn_policy0/setup/diagnostics.json \
+  --score-rankings results/candidate_g_fresh_preflight/score_diagnostics/can_paired_pos40_bad80_split606_policy0/demo_rankings.csv \
+  --out-dir results/sota_candidate/candidate_c_split606_sequence_mask_preflight
+
+conda run -n tri-piql python scripts/summarize_sota_cau_preflight.py \
+  --split-path results/candidate_g_fresh_preflight/splits/can_paired_pos40_bad80_split606/split_indices.json \
+  --base-weights results/sota_candidate/candidate_c_split606_sequence_mask_preflight/candidate_c_sequence_mask_weights.hdf5 \
+  --out-dir results/sota_candidate/cau_action_conflict_can606_preflight
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/train_robomimic_official_transition_weighted.py \
+  --config results/candidate_g_fresh_preflight/per_seed/can_paired_pos40_bad80_split606_positive_only_nn_policy0/setup/config.json \
+  --transition-weights results/sota_candidate/cau_action_conflict_can606_preflight/cau_negative_action_weights.hdf5 \
+  --experiment-name cau_action_conflict_can606_b005_m05_e200_seed0 \
+  --output-dir results/sota_candidate/cau_action_conflict_can606_b005_m05_e200_train \
+  --num-epochs 200 --epoch-steps 100 --save-every-epochs 100 \
+  --batch-size 100 --device cuda --negative-hinge-weight 0.05 \
+  --negative-margin 0.5
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python scripts/evaluate_robomimic_official_policy.py \
+  --split-path results/candidate_g_fresh_preflight/splits/can_paired_pos40_bad80_split606/split_indices.json \
+  --out-dir results/sota_candidate/cau_action_conflict_can606_b005_m05_eval20 \
+  --checkpoint results/sota_candidate/cau_action_conflict_can606_b005_m05_e200_train/cau_action_conflict_can606_b005_m05_e200_seed0/20260626193313/models/model_epoch_100.pth \
+  --checkpoint results/sota_candidate/cau_action_conflict_can606_b005_m05_e200_train/cau_action_conflict_can606_b005_m05_e200_seed0/20260626193313/models/model_epoch_200.pth \
+  --eval-episodes 20 --eval-horizon 400 \
+  --eval-init-mode valid_positive_states --device cuda --seed 0
+
+conda run -n tri-piql python scripts/prepare_hard_negative_can_endpoint_configs.py \
+  --split-seed 606 \
+  --split-path results/candidate_g_fresh_preflight/splits/can_paired_pos40_bad80_split606/split_indices.json \
+  --audit-csv results/sota_candidate/cau_v02_fresh606707_support_preflight/v02_fresh_router_support_per_split.csv \
+  --out-root results/sota_candidate/fresh606_v02_endpoint_200ep_can40 \
+  --candidate positive_nn_risk_union_top40 \
+  --candidate positive_nn_risk_fusion_top40 \
+  --mask-prefix sota_v02fresh_can40 \
+  --experiment-prefix sota_v02fresh_can40 \
+  --report-title "Fresh606 v0.2 Endpoint Setup" \
+  --num-epochs 200 --epoch-steps 100 --save-every-epochs 100 \
+  --train-batch-size 100
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python -m robomimic.scripts.train \
+  --config results/sota_candidate/fresh606_v02_endpoint_200ep_can40/split606/positive_nn_risk_union_top40/setup/config.json
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql \
+  python -m robomimic.scripts.train \
+  --config results/sota_candidate/fresh606_v02_endpoint_200ep_can40/split606/pnrf40/setup/config.json
+
+conda run -n tri-piql python scripts/summarize_sota_cau_v02_fresh606_endpoint_validation.py
+conda run -n tri-piql python scripts/summarize_sota_candidate_sweep.py
+```
+
+Artifacts:
+
+- Fresh validation report:
+  `results/sota_candidate/CAU_V02_FRESH606_ENDPOINT_VALIDATION_REPORT.md`.
+- Fresh validation CSV:
+  `results/sota_candidate/cau_v02_fresh606_endpoint_validation_summary.csv`.
+- CAU eval report:
+  `results/sota_candidate/cau_action_conflict_can606_b005_m05_eval20/REPORT.md`.
+- v0.2 union eval report:
+  `results/sota_candidate/fresh606_v02_endpoint_200ep_can40/split606/positive_nn_risk_union_top40/eval20/REPORT.md`.
+- Risk-fusion eval report:
+  `results/sota_candidate/fresh606_v02_endpoint_200ep_can40/split606/pnrf40/eval20/REPORT.md`.
+
+Result:
+
+- Existing split606 baselines: positive-only `16/20`, weighted BC `14/20`,
+  Candidate E gate `16/20`.
+- Gate-selected CAU: epoch100 `7/20`, epoch200 `15/20`.
+- Frozen v0.2 union: epoch100 `11/20`, epoch200 `14/20`.
+- Cleaner risk-fusion diagnostic: epoch100 `15/20`, epoch200 `15/20`.
+- Support-side improvement did not predict endpoint recovery: risk-fusion
+  support is cleaner (`37/40` hidden positives and `3` hidden bad) than union
+  (`38/48` hidden positives and `10` hidden bad), but both stay below the
+  positive-only endpoint anchor.
+
+Decision:
+
+- Reject promoting the unchanged CAU-plus-v0.2 portfolio as a fresh-validated
+  SOTA method. The first fresh endpoint split selects CAU but loses to the
+  positive-only anchor by `1/20`.
+- Future method search should not add another global threshold to this
+  portfolio; it needs a stronger state-conditional policy-quality signal or
+  should stay framed as development appendix evidence.
+
+## 2026-06-27: CAU support-distance selector LOO audit
+
+Motivation:
+
+- CAU-alone has real Can headroom, especially split707, but split606/808 and
+  the GMM-router transfer failure show that fixed CAU or a single tuned router
+  is not claim-bearing.
+- Before spending another GPU rollout, test whether existing hidden-label-free
+  initial support-distance features can select between positive-only and CAU
+  across completed Can CAU splits.
+
+Command:
+
+```bash
+conda run -n tri-piql python scripts/summarize_sota_cau_selector_feature_audit.py
+```
+
+Artifacts:
+
+- Report:
+  `results/sota_candidate/CAU_SELECTOR_FEATURE_LOO_AUDIT_REPORT.md`.
+- Selector rows:
+  `results/sota_candidate/cau_selector_feature_loo_rows.csv`.
+- Split baselines:
+  `results/sota_candidate/cau_selector_feature_split_baselines.csv`.
+
+Result:
+
+- Audited splits `101/202/303/404/505/606/707/808`.
+- Positive-only totals `269/370`; always-CAU totals `296/370`.
+- Per-episode oracle switching totals `331/370`, so the branch-selection
+  problem still has substantial headroom.
+- Leave-one-split-out safe selector totals `263/370` with `7` gains and `13`
+  losses versus positive-only.
+- Leave-one-split-out best-delta selector totals `277/370` with `31` gains and
+  `23` losses versus positive-only.
+
+Decision:
+
+- Do not launch a live router based on these support-distance features.
+- The result confirms that simple initial-distance selectors cannot safely
+  preserve positive-only anchors while capturing CAU-helped starts.
+- Regenerated the SOTA sweep and submission-readiness summaries to record this
+  as claim-boundary evidence rather than a promotable method.
+
+## 2026-06-27: CAU policy-feature selector audit and fresh split909 screen
+
+Motivation:
+
+- The support-distance selector audit failed, but CAU still has per-start
+  oracle headroom. Test whether first-state policy-distribution features can
+  identify when CAU should replace the positive-only anchor.
+
+Commands:
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/summarize_sota_cau_policy_feature_selector_audit.py --device cuda
+
+conda run -n tri-piql python scripts/summarize_candidate_c_sequence_mask_preflight.py \
+  --split-path results/candidate_f_can_fresh_validation/splits/can_paired_pos40_bad80_split909/split_indices.json \
+  --weighted-diagnostics results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split909_weighted_bc_policy0/setup/diagnostics.json \
+  --positive-diagnostics results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split909_positive_only_nn_policy0/setup/diagnostics.json \
+  --score-rankings results/candidate_f_can_fresh_validation/score_diagnostics/can_paired_pos40_bad80_split909_policy0/demo_rankings.csv \
+  --out-dir results/sota_candidate/candidate_c_split909_sequence_mask_preflight
+
+conda run -n tri-piql python scripts/summarize_sota_cau_preflight.py \
+  --split-path results/candidate_f_can_fresh_validation/splits/can_paired_pos40_bad80_split909/split_indices.json \
+  --base-weights results/sota_candidate/candidate_c_split909_sequence_mask_preflight/candidate_c_sequence_mask_weights.hdf5 \
+  --out-dir results/sota_candidate/cau_action_conflict_can909_preflight
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/train_robomimic_official_transition_weighted.py \
+  --config results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split909_positive_only_nn_policy0/setup/config.json \
+  --transition-weights results/sota_candidate/cau_action_conflict_can909_preflight/cau_negative_action_weights.hdf5 \
+  --experiment-name cau_action_conflict_can909_b005_m05_e200_seed0 \
+  --output-dir results/sota_candidate/cau_action_conflict_can909_b005_m05_e200_train \
+  --num-epochs 200 --epoch-steps 100 --save-every-epochs 100 \
+  --batch-size 100 --device cuda --negative-hinge-weight 0.05 \
+  --negative-margin 0.5
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_official_policy.py \
+  --split-path results/candidate_f_can_fresh_validation/splits/can_paired_pos40_bad80_split909/split_indices.json \
+  --out-dir results/sota_candidate/cau_action_conflict_can909_b005_m05_eval20 \
+  --checkpoint results/sota_candidate/cau_action_conflict_can909_b005_m05_e200_train/cau_action_conflict_can909_b005_m05_e200_seed0/20260626220319/models/model_epoch_200.pth \
+  --eval-episodes 20 --eval-horizon 400 \
+  --eval-init-mode valid_positive_states --device cuda --seed 0
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_router_policy.py \
+  --split-path results/candidate_f_can_fresh_validation/splits/can_paired_pos40_bad80_split909/split_indices.json \
+  --out-dir results/sota_candidate/cau_policy_feature_gate_can909_eval20 \
+  --policy positive=results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split909_positive_only_nn_policy0/train/can_paired_pos40_bad80_split909_positive_only_nn_policy0_official_bc_rnn/20260626085846/models/model_epoch_200.pth \
+  --policy cau=results/sota_candidate/cau_action_conflict_can909_b005_m05_e200_train/cau_action_conflict_can909_b005_m05_e200_seed0/20260626220319/models/model_epoch_200.pth \
+  --router-mode initial_policy_feature_gate \
+  --initial-policy-feature alt_logp_margin_vs_anchor \
+  --initial-policy-feature-direction gt \
+  --initial-policy-feature-threshold 0.757864 \
+  --initial-policy-feature-2 alt_support_margin \
+  --initial-policy-feature-direction-2 gt \
+  --initial-policy-feature-threshold-2 0.837440 \
+  --initial-policy-feature-operator or \
+  --eval-episodes 20 --eval-horizon 400 \
+  --eval-init-mode valid_positive_states --device cuda --seed 0
+
+conda run -n tri-piql python scripts/summarize_sota_cau_policy_feature_fresh909.py
+```
+
+Artifacts:
+
+- LOO policy-feature audit:
+  `results/sota_candidate/CAU_POLICY_FEATURE_SELECTOR_LOO_AUDIT_REPORT.md`.
+- Fresh split909 policy-feature screen:
+  `results/sota_candidate/CAU_POLICY_FEATURE_FRESH909_REPORT.md`.
+- Fresh split909 CAU-alone eval:
+  `results/sota_candidate/cau_action_conflict_can909_b005_m05_eval20/REPORT.md`.
+- Fresh split909 policy-feature gate eval:
+  `results/sota_candidate/cau_policy_feature_gate_can909_eval20/REPORT.md`.
+
+Result:
+
+- Offline policy-feature LOO audit over splits `101/202/303/404/505/606/707/808`:
+  positive-only `269/370`, always-CAU `296/370`, oracle switch `331/370`.
+- Safe held-out policy-feature selector: `276/370`, with `29` gains and `22`
+  losses versus positive-only.
+- Best-delta held-out policy-feature selector: `299/370`, with `44` gains and
+  `14` losses versus positive-only.
+- Pooled frozen rule:
+  `alt_logp_margin_vs_anchor > 0.757864 or alt_support_margin > 0.837440`.
+- Fresh split909 first-20 endpoint: positive-only `15/20`, weighted BC `8/20`,
+  TRIAGE-BC v0.1 `8/20`, Candidate E `15/20`, CAU-alone `9/20`, and the
+  policy-feature gate `15/20`.
+- The policy-feature gate opened `0` CAU episodes on split909, so the tie with
+  positive-only is anchor deferral, not successful CAU selection.
+
+Decision:
+
+- Treat policy-distribution features as a stronger diagnostic than
+  support-distance features, but not as a deployable router.
+- The fresh split909 result is neutral transfer and should be recorded as
+  claim-boundary evidence, not a method promotion.
+- Regenerated the SOTA sweep and submission-readiness summaries to include this
+  follow-up.
+
+## 2026-06-27: CAU policy-feature learned-router audit
+
+Motivation:
+
+- The pooled threshold policy-feature gate transferred neutrally on split909 by
+  opening no CAU starts. Test whether a slightly stronger but still simple
+  learned selector can use the same first-state policy features better.
+
+Command:
+
+```bash
+conda run -n tri-piql python scripts/summarize_sota_cau_policy_feature_learned_router_audit.py --device cpu
+```
+
+Artifacts:
+
+- Learned-router report:
+  `results/sota_candidate/CAU_POLICY_FEATURE_LEARNED_ROUTER_AUDIT_REPORT.md`.
+- Learned-router CSV:
+  `results/sota_candidate/cau_policy_feature_learned_router_summary.csv`.
+- Fresh split909 full feature rows:
+  `results/sota_candidate/cau_policy_feature_fresh909_rows.csv`.
+
+Result:
+
+- Standardized ridge learned routers do not improve the CAU selector.
+- LOO safe learned router: `277/370`, with `25` gains and `17` losses versus
+  positive-only.
+- LOO best-delta learned router: `278/370`, with `26` gains and `17` losses.
+- Frozen train-on-completed split909 router opens all `20` CAU starts and falls
+  to `9/20`, versus positive-only `15/20` and CAU-alone `9/20`.
+- Split909 deterministic first-state oracle is only `16/20` over `10` repeated
+  initial states; a same-screen threshold upper bound can also reach only
+  `16/20` with `1` gain and `0` losses.
+
+Decision:
+
+- Do not promote learned first-state policy-feature routing.
+- This closes the current scalar/linear first-state router family for CAU.
+- If continuing the method search, move to sequence-aware policy-quality signals
+  or a policy objective that preserves the positive-only anchor without a
+  separate brittle router.
+
+## 2026-06-27: CAU sequence support-margin router screen
+
+Motivation:
+
+- First-state CAU routers failed, but the evaluator already supports a
+  sequence-aware per-step support-margin router. Test whether this can preserve
+  positive-only anchors while allowing limited CAU intervention.
+
+Commands:
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_router_policy.py \
+  --split-path results/candidate_f_can_fresh_validation/splits/can_paired_pos40_bad80_split909/split_indices.json \
+  --out-dir results/sota_candidate/cau_sequence_support_margin_can909_eval20_thr0 \
+  --policy positive=results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split909_positive_only_nn_policy0/train/can_paired_pos40_bad80_split909_positive_only_nn_policy0_official_bc_rnn/20260626085846/models/model_epoch_200.pth \
+  --policy cau=results/sota_candidate/cau_action_conflict_can909_b005_m05_e200_train/cau_action_conflict_can909_b005_m05_e200_seed0/20260626220319/models/model_epoch_200.pth \
+  --router-mode positive_anchor_margin --switch-threshold 0.0 \
+  --eval-episodes 20 --eval-horizon 400 --eval-init-mode valid_positive_states \
+  --device cuda --seed 0
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_router_policy.py \
+  --split-path results/candidate_f_can_fresh_validation/splits/can_paired_pos40_bad80_split909/split_indices.json \
+  --out-dir results/sota_candidate/cau_sequence_support_margin_can909_eval20_thr025 \
+  --policy positive=results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split909_positive_only_nn_policy0/train/can_paired_pos40_bad80_split909_positive_only_nn_policy0_official_bc_rnn/20260626085846/models/model_epoch_200.pth \
+  --policy cau=results/sota_candidate/cau_action_conflict_can909_b005_m05_e200_train/cau_action_conflict_can909_b005_m05_e200_seed0/20260626220319/models/model_epoch_200.pth \
+  --router-mode positive_anchor_margin --switch-threshold 0.25 \
+  --eval-episodes 20 --eval-horizon 400 --eval-init-mode valid_positive_states \
+  --device cuda --seed 0
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_router_policy.py \
+  --split-path results/candidate_f_can_fresh_validation/splits/can_paired_pos40_bad80_split808/split_indices.json \
+  --out-dir results/sota_candidate/cau_sequence_support_margin_can808_eval20_thr025 \
+  --policy positive=results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split808_positive_only_nn_policy0/train/can_paired_pos40_bad80_split808_positive_only_nn_policy0_official_bc_rnn/20260626081822/models/model_epoch_200.pth \
+  --policy cau=results/sota_candidate/cau_action_conflict_can808_b005_m05_e200_train/cau_action_conflict_can808_b005_m05_e200_seed0/20260626211232/models/model_epoch_200.pth \
+  --router-mode positive_anchor_margin --switch-threshold 0.25 \
+  --eval-episodes 20 --eval-horizon 400 --eval-init-mode valid_positive_states \
+  --device cuda --seed 0
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_router_policy.py \
+  --split-path results/candidate_g_fresh_preflight/splits/can_paired_pos40_bad80_split707/split_indices.json \
+  --out-dir results/sota_candidate/cau_sequence_support_margin_can707_eval20_thr025 \
+  --policy positive=results/candidate_g_fresh_preflight/per_seed/can_paired_pos40_bad80_split707_positive_only_nn_policy0/train/can_paired_pos40_bad80_split707_positive_only_nn_policy0_official_bc_rnn/20260626051924/models/model_epoch_200.pth \
+  --policy cau=results/sota_candidate/cau_action_conflict_can707_b005_m05_e200_train/cau_action_conflict_can707_b005_m05_e200_seed0/20260626203825/models/model_epoch_200.pth \
+  --router-mode positive_anchor_margin --switch-threshold 0.25 \
+  --eval-episodes 20 --eval-horizon 400 --eval-init-mode valid_positive_states \
+  --device cuda --seed 0
+
+conda run -n tri-piql python scripts/summarize_sota_cau_sequence_support_router.py
+```
+
+Artifacts:
+
+- Report:
+  `results/sota_candidate/CAU_SEQUENCE_SUPPORT_ROUTER_REPORT.md`.
+- Summary CSV:
+  `results/sota_candidate/cau_sequence_support_router_summary.csv`.
+
+Result:
+
+- Split909 threshold `0.0` is too aggressive: `11/20` routed versus
+  positive-only `15/20` and CAU `9/20`.
+- Split909 threshold `0.25`: `16/20` routed versus positive-only `15/20` and
+  CAU `9/20`, with `2` gains and `1` loss versus positive-only.
+- Split808 threshold `0.25`: `17/20` routed versus positive-only `17/20` and
+  CAU `14/20`, with `0` gains and `0` losses.
+- Split707 threshold `0.25`: `15/20` routed versus positive-only `15/20` and
+  CAU `20/20`, with `0` gains and `0` losses.
+
+Decision:
+
+- This is the first sequence-aware CAU follow-up with a small positive fresh
+  signal, but it is not a promotable method yet.
+- It can preserve the positive anchor on CAU-bad splits, but it misses a
+  CAU-helped split where the correct behavior is to switch much more often.
+- Next method work should either learn when to relax this margin threshold or
+  train an anchor-preserving CAU policy directly.
+
+### 2026-06-27 follow-up: support-margin threshold sensitivity
+
+Motivation:
+
+- The `0.25` support-margin threshold preserved split909 and split808 but was
+  too conservative on CAU-helped split707. Run a bounded threshold sensitivity
+  check before abandoning this sequence-aware router family.
+
+Commands:
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_router_policy.py \
+  --split-path results/candidate_g_fresh_preflight/splits/can_paired_pos40_bad80_split707/split_indices.json \
+  --out-dir results/sota_candidate/cau_sequence_support_margin_can707_eval20_thr010 \
+  --policy positive=results/candidate_g_fresh_preflight/per_seed/can_paired_pos40_bad80_split707_positive_only_nn_policy0/train/can_paired_pos40_bad80_split707_positive_only_nn_policy0_official_bc_rnn/20260626051924/models/model_epoch_200.pth \
+  --policy cau=results/sota_candidate/cau_action_conflict_can707_b005_m05_e200_train/cau_action_conflict_can707_b005_m05_e200_seed0/20260626203825/models/model_epoch_200.pth \
+  --router-mode positive_anchor_margin --switch-threshold 0.10 \
+  --eval-episodes 20 --eval-horizon 400 --eval-init-mode valid_positive_states \
+  --device cuda --seed 0
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_router_policy.py \
+  --split-path results/candidate_g_fresh_preflight/splits/can_paired_pos40_bad80_split707/split_indices.json \
+  --out-dir results/sota_candidate/cau_sequence_support_margin_can707_eval20_thr005 \
+  --policy positive=results/candidate_g_fresh_preflight/per_seed/can_paired_pos40_bad80_split707_positive_only_nn_policy0/train/can_paired_pos40_bad80_split707_positive_only_nn_policy0_official_bc_rnn/20260626051924/models/model_epoch_200.pth \
+  --policy cau=results/sota_candidate/cau_action_conflict_can707_b005_m05_e200_train/cau_action_conflict_can707_b005_m05_e200_seed0/20260626203825/models/model_epoch_200.pth \
+  --router-mode positive_anchor_margin --switch-threshold 0.05 \
+  --eval-episodes 20 --eval-horizon 400 --eval-init-mode valid_positive_states \
+  --device cuda --seed 0
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_router_policy.py \
+  --split-path results/candidate_f_can_fresh_validation/splits/can_paired_pos40_bad80_split909/split_indices.json \
+  --out-dir results/sota_candidate/cau_sequence_support_margin_can909_eval20_thr005 \
+  --policy positive=results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split909_positive_only_nn_policy0/train/can_paired_pos40_bad80_split909_positive_only_nn_policy0_official_bc_rnn/20260626085846/models/model_epoch_200.pth \
+  --policy cau=results/sota_candidate/cau_action_conflict_can909_b005_m05_e200_train/cau_action_conflict_can909_b005_m05_e200_seed0/20260626220319/models/model_epoch_200.pth \
+  --router-mode positive_anchor_margin --switch-threshold 0.05 \
+  --eval-episodes 20 --eval-horizon 400 --eval-init-mode valid_positive_states \
+  --device cuda --seed 0
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_router_policy.py \
+  --split-path results/candidate_f_can_fresh_validation/splits/can_paired_pos40_bad80_split808/split_indices.json \
+  --out-dir results/sota_candidate/cau_sequence_support_margin_can808_eval20_thr005 \
+  --policy positive=results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split808_positive_only_nn_policy0/train/can_paired_pos40_bad80_split808_positive_only_nn_policy0_official_bc_rnn/20260626081822/models/model_epoch_200.pth \
+  --policy cau=results/sota_candidate/cau_action_conflict_can808_b005_m05_e200_train/cau_action_conflict_can808_b005_m05_e200_seed0/20260626211232/models/model_epoch_200.pth \
+  --router-mode positive_anchor_margin --switch-threshold 0.05 \
+  --eval-episodes 20 --eval-horizon 400 --eval-init-mode valid_positive_states \
+  --device cuda --seed 0
+
+conda run -n tri-piql python scripts/summarize_sota_cau_sequence_support_router.py
+```
+
+Artifacts:
+
+- Updated report:
+  `results/sota_candidate/CAU_SEQUENCE_SUPPORT_ROUTER_REPORT.md`.
+- Updated summary CSV:
+  `results/sota_candidate/cau_sequence_support_router_summary.csv`.
+- New eval reports:
+  `results/sota_candidate/cau_sequence_support_margin_can707_eval20_thr010/REPORT.md`,
+  `results/sota_candidate/cau_sequence_support_margin_can707_eval20_thr005/REPORT.md`,
+  `results/sota_candidate/cau_sequence_support_margin_can909_eval20_thr005/REPORT.md`,
+  `results/sota_candidate/cau_sequence_support_margin_can808_eval20_thr005/REPORT.md`.
+
+Result:
+
+- Split707 threshold `0.10`: `15/20` versus positive-only `15/20` and CAU
+  `20/20`, with `1` gain and `1` loss.
+- Split707 threshold `0.05`: `17/20` versus positive-only `15/20` and CAU
+  `20/20`, with `2` gains and `0` losses.
+- Split909 threshold `0.05`: `16/20` versus positive-only `15/20` and CAU
+  `9/20`, with `2` gains and `1` loss.
+- Split808 threshold `0.05`: `18/20` versus positive-only `17/20` and CAU
+  `14/20`, with `1` gain and `0` losses.
+- Fixed threshold `0.05` aggregates to `51/60` across splits 909/808/707
+  versus positive-only `47/60` and CAU-alone `43/60`, with `5` gains and
+  `1` loss versus positive-only.
+
+Decision:
+
+- This is now the strongest sequence-aware CAU validation candidate found so
+  far. It is not a paper claim yet because the threshold was selected during
+  follow-up and the evidence is still first-20 endpoints only.
+- Next endpoint work should run a 50-episode held-out validation for fixed
+  threshold `0.05`, with split606 or another unused split as the first guardrail
+  if the required checkpoints are already available.
+
+### 2026-06-27 follow-up: split606 no-retune guardrail
+
+Motivation:
+
+- Validate fixed threshold `0.05` without retuning on a split not used in the
+  909/808/707 threshold sensitivity screen.
+
+Command:
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_router_policy.py \
+  --split-path results/candidate_g_fresh_preflight/splits/can_paired_pos40_bad80_split606/split_indices.json \
+  --out-dir results/sota_candidate/cau_sequence_support_margin_can606_eval20_thr005 \
+  --policy positive=results/candidate_g_fresh_preflight/per_seed/can_paired_pos40_bad80_split606_positive_only_nn_policy0/train/can_paired_pos40_bad80_split606_positive_only_nn_policy0_official_bc_rnn/20260626074013/models/model_epoch_200.pth \
+  --policy cau=results/sota_candidate/cau_action_conflict_can606_b005_m05_e200_train/cau_action_conflict_can606_b005_m05_e200_seed0/20260626193313/models/model_epoch_200.pth \
+  --router-mode positive_anchor_margin --switch-threshold 0.05 \
+  --eval-episodes 20 --eval-horizon 400 --eval-init-mode valid_positive_states \
+  --device cuda --seed 0
+```
+
+Artifact:
+
+- `results/sota_candidate/cau_sequence_support_margin_can606_eval20_thr005/REPORT.md`.
+
+Result:
+
+- Split606 threshold `0.05`: `16/20` versus positive-only `16/20` and CAU
+  `15/20`.
+- Matched outcomes versus positive-only have `2` gains and `2` losses:
+  gains on `(1, demo_29)` and `(19, demo_189)`, losses on `(0, demo_5)` and
+  `(9, demo_189)`.
+- Including this guardrail, threshold `0.05` is `67/80` across splits
+  606/909/808/707 versus positive-only `63/80` and CAU-alone `58/80`, with
+  `7` gains and `3` losses versus positive-only.
+
+Decision:
+
+- The no-retune split606 result is neutral, so fixed threshold `0.05` remains a
+  promising validation candidate rather than a promotable method.
+- Do not claim method dominance from the first-20 support-margin router. The
+  next useful check is a 50-episode held-out validation only if we are willing
+  to spend endpoint budget on this branch.
+
+### 2026-06-27 follow-up: split606 50-episode no-retune validation
+
+Motivation:
+
+- The first-20 split606 guardrail was neutral, but the selected router should
+  be judged on a larger endpoint slice before rejecting or promoting it.
+  Re-evaluate positive-only, CAU, and the fixed-threshold router on the same
+  50 valid-positive starts without changing threshold `0.05`.
+
+Commands:
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_official_policy.py \
+  --split-path results/candidate_g_fresh_preflight/splits/can_paired_pos40_bad80_split606/split_indices.json \
+  --out-dir results/sota_candidate/can606_positive_cau_eval50 \
+  --checkpoint results/candidate_g_fresh_preflight/per_seed/can_paired_pos40_bad80_split606_positive_only_nn_policy0/train/can_paired_pos40_bad80_split606_positive_only_nn_policy0_official_bc_rnn/20260626074013/models/model_epoch_200.pth \
+  --checkpoint results/sota_candidate/cau_action_conflict_can606_b005_m05_e200_train/cau_action_conflict_can606_b005_m05_e200_seed0/20260626193313/models/model_epoch_200.pth \
+  --eval-episodes 50 --eval-horizon 400 --eval-init-mode valid_positive_states \
+  --device cuda --seed 0
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_router_policy.py \
+  --split-path results/candidate_g_fresh_preflight/splits/can_paired_pos40_bad80_split606/split_indices.json \
+  --out-dir results/sota_candidate/cau_sequence_support_margin_can606_eval50_thr005 \
+  --policy positive=results/candidate_g_fresh_preflight/per_seed/can_paired_pos40_bad80_split606_positive_only_nn_policy0/train/can_paired_pos40_bad80_split606_positive_only_nn_policy0_official_bc_rnn/20260626074013/models/model_epoch_200.pth \
+  --policy cau=results/sota_candidate/cau_action_conflict_can606_b005_m05_e200_train/cau_action_conflict_can606_b005_m05_e200_seed0/20260626193313/models/model_epoch_200.pth \
+  --router-mode positive_anchor_margin --switch-threshold 0.05 \
+  --eval-episodes 50 --eval-horizon 400 --eval-init-mode valid_positive_states \
+  --device cuda --seed 0
+
+conda run -n tri-piql python scripts/summarize_sota_cau_sequence_support_router.py
+```
+
+Artifacts:
+
+- Baselines: `results/sota_candidate/can606_positive_cau_eval50/REPORT.md`.
+- Router: `results/sota_candidate/cau_sequence_support_margin_can606_eval50_thr005/REPORT.md`.
+- Updated aggregate:
+  `results/sota_candidate/CAU_SEQUENCE_SUPPORT_ROUTER_REPORT.md`.
+
+Result:
+
+- Split606 50-episode positive-only: `38/50`.
+- Split606 50-episode CAU: `41/50`.
+- Split606 50-episode fixed-threshold router: `42/50`.
+- Matched versus positive-only: `7` gains and `3` losses.
+- Matched versus CAU: `4` gains and `3` losses.
+
+Decision:
+
+- This is the first positive 50-episode held-out result for the per-step
+  support-margin router, and it is stronger than both endpoint branches on the
+  same starts.
+- Keep the claim boundary conservative: one held-out 50-episode split is not a
+  methods/SOTA result. The next useful test is a second 50-episode no-retune
+  held-out split if the required positive/CAU checkpoints already exist.
+
+### 2026-06-27 follow-up: split101 50-episode no-retune validation
+
+Motivation:
+
+- Run one more fixed-threshold `0.05` router check on the next available
+  held-out Can split with existing matched positive-only and CAU 50-episode
+  baselines. Split101 has large CAU upside (`33/50` CAU versus `19/50`
+  positive-only), so it tests whether the router can exploit a clearly
+  CAU-dominant setting.
+
+Command:
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_router_policy.py \
+  --split-path results/final_paper_v02/splits/can_paired_pos40_bad80_split101/split_indices.json \
+  --out-dir results/sota_candidate/cau_sequence_support_margin_can101_eval50_thr005 \
+  --policy positive=results/final_paper_v02/per_seed/can_paired_pos40_bad80_split101_positive_only_nn_policy0/train/can_paired_pos40_bad80_split101_positive_only_nn_policy0_official_bc_rnn/20260625090642/models/model_epoch_200.pth \
+  --policy cau=results/sota_candidate/cau_action_conflict_can101_b005_m05_e200_train/cau_action_conflict_can101_b005_m05_e200_seed0/20260626181515/models/model_epoch_200.pth \
+  --router-mode positive_anchor_margin --switch-threshold 0.05 \
+  --eval-episodes 50 --eval-horizon 400 --eval-init-mode valid_positive_states \
+  --device cuda --seed 0
+```
+
+Artifact:
+
+- `results/sota_candidate/cau_sequence_support_margin_can101_eval50_thr005/REPORT.md`.
+
+Result:
+
+- Split101 50-episode positive-only: `19/50`.
+- Split101 50-episode CAU: `33/50`.
+- Split101 50-episode fixed-threshold router: `25/50`.
+- Matched versus positive-only: `8` gains and `2` losses.
+- Matched versus CAU: `6` gains and `14` losses.
+- Across split606 and split101 50-episode no-retune validations, the router is
+  `67/100` versus positive-only `57/100` and CAU `74/100`.
+
+Decision:
+
+- Fixed threshold `0.05` is a real improvement over positive-only on these two
+  50-episode validations, but it fails to capture the CAU-dominant split101
+  upside.
+- Do not promote the current support-margin router as a method result. The
+  useful next method work is not more fixed-threshold evaluation; it is a better
+  sequence-aware rule or policy objective that can switch more decisively on
+  CAU-dominant splits while preserving anchors on CAU-bad splits.
+
+### 2026-06-27 follow-up: persistent support-margin split101 check
+
+Motivation:
+
+- The non-persistent support-margin router improved over positive-only but
+  missed most split101 CAU upside. Test whether committing to CAU after a
+  persistent run of CAU-favored support-margin steps fixes the under-switching
+  failure mode.
+
+Implementation:
+
+- Added router mode `positive_anchor_margin_persistent` to
+  `scripts/evaluate_robomimic_router_policy.py`.
+- The mode uses the same `alt_score - anchor_score > --switch-threshold` gate
+  as `positive_anchor_margin`, but commits to the alternate policy for the rest
+  of the episode after `--temporal-persistence-steps` consecutive openings.
+
+Command:
+
+```bash
+XLA_PYTHON_CLIENT_PREALLOCATE=false MUJOCO_GL=egl conda run -n tri-piql python scripts/evaluate_robomimic_router_policy.py \
+  --split-path results/final_paper_v02/splits/can_paired_pos40_bad80_split101/split_indices.json \
+  --out-dir results/sota_candidate/cau_sequence_support_margin_persistent_can101_eval50_thr005_k10 \
+  --policy positive=results/final_paper_v02/per_seed/can_paired_pos40_bad80_split101_positive_only_nn_policy0/train/can_paired_pos40_bad80_split101_positive_only_nn_policy0_official_bc_rnn/20260625090642/models/model_epoch_200.pth \
+  --policy cau=results/sota_candidate/cau_action_conflict_can101_b005_m05_e200_train/cau_action_conflict_can101_b005_m05_e200_seed0/20260626181515/models/model_epoch_200.pth \
+  --router-mode positive_anchor_margin_persistent --switch-threshold 0.05 \
+  --temporal-persistence-steps 10 \
+  --eval-episodes 50 --eval-horizon 400 --eval-init-mode valid_positive_states \
+  --device cuda --seed 0
+```
+
+Artifact:
+
+- `results/sota_candidate/cau_sequence_support_margin_persistent_can101_eval50_thr005_k10/REPORT.md`.
+
+Result:
+
+- Persistent router: `20/50`.
+- Matched positive-only: `19/50`; non-persistent support-margin router:
+  `25/50`; CAU: `33/50`.
+- Persistent matched gains/losses versus positive-only: `3` gains and `2`
+  losses.
+- Persistent matched gains/losses versus CAU: `7` gains and `20` losses.
+- The router switched to CAU in `34/50` episodes and chose CAU for `7,571`
+  actions versus `6,845` positive actions, so the failure is overcommitment or
+  bad switch timing, not simply too little CAU usage.
+
+Decision:
+
+- Do not pursue naive persistent support-margin switching. It worsens the
+  split101 CAU-dominant case relative to the non-persistent router.
+- The next viable method needs a better state-conditional policy-quality signal
+  or direct anchor-preserving policy objective, not just harder commitment to
+  support-margin openings.

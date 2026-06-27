@@ -20,6 +20,8 @@ The frozen router selects weighted BC on Lift-like broad-coverage rows.
 | 505 | weighted_bc | v02_selected | 33 | 50 | 0.660 | 1430 | 1420 |
 | 505 | positive_only_nn | strong_baseline | 26 | 50 | 0.520 | 170 | 160 |
 | 505 | triage_bc | v01_method | 24 | 50 | 0.480 | 215 | 205 |
+| 505 | bc_all_mixed | mixed_log_baseline | 8 | 50 | 0.160 | 1440 | 0 |
+| 505 | all_train_positive_oracle | oracle_control | 39 | 50 | 0.780 | 286 | 0 |
 
 ## Aggregate Read
 

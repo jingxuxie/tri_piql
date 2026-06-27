@@ -1,0 +1,2 @@
+router_name,success_rate,avg_return,avg_len,eval_episodes,choices_positive,choices_cau
+initial_gmm_feature_force_alt_labeled_thr0_initthr3_initmarginthr0_positivebias0_caubias0,0.75,0.75,181.9,20,3638,0

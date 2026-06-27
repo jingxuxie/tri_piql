@@ -5,7 +5,7 @@ ROOT := ..
 all: validate
 
 validate:
-	cd $(ROOT) && python -m py_compile scripts/validate_paper_artifact_refs.py scripts/validate_paper_claim_numbers.py scripts/validate_paper_structure.py scripts/validate_method_freeze_v02.py scripts/summarize_primary_endpoint_paired_bootstrap.py scripts/plot_primary_endpoint_paired_deltas.py scripts/summarize_bad_label_control_table.py scripts/summarize_master_evidence_tables.py scripts/summarize_can40_score_support_tradeoff.py scripts/summarize_v02_union_candidate_audit.py scripts/summarize_v02_union_endpoint_aggregate.py scripts/summarize_hard_union_component_ablation.py scripts/summarize_failure_mode_initial_states.py scripts/summarize_candidate_family_audit.py scripts/summarize_hybrid_candidate_support_audit.py scripts/summarize_hard_negative_can_action_conflict_audit.py scripts/summarize_lift_hard_negative_action_conflict_audit.py scripts/summarize_can_coverage_shift_audit.py scripts/summarize_hard_negative_can_endpoint_smoke.py scripts/summarize_can_prefix_positive_endpoint.py scripts/plot_can_prefix_positive_diagnostic.py scripts/summarize_can_prefix_length_robustness.py scripts/summarize_generated_regime_probe_table.py scripts/summarize_precision_coverage_frontier.py scripts/summarize_policy_quality_proxy_no_go.py scripts/summarize_active_abstention_evaluation.py scripts/summarize_v02_fresh_can_endpoint.py scripts/summarize_v02_fresh_lift_endpoint.py scripts/summarize_v02_fresh_router_support_audit.py scripts/summarize_v02_fresh_gate.py scripts/summarize_v02_fresh_gate_uncertainty.py scripts/summarize_v02_fresh_baseline_coverage.py scripts/summarize_v02_router_regret_table.py scripts/summarize_submission_readiness_audit.py
+	cd $(ROOT) && python -m py_compile scripts/validate_paper_artifact_refs.py scripts/validate_paper_claim_numbers.py scripts/validate_paper_structure.py scripts/validate_method_freeze_v02.py scripts/summarize_primary_endpoint_paired_bootstrap.py scripts/plot_primary_endpoint_paired_deltas.py scripts/summarize_bad_label_control_table.py scripts/summarize_master_evidence_tables.py scripts/summarize_can40_score_support_tradeoff.py scripts/summarize_v02_union_candidate_audit.py scripts/summarize_v02_union_endpoint_aggregate.py scripts/summarize_hard_union_component_ablation.py scripts/summarize_failure_mode_initial_states.py scripts/summarize_candidate_family_audit.py scripts/summarize_hybrid_candidate_support_audit.py scripts/summarize_hard_negative_can_action_conflict_audit.py scripts/summarize_lift_hard_negative_action_conflict_audit.py scripts/summarize_can_coverage_shift_audit.py scripts/summarize_hard_negative_can_endpoint_smoke.py scripts/summarize_can_prefix_positive_endpoint.py scripts/plot_can_prefix_positive_diagnostic.py scripts/summarize_can_prefix_length_robustness.py scripts/summarize_generated_regime_probe_table.py scripts/summarize_precision_coverage_frontier.py scripts/summarize_policy_quality_proxy_no_go.py scripts/summarize_active_abstention_evaluation.py scripts/summarize_v02_fresh_can_endpoint.py scripts/summarize_v02_fresh_lift_endpoint.py scripts/summarize_v02_fresh_router_support_audit.py scripts/summarize_v02_fresh_gate.py scripts/summarize_v02_fresh_gate_uncertainty.py scripts/summarize_v02_fresh_baseline_coverage.py scripts/summarize_v02_router_regret_table.py scripts/summarize_sota_can404_anchor_overlap.py scripts/summarize_sota_anchor_feature_gate_preflight.py scripts/summarize_sota_cau_fallback_fresh505.py scripts/summarize_sota_cau_fallback_fresh303.py scripts/summarize_sota_cau_gate_feature_audit.py scripts/summarize_sota_cau_two_feature_gate_validation.py scripts/summarize_sota_cau_five_split_endpoint.py scripts/summarize_sota_cau_v02_portfolio_preflight.py scripts/summarize_sota_cau_v02_fresh606_endpoint_validation.py scripts/summarize_sota_can606_gmm_confidence_cau_router.py scripts/summarize_sota_cau_gmm_router_followup.py scripts/summarize_sota_cau_selector_feature_audit.py scripts/summarize_sota_cau_policy_feature_selector_audit.py scripts/summarize_sota_cau_policy_feature_fresh909.py scripts/summarize_sota_cau_policy_feature_learned_router_audit.py scripts/summarize_sota_cau_sequence_support_router.py scripts/summarize_sota_candidate_sweep.py scripts/summarize_submission_readiness_audit.py
 	cd $(ROOT) && python scripts/summarize_primary_endpoint_paired_bootstrap.py
 	cd $(ROOT) && python scripts/plot_primary_endpoint_paired_deltas.py
 	cd $(ROOT) && python scripts/summarize_bad_label_control_table.py
@@ -47,6 +47,23 @@ validate:
 	cd $(ROOT) && python scripts/summarize_v02_fresh_gate_uncertainty.py --root results/final_paper_v02
 	cd $(ROOT) && python scripts/summarize_v02_fresh_baseline_coverage.py --root results/final_paper_v02 --split-seeds 101 202 303 404 505
 	cd $(ROOT) && python scripts/summarize_v02_router_regret_table.py --root results/final_paper_v02 --out-dir results/final_paper_v02/tables
+	cd $(ROOT) && python scripts/summarize_sota_can404_anchor_overlap.py
+	cd $(ROOT) && python scripts/summarize_sota_anchor_feature_gate_preflight.py
+	cd $(ROOT) && python scripts/summarize_sota_cau_fallback_fresh505.py
+	cd $(ROOT) && python scripts/summarize_sota_cau_fallback_fresh303.py
+	cd $(ROOT) && python scripts/summarize_sota_cau_gate_feature_audit.py
+	cd $(ROOT) && python scripts/summarize_sota_cau_two_feature_gate_validation.py
+	cd $(ROOT) && python scripts/summarize_sota_cau_five_split_endpoint.py
+	cd $(ROOT) && python scripts/summarize_sota_cau_v02_portfolio_preflight.py
+	cd $(ROOT) && python scripts/summarize_sota_cau_v02_fresh606_endpoint_validation.py
+	cd $(ROOT) && python scripts/summarize_sota_can606_gmm_confidence_cau_router.py
+	cd $(ROOT) && python scripts/summarize_sota_cau_gmm_router_followup.py
+	cd $(ROOT) && python scripts/summarize_sota_cau_selector_feature_audit.py
+	cd $(ROOT) && python scripts/summarize_sota_cau_policy_feature_selector_audit.py --device cpu
+	cd $(ROOT) && python scripts/summarize_sota_cau_policy_feature_fresh909.py
+	cd $(ROOT) && python scripts/summarize_sota_cau_policy_feature_learned_router_audit.py --device cpu
+	cd $(ROOT) && python scripts/summarize_sota_cau_sequence_support_router.py
+	cd $(ROOT) && python scripts/summarize_sota_candidate_sweep.py
 	cd $(ROOT) && python scripts/summarize_submission_readiness_audit.py
 	latexmk -pdf -interaction=nonstopmode -halt-on-error triage_bc_paper.tex
 	latexmk -pdf -cd -interaction=nonstopmode -halt-on-error iclr2026/main.tex

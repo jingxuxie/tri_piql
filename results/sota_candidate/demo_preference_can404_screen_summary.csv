@@ -1,0 +1,10 @@
+method_id,label,kind,train_epochs,eval_episodes,success_count,success_rate,avg_len,delta_vs_positive
+positive_only_nn_top40,Positive-only NN top40,baseline,200,20,17,0.850,148.2,0
+weighted_bc_full_pool,Weighted BC full pool,baseline,200,20,13,0.650,211.5,-4
+candidate_c_sequence_mask_e200,Candidate C sequence-mask e200,previous_candidate,200,20,16,0.800,167.7,-1
+cau_action_conflict_b005_m05_e200,CAU action-conflict beta0.05 margin0.5 e200,previous_sota_candidate,200,20,16,0.800,170.3,-1
+safeexpand_demo103_e200,SafeExpand demo103 e200,previous_sota_candidate,200,20,12,0.600,225.3,-5
+demo_pref_refcenter_w1_e5,Demo-DPO ref-centered w1 e5,sota_candidate_5,5,20,16,0.800,163.7,-1
+demo_pref_refcenter_w1_e10,Demo-DPO ref-centered w1 e10,sota_candidate_5,10,20,2,0.100,372.4,-15
+demo_pref_refcenter_w1_e15,Demo-DPO ref-centered w1 e15,sota_candidate_5,15,20,16,0.800,162.8,-1
+demo_pref_refcenter_w1_e20,Demo-DPO ref-centered w1 e20,sota_candidate_5,20,20,16,0.800,163.4,-1

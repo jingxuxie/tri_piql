@@ -60,6 +60,50 @@ def build_rows() -> list[dict[str, str]]:
     candidate_breakthrough = read_csv(
         ROOT / "results" / "candidate_breakthrough" / "candidate_breakthrough_decision_summary.csv"
     )
+    sota_sweep = read_csv(ROOT / "results" / "sota_candidate" / "sota_candidate_sweep_summary.csv")
+    anchor_overlap = read_csv(ROOT / "results" / "sota_candidate" / "can404_anchor_overlap_summary.csv")
+    anchor_feature_gate = read_csv(
+        ROOT / "results" / "sota_candidate" / "can404_anchor_feature_gate_preflight.csv"
+    )
+    cau_fallback_fresh_505 = read_csv(
+        ROOT / "results" / "sota_candidate" / "can505_cau_fallback_fresh_validation_summary.csv"
+    )
+    cau_fallback_fresh_303 = read_csv(
+        ROOT / "results" / "sota_candidate" / "can303_cau_fallback_fresh_validation_summary.csv"
+    )
+    cau_two_feature_gate = read_csv(
+        ROOT / "results" / "sota_candidate" / "cau_two_feature_gate_fresh_validation_summary.csv"
+    )
+    cau_five_split = {
+        row["method_id"]: row
+        for row in read_csv(
+            ROOT / "results" / "sota_candidate" / "cau_action_conflict_can_five_split_endpoint_summary.csv"
+        )
+    }
+    cau_v02_portfolio = read_csv(
+        ROOT / "results" / "sota_candidate" / "cau_v02_portfolio_preflight_gate_scan.csv"
+    )[0]
+    cau_selector_rows = read_csv(ROOT / "results" / "sota_candidate" / "cau_selector_feature_loo_rows.csv")
+    cau_selector_baselines = read_csv(
+        ROOT / "results" / "sota_candidate" / "cau_selector_feature_split_baselines.csv"
+    )
+    cau_policy_selector_rows = read_csv(
+        ROOT / "results" / "sota_candidate" / "cau_policy_feature_selector_loo_rows.csv"
+    )
+    cau_policy_selector_baselines = read_csv(
+        ROOT / "results" / "sota_candidate" / "cau_policy_feature_split_baselines.csv"
+    )
+    cau_policy_fresh909 = {
+        row["method_id"]: row
+        for row in read_csv(ROOT / "results" / "sota_candidate" / "cau_policy_feature_fresh909_summary.csv")
+    }
+    cau_policy_learned_rows = read_csv(
+        ROOT / "results" / "sota_candidate" / "cau_policy_feature_learned_router_summary.csv"
+    )
+    cau_sequence_support = {
+        row["screen_id"]: row
+        for row in read_csv(ROOT / "results" / "sota_candidate" / "cau_sequence_support_router_summary.csv")
+    }
     v02_baseline_coverage = read_csv(
         ROOT / "results" / "final_paper_v02" / "tables" / "v02_fresh_baseline_coverage.csv"
     )
@@ -270,6 +314,235 @@ def build_rows() -> list[dict[str, str]]:
             ),
             "artifact": "results/candidate_breakthrough/candidate_breakthrough_decision_REPORT.md",
             "decision": "Candidate F failed its predeclared fresh Can validation gate early, and later transition/object-anchor/router follow-ups also failed validation; keep them as scoped discovery / failed-development evidence.",
+        }
+    )
+
+    best_can_sweep = [
+        row
+        for row in sota_sweep
+        if row["decision_level"] == "endpoint_screen"
+        and row["primary_gate"] == "Can404 valid-positive starts"
+    ]
+    best_can_success = max(int(row["best_candidate_score"].split("/", maxsplit=1)[0]) for row in best_can_sweep)
+    best_can_episodes = max(int(row["best_candidate_score"].split("/", maxsplit=1)[1]) for row in best_can_sweep)
+    can_positive = find_row(sota_sweep, candidate_id="2")["positive_score"]
+    ccg = find_row(sota_sweep, candidate_id="3")
+    anchored_iql = find_row(sota_sweep, candidate_id="6")
+    cau_overlap = find_row(anchor_overlap, method_id="cau_action_conflict")
+    demo_overlap = find_row(anchor_overlap, method_id="demo_dpo_refcenter")
+    cau_gate_rows = [
+        row
+        for row in anchor_feature_gate
+        if row["method_id"] == "cau_action_conflict"
+        and row["gains_vs_positive"] == "1"
+        and row["losses_vs_positive"] == "0"
+    ]
+    cau_gate = max(cau_gate_rows, key=lambda row: int(row["routed_successes"]))
+    cau_fallback_505_first20 = find_row(cau_fallback_fresh_505, screen_id="first20", checkpoint_name="model_epoch_200")
+    cau_fallback_505_eval50 = find_row(cau_fallback_fresh_505, screen_id="eval50", checkpoint_name="model_epoch_200")
+    cau_fallback_303_first20 = find_row(cau_fallback_fresh_303, screen_id="first20", checkpoint_name="model_epoch_200")
+    two_feature_101_eval50 = find_row(
+        cau_two_feature_gate,
+        split="101",
+        screen_id="eval50",
+        checkpoint_name="model_epoch_200",
+    )
+    two_feature_202_eval50 = find_row(
+        cau_two_feature_gate,
+        split="202",
+        screen_id="eval50",
+        checkpoint_name="model_epoch_200",
+    )
+    selector_total_episodes = sum(int(row["episodes"]) for row in cau_selector_baselines)
+    selector_positive = sum(int(row["positive_successes"]) for row in cau_selector_baselines)
+    selector_cau = sum(int(row["cau_successes"]) for row in cau_selector_baselines)
+    selector_oracle = sum(int(row["oracle_switch_successes"]) for row in cau_selector_baselines)
+    selector_safe_rows = [
+        row
+        for row in cau_selector_rows
+        if row["selector_mode"] == "safe_zero_loss" and row["heldout_split"] != "pooled_resubstitution"
+    ]
+    selector_best_rows = [
+        row
+        for row in cau_selector_rows
+        if row["selector_mode"] == "best_delta" and row["heldout_split"] != "pooled_resubstitution"
+    ]
+    selector_safe_routed = sum(int(row["test_routed_successes"]) for row in selector_safe_rows)
+    selector_safe_gains = sum(int(row["test_gains_vs_positive"]) for row in selector_safe_rows)
+    selector_safe_losses = sum(int(row["test_losses_vs_positive"]) for row in selector_safe_rows)
+    selector_best_routed = sum(int(row["test_routed_successes"]) for row in selector_best_rows)
+    selector_best_gains = sum(int(row["test_gains_vs_positive"]) for row in selector_best_rows)
+    selector_best_losses = sum(int(row["test_losses_vs_positive"]) for row in selector_best_rows)
+    policy_selector_total_episodes = sum(int(row["episodes"]) for row in cau_policy_selector_baselines)
+    policy_selector_positive = sum(int(row["positive_successes"]) for row in cau_policy_selector_baselines)
+    policy_selector_cau = sum(int(row["cau_successes"]) for row in cau_policy_selector_baselines)
+    policy_selector_oracle = sum(int(row["oracle_switch_successes"]) for row in cau_policy_selector_baselines)
+    policy_selector_safe_rows = [
+        row
+        for row in cau_policy_selector_rows
+        if row["selector_mode"] == "safe_zero_loss" and row["heldout_split"] != "pooled_resubstitution"
+    ]
+    policy_selector_best_rows = [
+        row
+        for row in cau_policy_selector_rows
+        if row["selector_mode"] == "best_delta" and row["heldout_split"] != "pooled_resubstitution"
+    ]
+    policy_selector_safe_routed = sum(int(row["test_routed_successes"]) for row in policy_selector_safe_rows)
+    policy_selector_safe_gains = sum(int(row["test_gains_vs_positive"]) for row in policy_selector_safe_rows)
+    policy_selector_safe_losses = sum(int(row["test_losses_vs_positive"]) for row in policy_selector_safe_rows)
+    policy_selector_best_routed = sum(int(row["test_routed_successes"]) for row in policy_selector_best_rows)
+    policy_selector_best_gains = sum(int(row["test_gains_vs_positive"]) for row in policy_selector_best_rows)
+    policy_selector_best_losses = sum(int(row["test_losses_vs_positive"]) for row in policy_selector_best_rows)
+    learned_safe_rows = [
+        row
+        for row in cau_policy_learned_rows
+        if row["selector_mode"] == "safe_zero_loss" and row["heldout_split"].isdigit()
+    ]
+    learned_best_rows = [
+        row
+        for row in cau_policy_learned_rows
+        if row["selector_mode"] == "best_delta" and row["heldout_split"].isdigit()
+    ]
+    learned_safe_fresh909 = find_row(cau_policy_learned_rows, selector_mode="safe_zero_loss", heldout_split="fresh909")
+    learned_best_fresh909 = find_row(cau_policy_learned_rows, selector_mode="best_delta", heldout_split="fresh909")
+    learned_safe_episodes = sum(int(row["test_episodes"]) for row in learned_safe_rows)
+    learned_safe_routed = sum(int(row["test_routed_successes"]) for row in learned_safe_rows)
+    learned_safe_gains = sum(int(row["test_gains_vs_positive"]) for row in learned_safe_rows)
+    learned_safe_losses = sum(int(row["test_losses_vs_positive"]) for row in learned_safe_rows)
+    learned_best_episodes = sum(int(row["test_episodes"]) for row in learned_best_rows)
+    learned_best_routed = sum(int(row["test_routed_successes"]) for row in learned_best_rows)
+    learned_best_gains = sum(int(row["test_gains_vs_positive"]) for row in learned_best_rows)
+    learned_best_losses = sum(int(row["test_losses_vs_positive"]) for row in learned_best_rows)
+    seq909 = cau_sequence_support["split909_thr005"]
+    seq808 = cau_sequence_support["split808_thr005"]
+    seq707 = cau_sequence_support["split707_thr005"]
+    seq606 = cau_sequence_support["split606_thr005_heldout"]
+    seq101_eval50 = cau_sequence_support["split101_thr005_eval50"]
+    seq101_persistent = cau_sequence_support["split101_persistent_thr005_k10_eval50"]
+    seq606_eval50 = cau_sequence_support["split606_thr005_eval50"]
+    seq005_rows = [seq909, seq808, seq707]
+    seq005_episodes = sum(int(row["episodes"]) for row in seq005_rows)
+    seq005_router = sum(int(row["router_successes"]) for row in seq005_rows)
+    seq005_positive = sum(int(row["positive_successes"]) for row in seq005_rows)
+    seq005_cau = sum(int(row["cau_successes"]) for row in seq005_rows)
+    seq005_gains = sum(int(row["gains_vs_positive"]) for row in seq005_rows)
+    seq005_losses = sum(int(row["losses_vs_positive"]) for row in seq005_rows)
+    seq005_with_heldout_rows = seq005_rows + [seq606]
+    seq005_with_heldout_episodes = sum(int(row["episodes"]) for row in seq005_with_heldout_rows)
+    seq005_with_heldout_router = sum(int(row["router_successes"]) for row in seq005_with_heldout_rows)
+    seq005_with_heldout_positive = sum(int(row["positive_successes"]) for row in seq005_with_heldout_rows)
+    seq005_with_heldout_cau = sum(int(row["cau_successes"]) for row in seq005_with_heldout_rows)
+    seq_eval50_rows = [seq606_eval50, seq101_eval50]
+    seq_eval50_episodes = sum(int(row["episodes"]) for row in seq_eval50_rows)
+    seq_eval50_router = sum(int(row["router_successes"]) for row in seq_eval50_rows)
+    seq_eval50_positive = sum(int(row["positive_successes"]) for row in seq_eval50_rows)
+    seq_eval50_cau = sum(int(row["cau_successes"]) for row in seq_eval50_rows)
+    seq_eval50_gains = sum(int(row["gains_vs_positive"]) for row in seq_eval50_rows)
+    seq_eval50_losses = sum(int(row["losses_vs_positive"]) for row in seq_eval50_rows)
+    rows.append(
+        {
+            "criterion_id": "methods_sota_candidate_sweep",
+            "required_for": "top_tier_methods_dominance",
+            "status": "not_met",
+            "criterion": "The focused SOTA-candidate sweep finds a promotable method beyond the precision/coverage framing.",
+            "evidence": (
+                f"Best Can404 short-screen candidates reach {best_can_success}/{best_can_episodes} "
+                f"versus positive-only {can_positive}; CCG transfer reaches "
+                f"{ccg['best_candidate_score']} versus positive-only {ccg['positive_score']}; "
+                f"anchored IQL-AWBC reaches {anchored_iql['best_candidate_score']}; "
+                f"Can404 anchor-overlap: CAU gains {cau_overlap['gains_vs_positive']} starts but loses "
+                f"{cau_overlap['losses_vs_positive']} positive-only starts, while Demo-DPO gains "
+                f"{demo_overlap['gains_vs_positive']} and loses {demo_overlap['losses_vs_positive']}; "
+                f"post-hoc CAU feature fallback reaches {cau_gate['routed_successes']}/20 with "
+                f"{cau_gate['losses_vs_positive']} same-screen anchor losses; frozen CAU fallback fresh "
+                f"split505 first-20 reaches {cau_fallback_505_first20['routed_successes']}/"
+                f"{cau_fallback_505_first20['eval_episodes']} versus positive-only "
+                f"{cau_fallback_505_first20['positive_successes']}/{cau_fallback_505_first20['eval_episodes']}; "
+                f"50-episode confirmation reaches {cau_fallback_505_eval50['routed_successes']}/"
+                f"{cau_fallback_505_eval50['eval_episodes']} versus positive-only "
+                f"{cau_fallback_505_eval50['positive_successes']}/{cau_fallback_505_eval50['eval_episodes']}, "
+                f"with {cau_fallback_505_eval50['losses_vs_positive']} anchor losses; split303 first-20 "
+                f"shows CAU alone {cau_fallback_303_first20['cau_successes']}/"
+                f"{cau_fallback_303_first20['eval_episodes']} but frozen routed fallback "
+                f"{cau_fallback_303_first20['routed_successes']}/{cau_fallback_303_first20['eval_episodes']} "
+                f"versus positive-only {cau_fallback_303_first20['positive_successes']}/"
+                f"{cau_fallback_303_first20['eval_episodes']} with "
+                f"{cau_fallback_303_first20['losses_vs_positive']} anchor losses; two-feature CAU gate "
+                f"split101 confirmation reaches {two_feature_101_eval50['routed_successes']}/"
+                f"{two_feature_101_eval50['eval_episodes']} versus positive-only "
+                f"{two_feature_101_eval50['positive_successes']}/{two_feature_101_eval50['eval_episodes']} "
+                f"with {two_feature_101_eval50['losses_vs_positive']} losses, while split202 50-episode confirmation is "
+                f"{two_feature_202_eval50['routed_successes']}/{two_feature_202_eval50['eval_episodes']} "
+                f"versus {two_feature_202_eval50['positive_successes']}/{two_feature_202_eval50['eval_episodes']} "
+                f"despite CAU alone reaching {two_feature_202_eval50['cau_successes']}/"
+                f"{two_feature_202_eval50['eval_episodes']}; CAU-alone five-split follow-up reaches "
+                f"{cau_five_split['cau_action_conflict']['successes']}/"
+                f"{cau_five_split['cau_action_conflict']['eval_episodes']} versus positive-only "
+                f"{cau_five_split['positive_only_nn']['successes']}/"
+                f"{cau_five_split['positive_only_nn']['eval_episodes']}, weighted BC "
+                f"{cau_five_split['weighted_bc']['successes']}/"
+                f"{cau_five_split['weighted_bc']['eval_episodes']}, TRIAGE-BC v0.1 "
+                f"{cau_five_split['triage_bc_v01']['successes']}/"
+                f"{cau_five_split['triage_bc_v01']['eval_episodes']}, best old baseline per split "
+                f"{cau_five_split['best_old_baseline_per_split']['successes']}/"
+                f"{cau_five_split['best_old_baseline_per_split']['eval_episodes']}, and v0.2 selected union "
+                f"{cau_five_split['v02_selected_union']['successes']}/"
+                f"{cau_five_split['v02_selected_union']['eval_episodes']}; post-hoc CAU-plus-v0.2 "
+                f"portfolio preflight selects CAU on splits {cau_v02_portfolio['selected_cau_splits']} "
+                f"and v0.2 on splits {cau_v02_portfolio['selected_v02_splits']}, reaching "
+                f"{cau_v02_portfolio['selected_successes']}/{cau_v02_portfolio['eval_episodes']} "
+                f"but without fresh validation; LOO selector-feature audit has positive-only "
+                f"{selector_positive}/{selector_total_episodes}, always-CAU "
+                f"{selector_cau}/{selector_total_episodes}, oracle switch "
+                f"{selector_oracle}/{selector_total_episodes}, safe selector "
+                f"{selector_safe_routed}/{selector_total_episodes} with {selector_safe_gains} gains and "
+                f"{selector_safe_losses} losses, and best-delta selector "
+                f"{selector_best_routed}/{selector_total_episodes} with {selector_best_gains} gains and "
+                f"{selector_best_losses} losses; policy-feature LOO audit has positive-only "
+                f"{policy_selector_positive}/{policy_selector_total_episodes}, always-CAU "
+                f"{policy_selector_cau}/{policy_selector_total_episodes}, oracle switch "
+                f"{policy_selector_oracle}/{policy_selector_total_episodes}, safe selector "
+                f"{policy_selector_safe_routed}/{policy_selector_total_episodes} with "
+                f"{policy_selector_safe_gains} gains and {policy_selector_safe_losses} losses, "
+                f"and best-delta selector {policy_selector_best_routed}/{policy_selector_total_episodes} "
+                f"with {policy_selector_best_gains} gains and {policy_selector_best_losses} losses; "
+                f"the pooled frozen policy-feature gate on fresh split909 is "
+                f"{cau_policy_fresh909['cau_policy_feature_gate']['screen_score']} versus positive-only "
+                f"{cau_policy_fresh909['positive_only_nn']['screen_score']} and CAU-alone "
+                f"{cau_policy_fresh909['cau_action_conflict']['screen_score']}, with "
+                f"{cau_policy_fresh909['cau_policy_feature_gate']['gate_open_episodes']} CAU opens; "
+                f"linear learned-router LOO safe reaches {learned_safe_routed}/{learned_safe_episodes} "
+                f"with {learned_safe_gains} gains and {learned_safe_losses} losses, while best-delta reaches "
+                f"{learned_best_routed}/{learned_best_episodes} with {learned_best_gains} gains and "
+                f"{learned_best_losses} losses; frozen learned routers on split909 open all CAU starts and reach "
+                f"{learned_safe_fresh909['test_routed_successes']}/{learned_safe_fresh909['test_episodes']} safe "
+                f"and {learned_best_fresh909['test_routed_successes']}/{learned_best_fresh909['test_episodes']} best-delta "
+                f"versus positive-only {learned_safe_fresh909['test_positive_successes']}/{learned_safe_fresh909['test_episodes']}."
+                f" Per-step support-margin router fixed threshold 0.05 reaches "
+                f"{seq005_router}/{seq005_episodes} across splits 909/808/707 versus positive-only "
+                f"{seq005_positive}/{seq005_episodes} and CAU {seq005_cau}/{seq005_episodes}, "
+                f"with {seq005_gains} gains and {seq005_losses} loss versus positive-only; per split it reaches "
+                f"{seq909['router_score']} on split909, {seq808['router_score']} on split808, and "
+                f"{seq707['router_score']} on split707. The first no-retune held-out guardrail on split606 "
+                f"is neutral at {seq606['router_score']} versus positive-only {seq606['positive_score']} "
+                f"and CAU {seq606['cau_score']}; including split606, the same threshold is "
+                f"{seq005_with_heldout_router}/{seq005_with_heldout_episodes} versus positive-only "
+                f"{seq005_with_heldout_positive}/{seq005_with_heldout_episodes} and CAU "
+                f"{seq005_with_heldout_cau}/{seq005_with_heldout_episodes}. The 50-episode split606 "
+                f"validation is {seq606_eval50['router_score']} router versus positive-only "
+                f"{seq606_eval50['positive_score']} and CAU {seq606_eval50['cau_score']}, "
+                f"with {seq606_eval50['gains_vs_positive']} gains and {seq606_eval50['losses_vs_positive']} "
+                f"losses versus positive-only; split101 is mixed-negative at {seq101_eval50['router_score']} "
+                f"versus positive-only {seq101_eval50['positive_score']} but below CAU {seq101_eval50['cau_score']}. "
+                f"Across these two 50-episode validations, the router is {seq_eval50_router}/{seq_eval50_episodes} "
+                f"versus positive-only {seq_eval50_positive}/{seq_eval50_episodes} and CAU "
+                f"{seq_eval50_cau}/{seq_eval50_episodes}, with {seq_eval50_gains} gains and "
+                f"{seq_eval50_losses} losses versus positive-only. Persistent support-margin switching "
+                f"falls to {seq101_persistent['router_score']} on split101 versus non-persistent "
+                f"{seq101_eval50['router_score']} and CAU {seq101_eval50['cau_score']}."
+            ),
+            "artifact": "results/sota_candidate/SOTA_CANDIDATE_SWEEP_REPORT.md; results/sota_candidate/CAN404_ANCHOR_OVERLAP_REPORT.md; results/sota_candidate/CAN404_ANCHOR_FEATURE_GATE_PREFLIGHT_REPORT.md; results/sota_candidate/CAN505_CAU_FALLBACK_FRESH_VALIDATION_REPORT.md; results/sota_candidate/CAN303_CAU_FALLBACK_FRESH_VALIDATION_REPORT.md; results/sota_candidate/CAU_GATE_FEATURE_AUDIT_REPORT.md; results/sota_candidate/CAU_TWO_FEATURE_GATE_FRESH_VALIDATION_REPORT.md; results/sota_candidate/CAU_ACTION_CONFLICT_CAN_FIVE_SPLIT_ENDPOINT_REPORT.md; results/sota_candidate/CAU_V02_PORTFOLIO_PREFLIGHT_REPORT.md; results/sota_candidate/CAU_SELECTOR_FEATURE_LOO_AUDIT_REPORT.md; results/sota_candidate/CAU_POLICY_FEATURE_SELECTOR_LOO_AUDIT_REPORT.md; results/sota_candidate/CAU_POLICY_FEATURE_FRESH909_REPORT.md; results/sota_candidate/CAU_POLICY_FEATURE_LEARNED_ROUTER_AUDIT_REPORT.md; results/sota_candidate/CAU_SEQUENCE_SUPPORT_ROUTER_REPORT.md",
+            "decision": "Do not promote SM-RWBC, CCG-Distill, SafeExpand, Demo-DPO, simple IQL-AWBC, the unchanged CAU fallback, the two-feature CAU gate, the current policy-feature gate, the learned policy-feature router, or the current per-step support-margin router as methods/SOTA dominance evidence yet; the support-margin router beats positive-only over two 50-episode no-retune validations but fails to capture the CAU-dominant split101 upside, so broader or improved routing is still needed; CAU action-conflict and CAU-plus-v0.2 remain useful method seeds.",
         }
     )
 

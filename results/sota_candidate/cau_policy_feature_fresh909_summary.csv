@@ -1,0 +1,7 @@
+method_id,label,screen_episodes,screen_successes,screen_score,screen_success_rate,delta_vs_positive,gains_vs_positive,losses_vs_positive,mean_return,mean_length,gate_open_episodes,choices_positive,choices_weighted,choices_cau,all_available_episodes,all_available_score,source
+positive_only_nn,Positive-only NN,20,15,15/20,0.750,0,0,0,0.750,177.1,,,,,50,41/50,results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split909_positive_only_nn_policy0/eval/episode_metrics.csv
+weighted_bc,Weighted BC,20,8,8/20,0.400,-7,1,8,0.400,282.4,,,,,50,18/50,results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split909_weighted_bc_policy0/eval/episode_metrics.csv
+triage_bc_v01,TRIAGE-BC v0.1,20,8,8/20,0.400,-7,1,8,0.400,284.4,,,,,50,22/50,results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split909_triage_bc_policy0/eval/episode_metrics.csv
+candidate_e_gate,Candidate E gate,20,15,15/20,0.750,0,0,0,0.750,177.1,1,3141,400,,50,39/50,results/candidate_f_can_fresh_validation/candidate_e_eval/can909_candidate_e_gate_eval50/episode_metrics.csv
+cau_action_conflict,CAU action-conflict,20,9,9/20,0.450,-6,1,7,0.450,269.3,,,,,20,9/20,results/sota_candidate/cau_action_conflict_can909_b005_m05_eval20/episode_metrics.csv
+cau_policy_feature_gate,CAU policy-feature gate,20,15,15/20,0.750,0,0,0,0.750,177.1,0,3541,,0,20,15/20,results/sota_candidate/cau_policy_feature_gate_can909_eval20/episode_metrics.csv

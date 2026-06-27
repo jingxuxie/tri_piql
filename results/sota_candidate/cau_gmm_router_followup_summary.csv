@@ -1,0 +1,16 @@
+artifact_id,split,screen,method_id,method_role,successes,eval_episodes,score,success_rate,avg_len,source_path
+can606_gmm_q25,606,eval20,gmm_confidence_router_q25,labeled_calibrated_router,16,20,16/20,0.800,,results/sota_candidate/can606_gmm_confidence_cau_router_summary.csv
+can606_gmm_posthoc_best,606,eval20,gmm_confidence_router_posthoc,same_screen_hypothesis,18,20,18/20,0.900,,results/sota_candidate/can606_gmm_confidence_cau_router_threshold_scan.csv
+can707_positive_eval20,707,eval20,positive_only_nn,fresh_baseline,15,20,15/20,0.750,181.9,results/candidate_g_fresh_preflight/can707_positive_epoch200_eval20/metrics.csv
+can707_weighted_eval20,707,eval20,weighted_bc,fresh_baseline,15,20,15/20,0.750,183.6,results/candidate_g_fresh_preflight/can707_weighted_epoch200_eval20/metrics.csv
+can707_cau_eval20,707,eval20,cau_action_conflict,fresh_cau_followup,20,20,20/20,1.000,104.1,results/sota_candidate/cau_action_conflict_can707_b005_m05_eval20/metrics.csv
+can707_gmm_router_eval20,707,eval20,gmm_confidence_router_thr15p545,fresh_router_transfer,15,20,15/20,0.750,181.9,results/sota_candidate/can707_gmm_confidence_cau_router_thr15p545_eval20/metrics.csv
+can707_positive_eval50,707,eval50,positive_only_nn,fresh_baseline_confirmation,36,50,36/50,0.720,188.7,results/sota_candidate/can707_positive_weighted_cau_eval50/metrics.csv
+can707_weighted_eval50,707,eval50,weighted_bc,fresh_baseline_confirmation,39,50,39/50,0.780,174.2,results/sota_candidate/can707_positive_weighted_cau_eval50/metrics.csv
+can707_cau_eval50,707,eval50,cau_action_conflict,fresh_cau_confirmation,50,50,50/50,1.000,104.7,results/sota_candidate/can707_positive_weighted_cau_eval50/metrics.csv
+can808_positive_eval50,808,eval50,positive_only_nn,fresh_validation_baseline,43,50,43/50,0.860,148.4,results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split808_positive_only_nn_policy0/eval/metrics.csv
+can808_weighted_eval50,808,eval50,weighted_bc,fresh_validation_baseline,25,50,25/50,0.500,258.3,results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split808_weighted_bc_policy0/eval/metrics.csv
+can808_triage_eval50,808,eval50,triage_bc_v01,fresh_validation_baseline,16,50,16/50,0.320,306.7,results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split808_triage_bc_policy0/eval/metrics.csv
+can808_candidate_e_eval50,808,eval50,candidate_e_gate,fresh_validation_router_reference,42,50,42/50,0.840,154.7,results/candidate_f_can_fresh_validation/candidate_e_eval/can808_candidate_e_gate_eval50/metrics.csv
+can808_cau_e100_eval50,808,eval50,cau_action_conflict_model_epoch_100,fresh_fixed_cau_validation,25,50,25/50,0.500,256.7,results/sota_candidate/cau_action_conflict_can808_b005_m05_eval50/metrics.csv
+can808_cau_e200_eval50,808,eval50,cau_action_conflict_model_epoch_200,fresh_fixed_cau_validation,38,50,38/50,0.760,178.9,results/sota_candidate/cau_action_conflict_can808_b005_m05_eval50/metrics.csv

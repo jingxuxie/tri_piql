@@ -1,0 +1,20 @@
+{
+  "split_path": "results/candidate_f_can_fresh_validation/splits/can_paired_pos40_bad80_split808/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "weighted_diagnostics": "results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split808_weighted_bc_policy0/setup/diagnostics.json",
+  "positive_diagnostics": "results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split808_positive_only_nn_policy0/setup/diagnostics.json",
+  "score_rankings": "results/candidate_f_can_fresh_validation/score_diagnostics/can_paired_pos40_bad80_split808_policy0/demo_rankings.csv",
+  "score_threshold": 0.2,
+  "margin_threshold": 2.0,
+  "train_demo_count": 130,
+  "anchor_demo_count": 50,
+  "extra_demo_count": 80,
+  "extra_positive_demo_count": 3,
+  "extra_bad_demo_count": 6,
+  "extra_positive_mass": 137,
+  "extra_bad_mass": 25,
+  "extra_bad_masked_fraction": 0.15432098765432098,
+  "total_selected_mass": 5467,
+  "total_transition_count": 12484,
+  "extra_mass_fraction_total": 0.029632339491494422
+}

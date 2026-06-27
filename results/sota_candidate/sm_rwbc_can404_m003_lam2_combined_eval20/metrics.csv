@@ -1,0 +1,3 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/sota_candidate/sm_rwbc_can404_m003_lam2_combined_e200_train/sm_rwbc_can404_m003_lam2_combined_e200_seed0/20260626130140/models/model_epoch_100.pth,model_epoch_100,0.5,0.5,260.0,20
+/home/eston/tri-piql/results/sota_candidate/sm_rwbc_can404_m003_lam2_combined_e200_train/sm_rwbc_can404_m003_lam2_combined_e200_seed0/20260626130140/models/model_epoch_200.pth,model_epoch_200,0.5,0.5,260.65,20

@@ -103,9 +103,11 @@ def parse_args() -> argparse.Namespace:
         choices=[
             "margin",
             "positive_anchor_margin",
+            "positive_anchor_margin_persistent",
             "initial_anchor_pos_dist_force_alt",
             "initial_anchor_pos_dist_margin_force_alt",
             "initial_gmm_feature_force_alt",
+            "initial_policy_feature_gate",
             "temporal_gmm_feature",
             "temporal_gmm_feature_persistent",
         ],
@@ -117,7 +119,11 @@ def parse_args() -> argparse.Namespace:
             "from positive support, then uses the second policy for the full episode. "
             "initial_anchor_pos_dist_margin_force_alt additionally requires the initial anchor "
             "support margin to exceed --initial-gate-margin-threshold before forcing the second policy. "
+            "positive_anchor_margin_persistent uses the same support-margin gate as "
+            "positive_anchor_margin, then commits to the alternate policy after "
+            "--temporal-persistence-steps consecutive openings. "
             "initial_gmm_feature_force_alt gates on a first-step learned-scale GMM feature. "
+            "initial_policy_feature_gate gates on a first-step policy agreement/support feature. "
             "temporal_gmm_feature recomputes that feature at every step and switches only for "
             "the current step. temporal_gmm_feature_persistent switches to the second policy "
             "for the rest of the episode after a run of low-confidence steps."
@@ -154,6 +160,88 @@ def parse_args() -> argparse.Namespace:
         choices=["gt", "lt"],
         default="lt",
         help="Open the initial GMM feature gate when feature is greater-than or less-than the threshold.",
+    )
+    parser.add_argument(
+        "--initial-policy-feature",
+        choices=[
+            "anchor_top_prob",
+            "anchor_entropy",
+            "anchor_logit_gap",
+            "anchor_top_scale_mean",
+            "anchor_support_margin",
+            "anchor_support_pos_dist",
+            "anchor_support_neg_dist",
+            "alt_top_prob",
+            "alt_entropy",
+            "alt_logit_gap",
+            "alt_top_scale_mean",
+            "alt_support_margin",
+            "alt_support_pos_dist",
+            "alt_support_neg_dist",
+            "alt_minus_anchor_top_prob",
+            "alt_minus_anchor_entropy",
+            "alt_minus_anchor_logit_gap",
+            "alt_minus_anchor_support_margin",
+            "anchor_alt_action_l2",
+            "anchor_logp_self",
+            "anchor_logp_under_alt",
+            "anchor_logp_margin_vs_alt",
+            "alt_logp_self",
+            "alt_logp_under_anchor",
+            "alt_logp_margin_vs_anchor",
+        ],
+        default="alt_logp_margin_vs_anchor",
+        help="First policy-feature gate feature. Anchor is the first --policy; alt is the second.",
+    )
+    parser.add_argument("--initial-policy-feature-threshold", type=float, default=0.0)
+    parser.add_argument(
+        "--initial-policy-feature-direction",
+        choices=["gt", "lt"],
+        default="gt",
+    )
+    parser.add_argument(
+        "--initial-policy-feature-2",
+        choices=[
+            "",
+            "anchor_top_prob",
+            "anchor_entropy",
+            "anchor_logit_gap",
+            "anchor_top_scale_mean",
+            "anchor_support_margin",
+            "anchor_support_pos_dist",
+            "anchor_support_neg_dist",
+            "alt_top_prob",
+            "alt_entropy",
+            "alt_logit_gap",
+            "alt_top_scale_mean",
+            "alt_support_margin",
+            "alt_support_pos_dist",
+            "alt_support_neg_dist",
+            "alt_minus_anchor_top_prob",
+            "alt_minus_anchor_entropy",
+            "alt_minus_anchor_logit_gap",
+            "alt_minus_anchor_support_margin",
+            "anchor_alt_action_l2",
+            "anchor_logp_self",
+            "anchor_logp_under_alt",
+            "anchor_logp_margin_vs_alt",
+            "alt_logp_self",
+            "alt_logp_under_anchor",
+            "alt_logp_margin_vs_anchor",
+        ],
+        default="",
+        help="Optional second first-policy-feature gate feature.",
+    )
+    parser.add_argument("--initial-policy-feature-threshold-2", type=float, default=0.0)
+    parser.add_argument(
+        "--initial-policy-feature-direction-2",
+        choices=["gt", "lt"],
+        default="gt",
+    )
+    parser.add_argument(
+        "--initial-policy-feature-operator",
+        choices=["and", "or"],
+        default="and",
     )
     parser.add_argument(
         "--temporal-persistence-steps",
@@ -585,6 +673,140 @@ def initial_gmm_feature_gate(
     }
 
 
+def _passes_threshold(value: float, direction: str, threshold: float) -> bool:
+    if direction == "gt":
+        return value > threshold
+    if direction == "lt":
+        return value < threshold
+    raise ValueError(direction)
+
+
+def initial_policy_feature_values(
+    *,
+    policies: dict[str, object],
+    policy_obs: dict[str, np.ndarray],
+    policy_order: list[str],
+    scorer: SupportScorer,
+    obs: dict[str, np.ndarray],
+    low: np.ndarray,
+    high: np.ndarray,
+    chunk_size: int,
+) -> dict[str, float]:
+    if len(policy_order) < 2:
+        raise ValueError("initial_policy_feature_gate requires at least two policies")
+    anchor = policy_order[0]
+    alt = policy_order[1]
+    anchor_dist = learned_step_distribution(policies[anchor], policy_obs)
+    alt_dist = learned_step_distribution(policies[alt], policy_obs)
+    anchor_action, anchor_features = top_mode_action_and_features(anchor_dist, low, high)
+    alt_action, alt_features = top_mode_action_and_features(alt_dist, low, high)
+    anchor_margin, anchor_pos_dist, anchor_neg_dist = score_action(
+        scorer=scorer,
+        obs=obs,
+        action=anchor_action,
+        chunk_size=chunk_size,
+    )
+    alt_margin, alt_pos_dist, alt_neg_dist = score_action(
+        scorer=scorer,
+        obs=obs,
+        action=alt_action,
+        chunk_size=chunk_size,
+    )
+    anchor_logp_self = action_log_prob(anchor_dist, anchor_action)
+    anchor_logp_under_alt = action_log_prob(alt_dist, anchor_action)
+    alt_logp_self = action_log_prob(alt_dist, alt_action)
+    alt_logp_under_anchor = action_log_prob(anchor_dist, alt_action)
+    return {
+        "anchor_top_prob": anchor_features["top_prob"],
+        "anchor_entropy": anchor_features["entropy"],
+        "anchor_logit_gap": anchor_features["logit_gap"],
+        "anchor_top_scale_mean": anchor_features["top_scale_mean"],
+        "anchor_support_margin": anchor_margin,
+        "anchor_support_pos_dist": anchor_pos_dist,
+        "anchor_support_neg_dist": anchor_neg_dist,
+        "alt_top_prob": alt_features["top_prob"],
+        "alt_entropy": alt_features["entropy"],
+        "alt_logit_gap": alt_features["logit_gap"],
+        "alt_top_scale_mean": alt_features["top_scale_mean"],
+        "alt_support_margin": alt_margin,
+        "alt_support_pos_dist": alt_pos_dist,
+        "alt_support_neg_dist": alt_neg_dist,
+        "alt_minus_anchor_top_prob": alt_features["top_prob"] - anchor_features["top_prob"],
+        "alt_minus_anchor_entropy": alt_features["entropy"] - anchor_features["entropy"],
+        "alt_minus_anchor_logit_gap": alt_features["logit_gap"] - anchor_features["logit_gap"],
+        "alt_minus_anchor_support_margin": alt_margin - anchor_margin,
+        "anchor_alt_action_l2": float(np.linalg.norm(anchor_action - alt_action)),
+        "anchor_logp_self": anchor_logp_self,
+        "anchor_logp_under_alt": anchor_logp_under_alt,
+        "anchor_logp_margin_vs_alt": anchor_logp_self - anchor_logp_under_alt,
+        "alt_logp_self": alt_logp_self,
+        "alt_logp_under_anchor": alt_logp_under_anchor,
+        "alt_logp_margin_vs_anchor": alt_logp_self - alt_logp_under_anchor,
+    }
+
+
+def initial_policy_feature_gate(
+    *,
+    args: argparse.Namespace,
+    policies: dict[str, object],
+    policy_obs: dict[str, np.ndarray],
+    policy_order: list[str],
+    scorer: SupportScorer,
+    obs: dict[str, np.ndarray],
+    low: np.ndarray,
+    high: np.ndarray,
+    chunk_size: int,
+) -> tuple[bool, str, dict[str, object]]:
+    if len(policy_order) < 2:
+        raise ValueError("initial_policy_feature_gate requires at least two policies")
+    values = initial_policy_feature_values(
+        policies=policies,
+        policy_obs=policy_obs,
+        policy_order=policy_order,
+        scorer=scorer,
+        obs=obs,
+        low=low,
+        high=high,
+        chunk_size=chunk_size,
+    )
+    first_value = values[args.initial_policy_feature]
+    first_open = _passes_threshold(
+        first_value,
+        args.initial_policy_feature_direction,
+        args.initial_policy_feature_threshold,
+    )
+    second_value = ""
+    if args.initial_policy_feature_2:
+        second_value = values[args.initial_policy_feature_2]
+        second_open = _passes_threshold(
+            float(second_value),
+            args.initial_policy_feature_direction_2,
+            args.initial_policy_feature_threshold_2,
+        )
+        gate_open = first_open and second_open if args.initial_policy_feature_operator == "and" else first_open or second_open
+    else:
+        gate_open = first_open
+    alt = policy_order[1]
+    anchor = policy_order[0]
+    return gate_open, alt if gate_open else anchor, {
+        "initial_feature_name": args.initial_policy_feature,
+        "initial_feature_value": first_value,
+        "initial_feature_threshold": args.initial_policy_feature_threshold,
+        "initial_feature_direction": args.initial_policy_feature_direction,
+        "initial_feature_2_name": args.initial_policy_feature_2,
+        "initial_feature_2_value": second_value,
+        "initial_feature_2_threshold": (
+            args.initial_policy_feature_threshold_2 if args.initial_policy_feature_2 else ""
+        ),
+        "initial_feature_2_direction": (
+            args.initial_policy_feature_direction_2 if args.initial_policy_feature_2 else ""
+        ),
+        "initial_feature_operator": (
+            args.initial_policy_feature_operator if args.initial_policy_feature_2 else ""
+        ),
+    }
+
+
 def temporal_gmm_feature_gate(
     *,
     policies: dict[str, object],
@@ -775,6 +997,11 @@ def main() -> None:
                 "initial_feature_value": "",
                 "initial_feature_threshold": "",
                 "initial_feature_direction": "",
+                "initial_feature_2_name": "",
+                "initial_feature_2_value": "",
+                "initial_feature_2_threshold": "",
+                "initial_feature_2_direction": "",
+                "initial_feature_operator": "",
             }
             temporal_gate_open_count = 0
             temporal_feature_values: list[float] = []
@@ -852,6 +1079,18 @@ def main() -> None:
                         low=low,
                         high=high,
                     )
+                if t == 0 and args.router_mode == "initial_policy_feature_gate":
+                    episode_gate_open, episode_forced_policy, initial_gate_features = initial_policy_feature_gate(
+                        args=args,
+                        policies=policies,
+                        policy_obs=policy_obs,
+                        policy_order=policy_order,
+                        scorer=scorer,
+                        obs=obs,
+                        low=low,
+                        high=high,
+                        chunk_size=args.chunk_size,
+                    )
                 raw_scores = {}
                 pos_dists = {}
                 neg_dists = {}
@@ -865,15 +1104,62 @@ def main() -> None:
                     raw_scores[name] = margin
                     pos_dists[name] = pos_dist
                     neg_dists[name] = neg_dist
+                if args.router_mode == "positive_anchor_margin_persistent":
+                    anchor = policy_order[0]
+                    best_alt = (
+                        max(
+                            policy_order[1:],
+                            key=lambda name: (
+                                raw_scores[name] + biases.get(name, 0.0),
+                                -policy_order.index(name),
+                            ),
+                        )
+                        if len(policy_order) > 1
+                        else anchor
+                    )
+                    anchor_score = raw_scores[anchor] + biases.get(anchor, 0.0)
+                    alt_score = raw_scores[best_alt] + biases.get(best_alt, 0.0)
+                    support_margin_gap = alt_score - anchor_score
+                    temporal_gate_open = bool(support_margin_gap > args.switch_threshold)
+                    step_temporal_policy = best_alt if temporal_gate_open else anchor
+                    temporal_gate_open_count += int(temporal_gate_open)
+                    temporal_feature_values.append(float(support_margin_gap))
+                    if temporal_gate_open:
+                        temporal_consecutive_open += 1
+                    else:
+                        temporal_consecutive_open = 0
+                    if (
+                        not temporal_persistent_policy
+                        and temporal_consecutive_open >= args.temporal_persistence_steps
+                    ):
+                        temporal_persistent_policy = step_temporal_policy
+                        temporal_persistent_switch_step = t
+                    if t == 0:
+                        episode_gate_open = temporal_gate_open
+                        episode_forced_policy = step_temporal_policy
+                        initial_gate_features = {
+                            "initial_feature_name": "support_margin_gap",
+                            "initial_feature_value": support_margin_gap,
+                            "initial_feature_threshold": args.switch_threshold,
+                            "initial_feature_direction": "gt",
+                            "initial_feature_2_name": "",
+                            "initial_feature_2_value": "",
+                            "initial_feature_2_threshold": "",
+                            "initial_feature_2_direction": "",
+                            "initial_feature_operator": "",
+                        }
                 if args.router_mode in {
                     "initial_anchor_pos_dist_force_alt",
                     "initial_anchor_pos_dist_margin_force_alt",
                     "initial_gmm_feature_force_alt",
+                    "initial_policy_feature_gate",
                 }:
                     selected = episode_forced_policy
                 elif args.router_mode == "temporal_gmm_feature":
                     selected = step_temporal_policy
                 elif args.router_mode == "temporal_gmm_feature_persistent":
+                    selected = temporal_persistent_policy or policy_order[0]
+                elif args.router_mode == "positive_anchor_margin_persistent":
                     selected = temporal_persistent_policy or policy_order[0]
                 else:
                     selected = select_policy(
@@ -962,6 +1248,11 @@ def main() -> None:
             "initial_feature_value",
             "initial_feature_threshold",
             "initial_feature_direction",
+            "initial_feature_2_name",
+            "initial_feature_2_value",
+            "initial_feature_2_threshold",
+            "initial_feature_2_direction",
+            "initial_feature_operator",
             "temporal_gate_open_count",
             "temporal_persistence_steps",
             "temporal_persistent_switch_step",
@@ -996,6 +1287,13 @@ def main() -> None:
         "initial_feature_calibration_ids": calibration_ids,
         "initial_feature_calibration_values": calibration_values,
         "initial_feature_direction": args.initial_feature_direction,
+        "initial_policy_feature": args.initial_policy_feature,
+        "initial_policy_feature_threshold": args.initial_policy_feature_threshold,
+        "initial_policy_feature_direction": args.initial_policy_feature_direction,
+        "initial_policy_feature_2": args.initial_policy_feature_2,
+        "initial_policy_feature_threshold_2": args.initial_policy_feature_threshold_2,
+        "initial_policy_feature_direction_2": args.initial_policy_feature_direction_2,
+        "initial_policy_feature_operator": args.initial_policy_feature_operator,
         "temporal_persistence_steps": args.temporal_persistence_steps,
         "isolated_policy_rng": not args.shared_policy_rng,
         "obs_keys": list(obs_keys),
@@ -1025,6 +1323,13 @@ def main() -> None:
         f"Initial feature threshold source: `{args.initial_feature_threshold_source}`.",
         f"Initial feature quantile: `{args.initial_feature_quantile}`.",
         f"Initial feature direction: `{args.initial_feature_direction}`.",
+        f"Initial policy feature: `{args.initial_policy_feature}`.",
+        f"Initial policy feature threshold: `{args.initial_policy_feature_threshold}`.",
+        f"Initial policy feature direction: `{args.initial_policy_feature_direction}`.",
+        f"Initial policy feature 2: `{args.initial_policy_feature_2}`.",
+        f"Initial policy feature threshold 2: `{args.initial_policy_feature_threshold_2}`.",
+        f"Initial policy feature direction 2: `{args.initial_policy_feature_direction_2}`.",
+        f"Initial policy feature operator: `{args.initial_policy_feature_operator}`.",
         f"Temporal persistence steps: `{args.temporal_persistence_steps}`.",
         f"Isolated policy RNG: `{not args.shared_policy_rng}`.",
         f"Policies: `{', '.join(policy_order)}`.",

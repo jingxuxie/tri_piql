@@ -23,6 +23,10 @@ Use:
 - Active abstention is a stress/limitation result, not endpoint dominance: original/shuffled Can MG are both `stress_abstain`, with estimated mass/count `1947.9`/`1025.7` and `1466.3`/`515.7`; assigned router-v2 rows average `0.700`, while abstained rows top out at `0.333`.
 - The generated Can regime-probe summary is staged in `results/final_paper/tables/generated_regime_probe_summary_REPORT.md`: hard-negative is `104/150` versus `91/150` (`+13/150`), coverage-shift is `120/150` versus `103/150` (`+17/150`), and prefix-positive is `119/150` versus `6/150` (`+113/150`). These remain controlled split constructions, not default benchmark rows.
 - The non-Can Lift hard-negative endpoint gate is exploratory only: `results/final_paper/ablations/lift_hard_negative_endpoint_200ep/REPORT.md` gives a full-budget split-101/202/303 aggregate of `15/150` for bad-aware proxy top40 versus `5/150` for state-action positive-NN top40, with selected support of 82 hidden positives and 38 hidden bad demos versus 12 hidden positives and 108 hidden bad demos. Low absolute success keeps it out of the main endpoint claims.
+- The focused SOTA-candidate sweep is a no-go artifact, not a new method result:
+  `results/sota_candidate/SOTA_CANDIDATE_SWEEP_REPORT.md` shows best Can404
+  candidates at `16/20` versus positive-only `17/20`, CCG transfer at
+  `10/20` versus positive-only `12/20`, and anchored IQL-AWBC at `13/20`.
 - The theory-lite contribution is `Proposition 1 (coverage-contamination criterion)`: add unlabeled support when marginal coverage gain exceeds normalized marginal contamination cost.
 - `REGIME_PROBE_SUITE.md` freezes the generated diagnostics as a TRI-Signal regime-probe suite and explicitly separates completed mechanism probes from default benchmark rows.
 - Strong positive-only retrieval is a first-class baseline and often beats the current bad-aware converter.
@@ -46,6 +50,9 @@ Offline imitation datasets often contain a small number of trusted successful de
 3. Provide controlled PointNav evidence that adaptive score-gap support can solve heavy-contamination settings where all-demo, positive-plus-unlabeled, and local weighted BC degrade.
 4. Provide frozen Robomimic evidence showing both sides of the precision/coverage tradeoff: Can 40p/80b shows hard selected support beating weighted and all-demo controls, Lift MG favors broader weighted coverage, positive-only retrieval remains stronger on Can, and fresh v0.2 branch selection is barely positive on the combined Can+Lift gate without establishing fixed-branch dominance.
 5. Establish strong caveats through positive-only NN, all-positive oracle, score-shape diagnostics, and Can MG branch-proxy failure.
+6. Keep the SOTA-candidate sweep as appendix claim-boundary evidence; do not
+   promote SM-RWBC, CAU-BC, CCG-Distill, SafeExpand, Demo-DPO, or simple
+   IQL-AWBC as the paper method.
 
 ## Recommended Paper Structure
 

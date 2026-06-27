@@ -1,0 +1,5 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/final_paper_v02/per_seed/can_paired_pos40_bad80_split404_bc_all_mixed_policy0/train/can_paired_pos40_bad80_split404_bc_all_mixed_policy0_official_bc_rnn/20260626160501/models/model_epoch_50.pth,model_epoch_50,0.3,0.3,321.96,50
+/home/eston/tri-piql/results/final_paper_v02/per_seed/can_paired_pos40_bad80_split404_bc_all_mixed_policy0/train/can_paired_pos40_bad80_split404_bc_all_mixed_policy0_official_bc_rnn/20260626160501/models/model_epoch_100.pth,model_epoch_100,0.38,0.38,292.7,50
+/home/eston/tri-piql/results/final_paper_v02/per_seed/can_paired_pos40_bad80_split404_bc_all_mixed_policy0/train/can_paired_pos40_bad80_split404_bc_all_mixed_policy0_official_bc_rnn/20260626160501/models/model_epoch_150.pth,model_epoch_150,0.3,0.3,320.18,50
+/home/eston/tri-piql/results/final_paper_v02/per_seed/can_paired_pos40_bad80_split404_bc_all_mixed_policy0/train/can_paired_pos40_bad80_split404_bc_all_mixed_policy0_official_bc_rnn/20260626160501/models/model_epoch_200.pth,model_epoch_200,0.54,0.54,244.66,50

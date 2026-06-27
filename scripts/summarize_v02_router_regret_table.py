@@ -46,6 +46,8 @@ REGIME_LABELS = {
     "can_mg_stress": "Can MG abstention/stress",
 }
 
+BRANCH_SELECTION_ROLES = {"v02_selected", "strong_baseline", "v01_method"}
+
 
 @dataclass(frozen=True)
 class Cell:
@@ -102,6 +104,10 @@ def fmt_rate(value: float | None) -> str:
 
 def row_by_method(rows: list[dict[str, str]], method_id: str) -> list[dict[str, str]]:
     return [row for row in rows if row["method_id"] == method_id]
+
+
+def branch_selection_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
+    return [row for row in rows if row["method_role"] in BRANCH_SELECTION_ROLES]
 
 
 def summed_cell(
@@ -221,13 +227,16 @@ def partial_or_complete_cell(
 
 def endpoint_cells_from_fresh_can(root: Path) -> list[Cell]:
     rows = read_csv(root / "tables" / "v02_fresh_can_endpoint_summary.csv")
-    oracle_successes, oracle_episodes = oracle_by_split(rows, "split_seed", "success_count", "eval_episodes")
-    triage_rows = row_by_method(rows, "triage_bc")
+    branch_rows = branch_selection_rows(rows)
+    oracle_successes, oracle_episodes = oracle_by_split(
+        branch_rows, "split_seed", "success_count", "eval_episodes"
+    )
+    triage_rows = row_by_method(branch_rows, "triage_bc")
     cells = [
         summed_cell(
             row_id="always_positive_only_nn",
             regime_id="can40_fresh",
-            rows=row_by_method(rows, "positive_only_nn"),
+            rows=row_by_method(branch_rows, "positive_only_nn"),
             source_method="positive_only_nn",
             oracle_successes=oracle_successes,
             oracle_episodes=oracle_episodes,
@@ -235,7 +244,7 @@ def endpoint_cells_from_fresh_can(root: Path) -> list[Cell]:
         summed_cell(
             row_id="always_weighted_bc",
             regime_id="can40_fresh",
-            rows=row_by_method(rows, "weighted_bc"),
+            rows=row_by_method(branch_rows, "weighted_bc"),
             source_method="weighted_bc",
             oracle_successes=oracle_successes,
             oracle_episodes=oracle_episodes,
@@ -243,7 +252,7 @@ def endpoint_cells_from_fresh_can(root: Path) -> list[Cell]:
         summed_cell(
             row_id="always_hard_support",
             regime_id="can40_fresh",
-            rows=row_by_method(rows, "positive_nn_risk_union_top40"),
+            rows=row_by_method(branch_rows, "positive_nn_risk_union_top40"),
             source_method="positive_nn_risk_union_top40",
             oracle_successes=oracle_successes,
             oracle_episodes=oracle_episodes,
@@ -252,7 +261,7 @@ def endpoint_cells_from_fresh_can(root: Path) -> list[Cell]:
             row_id="v01_triage_bc",
             regime_id="can40_fresh",
             rows=triage_rows,
-            all_rows=rows,
+            all_rows=branch_rows,
             split_key="split_seed",
             source_method="triage_bc",
             missing_note="A3 baseline completion needed for v0.1 on fresh split seeds 101/202/303/404/505.",
@@ -260,7 +269,7 @@ def endpoint_cells_from_fresh_can(root: Path) -> list[Cell]:
         summed_cell(
             row_id="v02_router",
             regime_id="can40_fresh",
-            rows=[row for row in rows if row["method_role"] == "v02_selected"],
+            rows=[row for row in branch_rows if row["method_role"] == "v02_selected"],
             source_method="hard_risk_union",
             oracle_successes=oracle_successes,
             oracle_episodes=oracle_episodes,
@@ -277,7 +286,7 @@ def endpoint_cells_from_fresh_can(root: Path) -> list[Cell]:
             oracle_episodes=oracle_episodes,
             oracle_success_rate=oracle_successes / oracle_episodes,
             source_method="per_split_best_completed_branch",
-            note="Audit-only selector over completed positive-only, weighted, and hard-union branches.",
+            note="Audit-only selector over completed branch-selection rows; optional mixed-log and oracle controls are excluded.",
         ),
     ]
     return cells
@@ -285,13 +294,16 @@ def endpoint_cells_from_fresh_can(root: Path) -> list[Cell]:
 
 def endpoint_cells_from_fresh_lift(root: Path) -> list[Cell]:
     rows = read_csv(root / "tables" / "v02_fresh_lift_endpoint_summary.csv")
-    oracle_successes, oracle_episodes = oracle_by_split(rows, "split_seed", "success_count", "eval_episodes")
-    triage_rows = row_by_method(rows, "triage_bc")
+    branch_rows = branch_selection_rows(rows)
+    oracle_successes, oracle_episodes = oracle_by_split(
+        branch_rows, "split_seed", "success_count", "eval_episodes"
+    )
+    triage_rows = row_by_method(branch_rows, "triage_bc")
     cells = [
         summed_cell(
             row_id="always_positive_only_nn",
             regime_id="lift_mg_fresh",
-            rows=row_by_method(rows, "positive_only_nn"),
+            rows=row_by_method(branch_rows, "positive_only_nn"),
             source_method="positive_only_nn",
             oracle_successes=oracle_successes,
             oracle_episodes=oracle_episodes,
@@ -299,7 +311,7 @@ def endpoint_cells_from_fresh_lift(root: Path) -> list[Cell]:
         summed_cell(
             row_id="always_weighted_bc",
             regime_id="lift_mg_fresh",
-            rows=row_by_method(rows, "weighted_bc"),
+            rows=row_by_method(branch_rows, "weighted_bc"),
             source_method="weighted_bc",
             oracle_successes=oracle_successes,
             oracle_episodes=oracle_episodes,
@@ -308,7 +320,7 @@ def endpoint_cells_from_fresh_lift(root: Path) -> list[Cell]:
             row_id="always_hard_support",
             regime_id="lift_mg_fresh",
             rows=triage_rows,
-            all_rows=rows,
+            all_rows=branch_rows,
             split_key="split_seed",
             source_method="triage_bc",
             missing_note="Hard-support branch not completed for the five fresh Lift splits; A3 should fill v0.1/hard-support baselines if needed.",
@@ -318,7 +330,7 @@ def endpoint_cells_from_fresh_lift(root: Path) -> list[Cell]:
             row_id="v01_triage_bc",
             regime_id="lift_mg_fresh",
             rows=triage_rows,
-            all_rows=rows,
+            all_rows=branch_rows,
             split_key="split_seed",
             source_method="triage_bc",
             missing_note="A3 baseline completion needed for v0.1 on fresh split seeds 101/202/303/404/505.",
@@ -326,7 +338,7 @@ def endpoint_cells_from_fresh_lift(root: Path) -> list[Cell]:
         summed_cell(
             row_id="v02_router",
             regime_id="lift_mg_fresh",
-            rows=[row for row in rows if row["method_role"] == "v02_selected"],
+            rows=[row for row in branch_rows if row["method_role"] == "v02_selected"],
             source_method="soft_weighted",
             oracle_successes=oracle_successes,
             oracle_episodes=oracle_episodes,
@@ -343,7 +355,7 @@ def endpoint_cells_from_fresh_lift(root: Path) -> list[Cell]:
             oracle_episodes=oracle_episodes,
             oracle_success_rate=oracle_successes / oracle_episodes,
             source_method="per_split_best_completed_branch",
-            note="Audit-only selector over completed positive-only and weighted branches.",
+            note="Audit-only selector over completed branch-selection rows; optional mixed-log and oracle controls are excluded.",
         ),
     ]
     return cells
@@ -776,7 +788,7 @@ def build_report(summary: list[dict[str, object]], per_regime: list[dict[str, ob
         "- `N/A` means that branch was not part of that completed endpoint probe; it is excluded from counted combined success and regret.",
         "- `N/A not run` means the branch is conceptually relevant but missing from the current completed matrix; A3 should fill these cells if the paper needs a complete leaderboard.",
         "- Can MG is a stress/abstention diagnostic with rate-only reused branch summaries, so it is shown but excluded from counted endpoint totals.",
-        "- Regret is measured against the best completed branch per split or aggregate probe; the oracle row is audit-only and can use endpoint outcomes.",
+        "- Regret is measured against the best completed branch-selection row per split or aggregate probe; optional mixed-log and all-positive oracle diagnostics are excluded from the fresh Can/Lift regret oracle.",
         "",
         "## Summary",
         "",

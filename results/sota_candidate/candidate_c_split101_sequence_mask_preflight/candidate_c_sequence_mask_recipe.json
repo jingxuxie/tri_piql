@@ -1,0 +1,20 @@
+{
+  "split_path": "results/final_paper_v02/splits/can_paired_pos40_bad80_split101/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "weighted_diagnostics": "results/final_paper_v02/per_seed/can_paired_pos40_bad80_split101_weighted_bc_policy0/setup/diagnostics.json",
+  "positive_diagnostics": "results/final_paper_v02/per_seed/can_paired_pos40_bad80_split101_positive_only_nn_policy0/setup/diagnostics.json",
+  "score_rankings": "results/final_paper_v02/score_diagnostics/can_paired_pos40_bad80_split101_policy0/demo_rankings.csv",
+  "score_threshold": 0.2,
+  "margin_threshold": 2.0,
+  "train_demo_count": 130,
+  "anchor_demo_count": 50,
+  "extra_demo_count": 80,
+  "extra_positive_demo_count": 9,
+  "extra_bad_demo_count": 2,
+  "extra_positive_mass": 322,
+  "extra_bad_mass": 4,
+  "extra_bad_masked_fraction": 0.012269938650306749,
+  "total_selected_mass": 5316,
+  "total_transition_count": 12460,
+  "extra_mass_fraction_total": 0.06132430398796087
+}

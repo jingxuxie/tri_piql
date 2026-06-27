@@ -1,0 +1,28 @@
+evidence_group,split,method,successes,episodes,delta_vs_positive,note
+live_router,lift606,positive_only_nn,14,20,0,Candidate K first-step confidence screen.
+live_router,lift606,triage_bc,13,20,-1,Candidate K first-step confidence screen.
+live_router,lift606,weighted_bc,6,20,-8,Candidate K first-step confidence screen.
+live_router,lift606,confidence_router_thr6p27,18,20,4,Candidate K first-step confidence screen.
+live_router,lift707,positive_only_nn,12,20,0,Candidate K fixed threshold transfer.
+live_router,lift707,triage_bc,9,20,-3,Candidate K fixed threshold transfer.
+live_router,lift707,confidence_router_thr6p27,10,20,-2,Candidate K fixed threshold transfer.
+calibrated_transfer,lift707,best_lift606_selected_positive_logp_under_triage,11,20,-1,Best Lift606-selected one-feature threshold transferred to Lift707.
+leaky_upper_bound,lift707,best_lift707_leaky_triage_minus_positive_logit_gap,13,20,1,Diagnostic only: threshold selected on the same Lift707 starts.
+temporal_router,lift606,temporal_initial_q25,7,20,-7,Per-step confidence gate.
+temporal_router,lift606,temporal_sequence_q25,7,20,-7,Per-step confidence gate.
+persistent_router,lift606,persistent_sequence_q25_k10,13,20,-1,Temporal gate with hysteresis.
+persistent_router,lift606,persistent_sequence_q25_k20,11,20,-3,Temporal gate with hysteresis.
+training_side_anchor_union,lift606,candidate_o_epoch50,1,20,-13,anchor_union_from_scratch: closest prior evidence for training a single policy from mixed specialists.
+training_side_anchor_union,lift606,candidate_o_epoch100,5,20,-9,anchor_union_from_scratch: closest prior evidence for training a single policy from mixed specialists.
+training_side_anchor_union,lift606,candidate_p_epoch20_posinit_finetune,11,20,-3,positive_initialized_union: closest prior evidence for training a single policy from mixed specialists.
+training_side_anchor_union,lift606,model_epoch_1,10,20,-4,candidate_q_short_finetune: closest prior evidence for training a single policy from mixed specialists.
+training_side_anchor_union,lift606,model_epoch_2,10,20,-4,candidate_q_short_finetune: closest prior evidence for training a single policy from mixed specialists.
+training_side_anchor_union,lift606,model_epoch_3,9,20,-5,candidate_q_short_finetune: closest prior evidence for training a single policy from mixed specialists.
+training_side_anchor_union,lift606,model_epoch_4,11,20,-3,candidate_q_short_finetune: closest prior evidence for training a single policy from mixed specialists.
+training_side_anchor_union,lift606,model_epoch_5,10,20,-4,candidate_q_short_finetune: closest prior evidence for training a single policy from mixed specialists.
+training_side_anchor_union,lift606,pos_to_anchor_union_p20_alpha_0p05,11,20,-3,candidate_r_interpolation: closest prior evidence for training a single policy from mixed specialists.
+training_side_anchor_union,lift606,pos_to_anchor_union_p20_alpha_0p10,10,20,-4,candidate_r_interpolation: closest prior evidence for training a single policy from mixed specialists.
+training_side_anchor_union,lift606,pos_to_anchor_union_p20_alpha_0p20,10,20,-4,candidate_r_interpolation: closest prior evidence for training a single policy from mixed specialists.
+training_side_anchor_union,lift606,pos_to_anchor_union_p20_alpha_0p35,10,20,-4,candidate_r_interpolation: closest prior evidence for training a single policy from mixed specialists.
+learned_initial_risk_gate,lift606,policy_feature_logistic_q25,12,20,-2,Balanced labeled positive/negative initial-state classifier.
+learned_initial_risk_gate,lift707,policy_feature_logistic_q25,12,20,0,Balanced labeled positive/negative initial-state classifier.

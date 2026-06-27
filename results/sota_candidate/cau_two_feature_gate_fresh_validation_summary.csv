@@ -1,0 +1,7 @@
+split,screen_id,checkpoint_name,gate_source,gate_rule,opened_initial_demo_ids,opened_initial_count,opened_episodes,positive_successes,cau_successes,routed_successes,eval_episodes,gains_vs_positive,losses_vs_positive,delta_vs_positive,status
+101,eval50,model_epoch_200,pooled split303/404/505 development gate,initial_anchor_pos_dist_mean le 1.273665 or initial_anchor_neg_dist_mean gt 3.131861,demo_39 demo_105,2,10,19,33,24,50,5,0,5,fresh_screen_positive
+101,first20,model_epoch_100,pooled split303/404/505 development gate,initial_anchor_pos_dist_mean le 1.273665 or initial_anchor_neg_dist_mean gt 3.131861,demo_39 demo_105,2,4,7,11,7,20,0,0,0,fresh_screen_neutral
+101,first20,model_epoch_200,pooled split303/404/505 development gate,initial_anchor_pos_dist_mean le 1.273665 or initial_anchor_neg_dist_mean gt 3.131861,demo_39 demo_105,2,4,7,15,9,20,2,0,2,fresh_screen_positive
+202,eval50,model_epoch_200,pooled split303/404/505 development gate,initial_anchor_pos_dist_mean le 1.273665 or initial_anchor_neg_dist_mean gt 3.131861,demo_5 demo_189,2,10,40,42,40,50,0,0,0,fresh_screen_neutral
+202,first20,model_epoch_100,pooled split303/404/505 development gate,initial_anchor_pos_dist_mean le 1.273665 or initial_anchor_neg_dist_mean gt 3.131861,demo_5 demo_189,2,4,17,13,15,20,0,2,-2,fresh_screen_mixed
+202,first20,model_epoch_200,pooled split303/404/505 development gate,initial_anchor_pos_dist_mean le 1.273665 or initial_anchor_neg_dist_mean gt 3.131861,demo_5 demo_189,2,4,17,16,17,20,0,0,0,fresh_screen_neutral

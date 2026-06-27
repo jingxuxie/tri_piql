@@ -33,7 +33,7 @@ Current status as of 2026-06-26:
   and v0.2 method-freeze validators.
 - The submission-readiness audit marks the high-quality empirical submission
   criteria as green (`6` pass, `0` caution), while top-tier methods/SOTA
-  dominance remains explicitly not met (`1` caution, `4` not met).
+  dominance remains explicitly not met (`1` caution, `5` not met).
 - The latest action-risk v0.2 candidate improves support purity but fails the endpoint gate: positive-NN/risk fusion reaches `0.820` versus positive-only NN `0.840` on Can 40p/80b split 11, and `0.640` versus `0.760` on split 22.
 - A follow-up union candidate that keeps positive-only NN support and adds risk-fusion demos improves the pooled Can 40p/80b endpoint row to `116/150`, versus positive-only NN `108/150`, TRIAGE-BC v0.1 `99/150`, and weighted BC `90/150`. This is promising Can-only development evidence, but it is not a frozen v0.2 because it loses split 11 to positive-only NN and does not address Lift MG or Can MG.
 - A follow-up mass/count portfolio-router audit chooses hard union for low-mass Can rows, soft weighted BC for Lift, and abstention for Can MG. It reaches `209/300` over the two primary development endpoints versus `201/300` for the strongest pre-union per-task baselines and `173/300` for v0.1. This is the development shape that was frozen into v0.2; after completing all five A3 Lift v0.1 audit rows, the five-split fresh Can+Lift gate now reaches `340/500` versus `338/500`.
@@ -72,10 +72,68 @@ Current status as of 2026-06-26:
   but failed fresh validation (`81/100` versus `84/100` best completed
   baselines), and later output-anchor, two-feature rescue, and transition-level
   variants did not clear their first validation checks.
-- The next viable method-search direction, if pursued, needs a genuinely new
-  state-conditional policy-quality signal or a different transition-level
-  training objective. Otherwise the strongest paper path remains the
-  precision/coverage study.
+- The follow-on SOTA-candidate sweep in
+  `triage_bc_sota_candidate_plan.md` is now complete at the short-screen level.
+  The aggregate report is
+  `results/sota_candidate/SOTA_CANDIDATE_SWEEP_REPORT.md`. No branch clears its
+  first-stage gate: the best Can404 endpoint branches reach `16/20` versus the
+  matched positive-only anchor at `17/20`, CCG transfer reaches `10/20` on
+  Lift707 versus positive-only `12/20`, and anchored IQL-AWBC reaches only
+  `13/20`.
+- A later CAU-alone five-split endpoint follow-up is stronger than the first
+  short screen suggested: CAU action-conflict reaches `193/250` on Can, versus
+  positive-only `174/250`, weighted BC `158/250`, TRIAGE-BC v0.1 `171/250`,
+  best old baseline per split `192/250`, and v0.2 selected union `197/250`.
+- A post-hoc CAU-plus-v0.2 portfolio preflight reaches `208/250` by selecting
+  CAU on splits `303/404/505` and v0.2 on `101/202`. It was the best
+  pre-fresh-validation method-search hypothesis, but it was selected on the
+  same five endpoint splits and cannot be a method result by itself.
+- The first fresh validation of that CAU-plus-v0.2 setup gate on Can split606
+  is negative: the fitted gate selects CAU, but CAU reaches `15/20` versus
+  positive-only `16/20`; frozen v0.2 union reaches `14/20`, and the cleaner
+  risk-fusion diagnostic reaches `15/20`. A proper expanded-mask CAU check
+  that trains on the full 130-demo transition-weight filter reaches only
+  `12/20`, closing the hypothesis that the split606 failure was just a
+  training-filter mismatch.
+- A GMM-confidence CAU router follow-up is not the missing selector: split606
+  labeled q25 calibration is neutral (`16/20`), a post-hoc split606 threshold
+  reaches `18/20`, but the frozen threshold fails unused split707 (`15/20`,
+  opening no CAU episodes). CAU-alone is the important signal on split707:
+  `20/20` first-20 and `50/50` at 50 episodes versus positive-only `36/50` and
+  weighted BC `39/50`. The next fixed-CAU split808 validation is negative:
+  `38/50` versus positive-only `43/50` and Candidate E `42/50`.
+- A leave-one-split-out CAU selector feature audit confirms that simple initial
+  support-distance features are not the missing selector. Across audited Can
+  splits, positive-only is `269/370`, always-CAU is `296/370`, and oracle
+  switching is `331/370`, but the safe held-out selector reaches only
+  `263/370` while the best-delta selector reaches `277/370` with `23` losses.
+- A first-state policy-distribution selector audit is stronger but still not
+  deployable. Across the same completed splits, the safe held-out selector
+  reaches `276/370` with `29` gains and `22` losses, and the best-delta selector
+  reaches `299/370` with `44` gains and `14` losses. Its pooled frozen rule is
+  neutral on fresh split909: `15/20` routed versus `15/20` positive-only and
+  `9/20` CAU-alone, opening `0` CAU episodes.
+- A linear learned router over those policy features is also negative:
+  leave-one-split-out safe reaches `277/370` and best-delta `278/370`, both
+  with `17` positive-only losses. Freezing the learned router from completed
+  splits to split909 opens all CAU starts and falls to `9/20`.
+- A per-step support-margin router is the first sequence-aware CAU follow-up
+  with a consistent short-screen gain: fixed threshold `0.05` reaches `51/60`
+  across splits 909/808/707 versus positive-only `47/60` and CAU-alone
+  `43/60`, with `5` gains and `1` loss versus positive-only. The first
+  no-retune held-out guardrail on split606 is neutral (`16/20` router versus
+  `16/20` positive-only and `15/20` CAU), but the 50-episode split606
+  validation is positive (`42/50` router versus `38/50` positive-only and
+  `41/50` CAU). The next 50-episode split101 check is mixed-negative (`25/50`
+  router versus `19/50` positive-only and `33/50` CAU), so the two 50-episode
+  validations aggregate to `67/100` router versus `57/100` positive-only but
+  below CAU `74/100`. A naive persistent support-margin variant is worse on
+  split101 (`20/50`), so committing harder after repeated support-margin
+  evidence is not enough.
+- The current support-margin router remains a useful sequence-aware diagnostic,
+  not a method claim. The strongest paper path remains the precision/coverage
+  study unless a better router captures CAU-dominant splits without losing the
+  positive-only anchor.
 
 ---
 

@@ -21,6 +21,17 @@ The latest evidence improves the project significantly:
 - Fresh Can 40p/80b is a positive but modest method result: v0.2 hard union reaches **197/250** versus **192/250** best per-split baselines, with one severe split-404 reversal.
 - Lift MG is still a caveat: v0.2 selects weighted BC and gets **143/250** versus **146/250** best completed per-split baselines, winning only two of five splits after the completed five-split v0.1 audit.
 - Generated Can diagnostics now show clear regimes where bad-aware support beats matched positive-only retrieval: hard-negative, coverage-shift, and prefix-positive settings.
+- The follow-on focused SOTA-candidate sweep is negative: SM-RWBC, CAU-BC,
+  CCG-Distill, SafeExpand, Demo-DPO, and simple IQL-AWBC all fail their first
+  short-screen gates. The aggregate report is
+  `results/sota_candidate/SOTA_CANDIDATE_SWEEP_REPORT.md`; best Can404
+  candidates reach `16/20` versus positive-only `17/20`, CCG transfer reaches
+  `10/20` versus positive-only `12/20`, and anchored IQL-AWBC reaches `13/20`.
+- CAU action-conflict is now the strongest current Can method seed after a
+  five-split endpoint follow-up (`193/250`), but it still trails v0.2 selected
+  union (`197/250`). A post-hoc CAU-plus-v0.2 setup gate reaches `208/250` by
+  selecting CAU on `303/404/505` and v0.2 on `101/202`; treat this as a fresh
+  validation hypothesis, not as current methods/SOTA evidence.
 - The uncertainty intervals for v0.2 still cross zero, so the result should be reported as **directional branch-selection evidence**, not a formal significance win.
 
 **Bottom line:**
@@ -28,6 +39,10 @@ The latest evidence improves the project significantly:
 - Current evidence is **borderline but promising** for a top-tier empirical study.
 - It is **not yet decisive** for a top-tier methods/SOTA paper.
 - With 2–4 targeted additions, the paper can become much stronger without requiring huge compute.
+- Do not promote v0.2 as methods/SOTA dominance, and do not scale the completed
+  SOTA-candidate recipes unchanged. If method-search continues, prioritize
+  fresh validation of the CAU-plus-v0.2 setup gate or a new diagnostic that
+  explains how a candidate will preserve the positive-only anchor.
 
 ---
 
@@ -146,9 +161,10 @@ What to do next:
 
 - The five-split fresh gate is now complete; do not describe the current
   weakness as an “only three split seeds” issue.
-- If more GPU budget is spent, run optional fresh all-demo/all-positive
-  diagnostics or pursue a stronger non-Can endpoint row, but keep those
-  separate from the current selected-vs-strong-baseline/v0.1 audit.
+- If more GPU budget is spent, expand optional fresh all-demo/all-positive
+  diagnostics across additional splits or pursue a stronger non-Can endpoint
+  row, but keep those separate from the current selected-vs-strong-baseline/v0.1
+  audit.
 - Present v0.2 as **portfolio-regret reduction and risk-control evidence**,
   not as “TRIAGE always wins.”
 
@@ -365,8 +381,9 @@ Status as of 2026-06-26:
 - The fresh baseline coverage audit
   `results/final_paper_v02/tables/v02_fresh_baseline_coverage_REPORT.md`
   records required branch-selection rows as `7/7` complete and optional
-  fresh all-demo/all-positive diagnostic rows as `0/4` run. Do not imply those
-  optional diagnostics are completed fresh-gate evidence unless they are run.
+  fresh all-demo/all-positive diagnostic categories as `4/4` represented by at
+  least one split each. Do not imply those optional diagnostics are completed
+  fresh-gate evidence unless the full five-split diagnostic matrix is run.
 
 Minimum baselines:
 

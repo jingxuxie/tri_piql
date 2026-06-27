@@ -1,0 +1,2 @@
+checkpoint,checkpoint_name,success_rate,avg_return,avg_len,eval_episodes
+/home/eston/tri-piql/results/sota_candidate/cau_action_conflict_can505_b005_m05_e200_train/cau_action_conflict_can505_b005_m05_e200_seed0/20260626172232/models/model_epoch_200.pth,model_epoch_200,0.86,0.86,149.22,50

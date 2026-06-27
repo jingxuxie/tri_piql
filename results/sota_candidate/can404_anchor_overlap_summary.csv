@@ -1,0 +1,13 @@
+method_id,label,role,checkpoint,success_count,eval_episodes,delta_vs_positive,gains_vs_positive,losses_vs_positive,retained_positive_successes,shared_positive_failures,oracle_solved_positive_losses
+positive_only_nn_top40,Positive-only NN top40,anchor_baseline,model_epoch_200,17,20,0,0,0,17,3,0
+weighted_bc_full_pool,Weighted BC full pool,baseline,model_epoch_200,13,20,-4,2,6,11,1,6
+v01_triage_bc,v0.1 TRIAGE-BC,baseline,model_epoch_200,14,20,-3,1,4,13,2,3
+bc_all_mixed,All-demo BC,diagnostic_control,model_epoch_200,10,20,-7,2,9,8,1,9
+all_positive_oracle,All-positive oracle,oracle_control,model_epoch_200,19,20,2,3,1,16,0,0
+candidate_c_sequence_mask,Candidate C sequence mask,previous_candidate,model_epoch_200,16,20,-1,0,1,16,3,1
+sm_rwbc,SM-RWBC m0.03 lambda2 combined,sota_candidate,model_epoch_100,10,20,-7,2,9,8,1,8
+cau_action_conflict,CAU action-conflict,sota_candidate,model_epoch_200,16,20,-1,2,3,14,1,3
+safeexpand,SafeExpand demo103,sota_candidate,model_epoch_200,12,20,-5,1,6,11,2,5
+demo_dpo_refcenter,Demo-DPO ref-centered,sota_candidate,model_epoch_5,16,20,-1,1,2,15,2,1
+iql_awbc_norm_topq,IQL-AWBC norm-topq,sota_candidate_diagnostic,model_epoch_100,4,20,-13,0,13,4,3,12
+anchored_iql_awbc,Anchored IQL-AWBC,sota_candidate,model_epoch_10,13,20,-4,1,5,12,2,4

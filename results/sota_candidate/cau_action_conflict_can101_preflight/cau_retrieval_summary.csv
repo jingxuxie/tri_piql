@@ -1,0 +1,4 @@
+retrieval_mode,negative_loss_scope,negative_loss_mass,hidden_positive_negative_loss_mass,hidden_bad_negative_loss_mass,selected_negative_obs_distance_mean,selected_negative_action_distance_mean,selected_negative_action_distance_p25,selected_negative_action_distance_p50,selected_negative_action_distance_p75,selected_negative_state_action_distance_mean
+nearest_state,selected,5316,4667,649,3.367786,2.796551,1.198505,2.292329,4.408298,4.546549
+nearest_state_action,selected,5316,4667,649,3.546536,1.940632,0.753392,1.403510,3.093117,4.161606
+action_conflict,selected,5316,4667,649,3.777375,3.798804,2.309213,3.771447,5.146017,5.521750

@@ -1,0 +1,2 @@
+selection_scope,gate_label,feature_1,direction_1,threshold_1,feature_2,direction_2,threshold_2,operator,episodes,positive_successes,cau_successes,routed_successes,delta_vs_positive,gains_vs_positive,losses_vs_positive,opened_episodes
+pooled_303_404_505,two_feature,initial_anchor_pos_dist_mean,le,1.273665,initial_anchor_neg_dist_mean,gt,3.131861,or,60,47,48,51,4,4,0,18

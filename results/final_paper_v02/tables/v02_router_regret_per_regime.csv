@@ -4,13 +4,13 @@ always_weighted_bc,Always weighted BC,can40_fresh,Can 40p/80b,complete,158,250,0
 always_hard_support,Always hard support,can40_fresh,Can 40p/80b,complete,197,250,0.788,209,250,0.836,12,0.048,positive_nn_risk_union_top40,
 v01_triage_bc,v0.1 TRIAGE-BC,can40_fresh,Can 40p/80b,complete,171,250,0.684,209,250,0.836,38,0.152,triage_bc,"Completed all current split seeds: 101, 202, 303, 404, 505."
 v02_router,v0.2 router,can40_fresh,Can 40p/80b,complete,197,250,0.788,209,250,0.836,12,0.048,hard_risk_union,Frozen v0.2 selects hard union on all five Can 40 fresh splits.
-oracle_branch_selector,Oracle branch selector,can40_fresh,Can 40p/80b,oracle,209,250,0.836,209,250,0.836,0,0.000,per_split_best_completed_branch,"Audit-only selector over completed positive-only, weighted, and hard-union branches."
+oracle_branch_selector,Oracle branch selector,can40_fresh,Can 40p/80b,oracle,209,250,0.836,209,250,0.836,0,0.000,per_split_best_completed_branch,Audit-only selector over completed branch-selection rows; optional mixed-log and oracle controls are excluded.
 always_positive_only_nn,Always positive-only NN,lift_mg_fresh,Lift MG,complete,125,250,0.500,154,250,0.616,29,0.116,positive_only_nn,
 always_weighted_bc,Always weighted BC,lift_mg_fresh,Lift MG,complete,143,250,0.572,154,250,0.616,11,0.044,weighted_bc,
 always_hard_support,Always hard support,lift_mg_fresh,Lift MG,complete,143,250,0.572,154,250,0.616,11,0.044,triage_bc,"Fresh hard-support proxy uses the v0.1 hard pos-min TRIAGE branch. Completed all current split seeds: 101, 202, 303, 404, 505."
 v01_triage_bc,v0.1 TRIAGE-BC,lift_mg_fresh,Lift MG,complete,143,250,0.572,154,250,0.616,11,0.044,triage_bc,"Completed all current split seeds: 101, 202, 303, 404, 505."
 v02_router,v0.2 router,lift_mg_fresh,Lift MG,complete,143,250,0.572,154,250,0.616,11,0.044,soft_weighted,Frozen v0.2 selects weighted BC on all five Lift MG fresh splits.
-oracle_branch_selector,Oracle branch selector,lift_mg_fresh,Lift MG,oracle,154,250,0.616,154,250,0.616,0,0.000,per_split_best_completed_branch,Audit-only selector over completed positive-only and weighted branches.
+oracle_branch_selector,Oracle branch selector,lift_mg_fresh,Lift MG,oracle,154,250,0.616,154,250,0.616,0,0.000,per_split_best_completed_branch,Audit-only selector over completed branch-selection rows; optional mixed-log and oracle controls are excluded.
 always_positive_only_nn,Always positive-only NN,hard_negative_can,Hard-negative Can,complete,91,150,0.607,104,150,0.693,13,0.087,state_action_positive_nn_top40,
 always_weighted_bc,Always weighted BC,hard_negative_can,Hard-negative Can,not_applicable,,,,104,150,0.693,,,,Weighted BC was not part of this matched generated-regime endpoint probe.
 always_hard_support,Always hard support,hard_negative_can,Hard-negative Can,complete,104,150,0.693,104,150,0.693,0,0.000,hybrid_rank_fusion_badaware_heavy_top40,Bad-aware hard-support probe branch.

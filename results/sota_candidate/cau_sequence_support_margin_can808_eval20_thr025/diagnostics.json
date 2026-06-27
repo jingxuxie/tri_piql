@@ -1,0 +1,61 @@
+{
+  "split_path": "results/candidate_f_can_fresh_validation/splits/can_paired_pos40_bad80_split808/split_indices.json",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "env_name": "PickPlaceCan",
+  "env_version": "1.5.1",
+  "policies": {
+    "positive": "results/candidate_f_can_fresh_validation/per_seed/can_paired_pos40_bad80_split808_positive_only_nn_policy0/train/can_paired_pos40_bad80_split808_positive_only_nn_policy0_official_bc_rnn/20260626081822/models/model_epoch_200.pth",
+    "cau": "results/sota_candidate/cau_action_conflict_can808_b005_m05_e200_train/cau_action_conflict_can808_b005_m05_e200_seed0/20260626211232/models/model_epoch_200.pth"
+  },
+  "policy_order": [
+    "positive",
+    "cau"
+  ],
+  "policy_biases": {},
+  "router_mode": "positive_anchor_margin",
+  "support_mode": "labeled",
+  "positive_anchor_diagnostics": null,
+  "switch_threshold": 0.25,
+  "initial_gate_threshold": 3.0,
+  "initial_gate_margin_threshold": 0.0,
+  "initial_feature": "anchor_logp_under_alt",
+  "initial_feature_threshold": 0.0,
+  "effective_initial_feature_threshold": 0.0,
+  "initial_feature_threshold_source": "literal",
+  "initial_feature_quantile": 0.25,
+  "initial_feature_calibration_ids": [],
+  "initial_feature_calibration_values": [],
+  "initial_feature_direction": "lt",
+  "initial_policy_feature": "alt_logp_margin_vs_anchor",
+  "initial_policy_feature_threshold": 0.0,
+  "initial_policy_feature_direction": "gt",
+  "initial_policy_feature_2": "",
+  "initial_policy_feature_threshold_2": 0.0,
+  "initial_policy_feature_direction_2": "gt",
+  "initial_policy_feature_operator": "and",
+  "temporal_persistence_steps": 10,
+  "isolated_policy_rng": true,
+  "obs_keys": [
+    "object",
+    "robot0_eef_pos",
+    "robot0_eef_quat",
+    "robot0_gripper_qpos"
+  ],
+  "eval_init_mode": "valid_positive_states",
+  "eval_initial_ids": [
+    "demo_5",
+    "demo_29",
+    "demo_39",
+    "demo_45",
+    "demo_53",
+    "demo_81",
+    "demo_89",
+    "demo_99",
+    "demo_105",
+    "demo_189"
+  ],
+  "eval_episodes": 20,
+  "eval_horizon": 400,
+  "seed": 0,
+  "device": "cuda"
+}

@@ -21,6 +21,8 @@ This report covers the Can branch; see the v0.2 README and Lift report for the c
 | 404 | positive_only_nn | strong_baseline | 39 | 50 | 0.780 | 50 | 40 |
 | 404 | weighted_bc | strong_baseline | 33 | 50 | 0.660 | 130 | 120 |
 | 404 | triage_bc | v01_method | 36 | 50 | 0.720 | 69 | 59 |
+| 404 | bc_all_mixed | mixed_log_baseline | 27 | 50 | 0.540 | 180 | 0 |
+| 404 | all_train_positive_oracle | oracle_control | 49 | 50 | 0.980 | 90 | 0 |
 | 505 | positive_nn_risk_union_top40 | v02_selected | 41 | 50 | 0.820 | 54 | 44 |
 | 505 | positive_only_nn | strong_baseline | 40 | 50 | 0.800 | 50 | 40 |
 | 505 | weighted_bc | strong_baseline | 30 | 50 | 0.600 | 130 | 120 |

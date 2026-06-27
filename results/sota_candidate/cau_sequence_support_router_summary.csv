@@ -1,0 +1,13 @@
+screen_id,split,threshold,episodes,positive_successes,cau_successes,router_successes,positive_score,cau_score,router_score,delta_vs_positive,delta_vs_cau,gains_vs_positive,losses_vs_positive,choices_positive,choices_cau,router_report
+split909_thr0,909,0.0,20,15,9,11,15/20,9/20,11/20,-4,2,1,5,2108,2656,results/sota_candidate/cau_sequence_support_margin_can909_eval20_thr0/REPORT.md
+split101_thr005_eval50,101,0.05,50,19,33,25,19/50,33/50,25/50,6,-8,8,2,8055,4595,results/sota_candidate/cau_sequence_support_margin_can101_eval50_thr005/REPORT.md
+split101_persistent_thr005_k10_eval50,101,0.05_persistent_k10,50,19,33,20,19/50,33/50,20/50,1,-13,3,2,6845,7571,results/sota_candidate/cau_sequence_support_margin_persistent_can101_eval50_thr005_k10/REPORT.md
+split909_thr005,909,0.05,20,15,9,16,15/20,9/20,16/20,1,7,2,1,2209,1093,results/sota_candidate/cau_sequence_support_margin_can909_eval20_thr005/REPORT.md
+split909_thr025,909,0.25,20,15,9,16,15/20,9/20,16/20,1,7,2,1,3022,206,results/sota_candidate/cau_sequence_support_margin_can909_eval20_thr025/REPORT.md
+split606_thr005_heldout,606,0.05,20,16,15,16,16/20,15/20,16/20,0,1,2,2,2362,873,results/sota_candidate/cau_sequence_support_margin_can606_eval20_thr005/REPORT.md
+split606_thr005_eval50,606,0.05,50,38,41,42,38/50,41/50,42/50,4,1,7,3,5496,2005,results/sota_candidate/cau_sequence_support_margin_can606_eval50_thr005/REPORT.md
+split808_thr005,808,0.05,20,17,14,18,17/20,14/20,18/20,1,4,1,0,1909,789,results/sota_candidate/cau_sequence_support_margin_can808_eval20_thr005/REPORT.md
+split808_thr025,808,0.25,20,17,14,17,17/20,14/20,17/20,0,3,0,0,2914,110,results/sota_candidate/cau_sequence_support_margin_can808_eval20_thr025/REPORT.md
+split707_thr025,707,0.25,20,15,20,15,15/20,20/20,15/20,0,-5,0,0,3275,316,results/sota_candidate/cau_sequence_support_margin_can707_eval20_thr025/REPORT.md
+split707_thr010,707,0.10,20,15,20,15,15/20,20/20,15/20,0,-5,1,1,2826,728,results/sota_candidate/cau_sequence_support_margin_can707_eval20_thr010/REPORT.md
+split707_thr005,707,0.05,20,15,20,17,15/20,20/20,17/20,2,-3,2,0,2061,891,results/sota_candidate/cau_sequence_support_margin_can707_eval20_thr005/REPORT.md

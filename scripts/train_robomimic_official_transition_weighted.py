@@ -13,6 +13,7 @@ from pathlib import Path
 import h5py
 import numpy as np
 import torch
+import torch.nn.functional as F
 from torch.utils.data import DataLoader, WeightedRandomSampler
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -88,6 +89,36 @@ def parse_args() -> argparse.Namespace:
         help="Weight for optional max(0, log pi(a_bad|s) - log pi(a_demo|s) + margin) regularizer.",
     )
     parser.add_argument("--negative-margin", type=float, default=0.5)
+    parser.add_argument(
+        "--demo-preference-weight",
+        type=float,
+        default=0.0,
+        help=(
+            "Weight for optional demo-level preference loss. Requires transition "
+            "HDF5 datasets named preference_label with +1 positive, -1 negative, "
+            "and 0 ignored."
+        ),
+    )
+    parser.add_argument(
+        "--demo-preference-temperature",
+        type=float,
+        default=1.0,
+        help="Temperature multiplying the positive-minus-negative sequence log-probability gap.",
+    )
+    parser.add_argument(
+        "--demo-preference-margin",
+        type=float,
+        default=0.0,
+        help="Optional margin subtracted from the positive-minus-negative preference gap.",
+    )
+    parser.add_argument(
+        "--demo-preference-reference-centered",
+        action="store_true",
+        help=(
+            "Use DPO-style reference centering when anchor_log_probs are available: "
+            "(log pi - log pi_ref)(positive) - (log pi - log pi_ref)(negative)."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -95,6 +126,8 @@ class TransitionWeightStore:
     def __init__(self, path: Path):
         self.path = path
         self.weights: dict[str, np.ndarray] = {}
+        self.sample_weights: dict[str, np.ndarray] = {}
+        self.preference_labels: dict[str, np.ndarray] = {}
         self.negative_actions: dict[str, np.ndarray] = {}
         self.negative_loss_weights: dict[str, np.ndarray] = {}
         self.metadata: dict[str, object] = {}
@@ -105,6 +138,10 @@ class TransitionWeightStore:
             for demo_id in data_group:
                 demo_group = data_group[demo_id]
                 self.weights[demo_id] = np.asarray(demo_group["loss_weight"], dtype=np.float32)
+                if "sample_weight" in demo_group:
+                    self.sample_weights[demo_id] = np.asarray(demo_group["sample_weight"], dtype=np.float32)
+                if "preference_label" in demo_group:
+                    self.preference_labels[demo_id] = np.asarray(demo_group["preference_label"], dtype=np.float32)
                 if "negative_action" in demo_group:
                     self.negative_actions[demo_id] = np.asarray(demo_group["negative_action"], dtype=np.float32)
                 if "negative_loss_weight" in demo_group:
@@ -162,6 +199,22 @@ class TransitionWeightStore:
             raise ValueError(f"loss_weight sequence must be 1D, got {seq.shape}")
         return seq
 
+    def sample_weight_for_index(self, trainset, index: int) -> np.ndarray:
+        if not self.sample_weights:
+            return self.sequence_for_index(trainset, index)
+        seq = self._sequence_from_array(trainset, index, self.sample_weights, name="sample_weight")
+        if seq.ndim != 1:
+            raise ValueError(f"sample_weight sequence must be 1D, got {seq.shape}")
+        return seq
+
+    def preference_label_for_index(self, trainset, index: int) -> np.ndarray | None:
+        if not self.preference_labels:
+            return None
+        seq = self._sequence_from_array(trainset, index, self.preference_labels, name="preference_label")
+        if seq.ndim != 1:
+            raise ValueError(f"preference_label sequence must be 1D, got {seq.shape}")
+        return seq
+
     def negative_action_for_index(self, trainset, index: int) -> np.ndarray | None:
         if not self.negative_actions:
             return None
@@ -190,6 +243,9 @@ class TransitionWeightDataset(torch.utils.data.Dataset):
     def __getitem__(self, index: int):
         item = self.base_dataset[index]
         item["loss_weight"] = self.weight_store.sequence_for_index(self.base_dataset, int(index))
+        preference_label = self.weight_store.preference_label_for_index(self.base_dataset, int(index))
+        if preference_label is not None:
+            item["preference_label"] = preference_label
         negative_action = self.weight_store.negative_action_for_index(self.base_dataset, int(index))
         if negative_action is not None:
             item["negative_action"] = negative_action
@@ -202,9 +258,9 @@ class TransitionWeightDataset(torch.utils.data.Dataset):
 def sequence_mean_weights(trainset, weight_store: TransitionWeightStore) -> torch.DoubleTensor:
     weights = np.empty((len(trainset),), dtype=np.float64)
     for index in range(len(trainset)):
-        weights[index] = float(np.mean(weight_store.sequence_for_index(trainset, index)))
+        weights[index] = float(np.mean(weight_store.sample_weight_for_index(trainset, index)))
     if weights.sum() <= 0.0:
-        raise ValueError("transition weights produced zero total sequence weight")
+        raise ValueError("transition/sample weights produced zero total sequence weight")
     return torch.as_tensor(weights, dtype=torch.double)
 
 
@@ -218,7 +274,24 @@ def _match_log_prob_shape(weights: torch.Tensor, log_probs: torch.Tensor, *, nam
     return weights
 
 
-def _weighted_nll_losses(predictions, batch, *, negative_hinge_weight: float, negative_margin: float):
+def _sequence_mean(values: torch.Tensor) -> torch.Tensor:
+    if values.dim() <= 1:
+        return values
+    reduce_dims = tuple(range(1, values.dim()))
+    return values.mean(dim=reduce_dims)
+
+
+def _weighted_nll_losses(
+    predictions,
+    batch,
+    *,
+    negative_hinge_weight: float,
+    negative_margin: float,
+    demo_preference_weight: float,
+    demo_preference_temperature: float,
+    demo_preference_margin: float,
+    demo_preference_reference_centered: bool,
+):
     log_probs = predictions["log_probs"]
     weights = batch.get("loss_weight", None)
     if weights is None:
@@ -256,6 +329,40 @@ def _weighted_nll_losses(predictions, batch, *, negative_hinge_weight: float, ne
         losses["negative_log_probs"] = torch.sum(negative_log_probs * negative_weights) / neg_denom
         losses["negative_hinge_active"] = torch.sum((hinge > 0.0).to(log_probs.dtype) * negative_weights) / neg_denom
         losses["negative_loss_weight_mean"] = negative_weights.mean()
+    if demo_preference_weight > 0.0 and "preference_label" in batch:
+        preference_labels = batch["preference_label"].to(device=log_probs.device, dtype=log_probs.dtype)
+        preference_labels = _match_log_prob_shape(
+            preference_labels,
+            log_probs,
+            name="preference_label",
+        )
+        if demo_preference_reference_centered:
+            if "anchor_log_probs" not in predictions:
+                raise ValueError("reference-centered demo preference requires predictions['anchor_log_probs']")
+            anchor_log_probs = predictions["anchor_log_probs"].to(device=log_probs.device, dtype=log_probs.dtype)
+            sequence_scores = _sequence_mean(log_probs - anchor_log_probs)
+        else:
+            sequence_scores = _sequence_mean(log_probs)
+        sequence_labels = _sequence_mean(preference_labels)
+        positive_mask = sequence_labels > 0.5
+        negative_mask = sequence_labels < -0.5
+        positive_count = torch.sum(positive_mask.to(log_probs.dtype))
+        negative_count = torch.sum(negative_mask.to(log_probs.dtype))
+        losses["demo_preference_positive_count"] = positive_count
+        losses["demo_preference_negative_count"] = negative_count
+        if bool(torch.any(positive_mask)) and bool(torch.any(negative_mask)):
+            positive_score = sequence_scores[positive_mask].mean()
+            negative_score = sequence_scores[negative_mask].mean()
+            preference_gap = positive_score - negative_score
+            preference_loss = F.softplus(
+                -float(demo_preference_temperature) * (preference_gap - float(demo_preference_margin))
+            )
+            losses["demo_preference_loss"] = preference_loss
+            losses["demo_preference_weighted_loss"] = float(demo_preference_weight) * preference_loss
+            losses["demo_preference_gap"] = preference_gap
+            losses["demo_preference_positive_log_prob"] = positive_score
+            losses["demo_preference_negative_log_prob"] = negative_score
+            losses["action_loss"] = losses["action_loss"] + losses["demo_preference_weighted_loss"]
     return losses
 
 
@@ -310,7 +417,15 @@ def install_anchor_logprob_reference(
     model._anchor_logprob_policy = anchor_policy
 
 
-def install_transition_weight_patch(*, negative_hinge_weight: float, negative_margin: float) -> None:
+def install_transition_weight_patch(
+    *,
+    negative_hinge_weight: float,
+    negative_margin: float,
+    demo_preference_weight: float,
+    demo_preference_temperature: float,
+    demo_preference_margin: float,
+    demo_preference_reference_centered: bool,
+) -> None:
     original_bc_process = BcAlgos.BC.process_batch_for_training
     original_rnn_process = BcAlgos.BC_RNN.process_batch_for_training
     original_gmm_log_info = BcAlgos.BC_GMM.log_info
@@ -329,6 +444,10 @@ def install_transition_weight_patch(*, negative_hinge_weight: float, negative_ma
             input_batch["negative_loss_weight"] = TensorUtils.to_float(
                 TensorUtils.to_device(batch["negative_loss_weight"][:, 0], self.device)
             )
+        if "preference_label" in batch:
+            input_batch["preference_label"] = TensorUtils.to_float(
+                TensorUtils.to_device(batch["preference_label"][:, 0], self.device)
+            )
         return input_batch
 
     def rnn_process(self, batch):
@@ -342,6 +461,10 @@ def install_transition_weight_patch(*, negative_hinge_weight: float, negative_ma
         if "negative_loss_weight" in batch:
             input_batch["negative_loss_weight"] = TensorUtils.to_float(
                 TensorUtils.to_device(batch["negative_loss_weight"], self.device)
+            )
+        if "preference_label" in batch:
+            input_batch["preference_label"] = TensorUtils.to_float(
+                TensorUtils.to_device(batch["preference_label"], self.device)
             )
         return input_batch
 
@@ -391,6 +514,10 @@ def install_transition_weight_patch(*, negative_hinge_weight: float, negative_ma
             batch,
             negative_hinge_weight=negative_hinge_weight,
             negative_margin=negative_margin,
+            demo_preference_weight=demo_preference_weight,
+            demo_preference_temperature=demo_preference_temperature,
+            demo_preference_margin=demo_preference_margin,
+            demo_preference_reference_centered=demo_preference_reference_centered,
         )
         anchor_l2_weight = float(getattr(self, "_anchor_l2_weight", 0.0))
         if anchor_l2_weight > 0.0:
@@ -445,6 +572,15 @@ def install_transition_weight_patch(*, negative_hinge_weight: float, negative_ma
             log["Anchor_LogProb_Weighted_Loss"] = losses["anchor_logprob_weighted_loss"].item()
             log["Anchor_LogProb_Active"] = losses["anchor_logprob_active"].item()
             log["Anchor_LogProb_Weight_Mean"] = losses["anchor_logprob_weight_mean"].item()
+        if "demo_preference_loss" in losses:
+            log["Demo_Preference_Loss"] = losses["demo_preference_loss"].item()
+            log["Demo_Preference_Weighted_Loss"] = losses["demo_preference_weighted_loss"].item()
+            log["Demo_Preference_Gap"] = losses["demo_preference_gap"].item()
+            log["Demo_Preference_Positive_LogProb"] = losses["demo_preference_positive_log_prob"].item()
+            log["Demo_Preference_Negative_LogProb"] = losses["demo_preference_negative_log_prob"].item()
+        if "demo_preference_positive_count" in losses:
+            log["Demo_Preference_Positive_Count"] = losses["demo_preference_positive_count"].item()
+            log["Demo_Preference_Negative_Count"] = losses["demo_preference_negative_count"].item()
         return log
 
     def rnn_gmm_log_info(self, info):
@@ -467,6 +603,15 @@ def install_transition_weight_patch(*, negative_hinge_weight: float, negative_ma
             log["Anchor_LogProb_Weighted_Loss"] = losses["anchor_logprob_weighted_loss"].item()
             log["Anchor_LogProb_Active"] = losses["anchor_logprob_active"].item()
             log["Anchor_LogProb_Weight_Mean"] = losses["anchor_logprob_weight_mean"].item()
+        if "demo_preference_loss" in losses:
+            log["Demo_Preference_Loss"] = losses["demo_preference_loss"].item()
+            log["Demo_Preference_Weighted_Loss"] = losses["demo_preference_weighted_loss"].item()
+            log["Demo_Preference_Gap"] = losses["demo_preference_gap"].item()
+            log["Demo_Preference_Positive_LogProb"] = losses["demo_preference_positive_log_prob"].item()
+            log["Demo_Preference_Negative_LogProb"] = losses["demo_preference_negative_log_prob"].item()
+        if "demo_preference_positive_count" in losses:
+            log["Demo_Preference_Positive_Count"] = losses["demo_preference_positive_count"].item()
+            log["Demo_Preference_Negative_Count"] = losses["demo_preference_negative_count"].item()
         return log
 
     BcAlgos.BC.process_batch_for_training = bc_process
@@ -505,6 +650,10 @@ def train(
     anchor_l2_weight: float,
     anchor_logprob_weight: float,
     anchor_logprob_min_weight: float,
+    demo_preference_weight: float,
+    demo_preference_temperature: float,
+    demo_preference_margin: float,
+    demo_preference_reference_centered: bool,
 ) -> None:
     np.random.seed(config.train.seed)
     torch.manual_seed(config.train.seed)
@@ -512,6 +661,10 @@ def train(
     install_transition_weight_patch(
         negative_hinge_weight=negative_hinge_weight,
         negative_margin=negative_margin,
+        demo_preference_weight=demo_preference_weight,
+        demo_preference_temperature=demo_preference_temperature,
+        demo_preference_margin=demo_preference_margin,
+        demo_preference_reference_centered=demo_preference_reference_centered,
     )
 
     print("\n============= Transition-Weighted Robomimic Run =============")
@@ -525,6 +678,14 @@ def train(
         print(
             "Anchor logprob: "
             f"weight={anchor_logprob_weight}, min_weight={anchor_logprob_min_weight}"
+        )
+    if demo_preference_weight > 0.0:
+        print(
+            "Demo preference: "
+            f"weight={demo_preference_weight}, "
+            f"temperature={demo_preference_temperature}, "
+            f"margin={demo_preference_margin}, "
+            f"reference_centered={demo_preference_reference_centered}"
         )
     log_dir, ckpt_dir, _video_dir, time_dir = TrainUtils.get_exp_dir(config, resume=False)
     latest_model_path = os.path.join(time_dir, "last.pth")
@@ -692,6 +853,10 @@ def main() -> None:
         anchor_l2_weight=args.anchor_l2_weight,
         anchor_logprob_weight=args.anchor_logprob_weight,
         anchor_logprob_min_weight=args.anchor_logprob_min_weight,
+        demo_preference_weight=args.demo_preference_weight,
+        demo_preference_temperature=args.demo_preference_temperature,
+        demo_preference_margin=args.demo_preference_margin,
+        demo_preference_reference_centered=args.demo_preference_reference_centered,
     )
 
 

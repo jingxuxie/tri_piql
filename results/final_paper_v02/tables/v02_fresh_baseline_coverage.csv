@@ -3,10 +3,10 @@ Can 40p/80b,v0.2 selected hard union,positive_nn_risk_union_top40,v02_selected,r
 Can 40p/80b,positive-only NN,positive_only_nn,strong_baseline,required_branch_selection,complete,101/202/303/404/505,,174,250,0.696
 Can 40p/80b,weighted BC,weighted_bc,strong_baseline,required_branch_selection,complete,101/202/303/404/505,,158,250,0.632
 Can 40p/80b,v0.1 TRIAGE-BC,triage_bc,v01_fixed_branch,required_branch_selection,complete,101/202/303/404/505,,171,250,0.684
-Can 40p/80b,all-demo BC,bc_all_mixed,all_demo_control,optional_diagnostic,optional_not_run,,101/202/303/404/505,,,
-Can 40p/80b,all-positive oracle,all_train_positive_oracle,oracle_control,optional_diagnostic,optional_not_run,,101/202/303/404/505,,,
+Can 40p/80b,all-demo BC,bc_all_mixed,all_demo_control,optional_diagnostic,partial,404,101/202/303/505,27,50,0.540
+Can 40p/80b,all-positive oracle,all_train_positive_oracle,oracle_control,optional_diagnostic,partial,404,101/202/303/505,49,50,0.980
 Lift MG,v0.2 selected weighted BC,weighted_bc,v02_selected,required_branch_selection,complete,101/202/303/404/505,,143,250,0.572
 Lift MG,positive-only NN,positive_only_nn,strong_baseline,required_branch_selection,complete,101/202/303/404/505,,125,250,0.500
 Lift MG,v0.1 TRIAGE-BC,triage_bc,v01_fixed_branch,required_branch_selection,complete,101/202/303/404/505,,143,250,0.572
-Lift MG,all-demo BC,bc_all_mixed,all_demo_control,optional_diagnostic,optional_not_run,,101/202/303/404/505,,,
-Lift MG,all-positive oracle,all_train_positive_oracle,oracle_control,optional_diagnostic,optional_not_run,,101/202/303/404/505,,,
+Lift MG,all-demo BC,bc_all_mixed,all_demo_control,optional_diagnostic,partial,505,101/202/303/404,8,50,0.160
+Lift MG,all-positive oracle,all_train_positive_oracle,oracle_control,optional_diagnostic,partial,505,101/202/303/404,39,50,0.780

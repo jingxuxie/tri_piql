@@ -191,7 +191,7 @@ def build_report(rows: list[dict[str, object]]) -> str:
         f"- Required branch-selection rows complete: `{required_complete}/{len(required)}`.",
         f"- Optional diagnostic rows run in the fresh five-split gate: `{optional_run}/{len(optional)}`.",
         "- The current v0.2 fresh-gate claim is a branch-selection comparison over selected, positive-only, weighted, and v0.1 fixed branches.",
-        "- Fresh all-demo and all-positive rows would be useful diagnostic controls, but they are not required for the current validated branch-selection claim and should not be implied as completed fresh-gate evidence.",
+        "- Fresh all-demo and all-positive diagnostic categories are represented by at least one split, but they are not required for the current validated branch-selection claim and should not be implied as a complete five-split leaderboard.",
         "",
         "## Row Coverage",
         "",
@@ -215,7 +215,7 @@ def build_report(rows: list[dict[str, object]]) -> str:
             "",
             "- A3 now closes the required v0.1 fixed-branch objection for the fresh five-split Can/Lift gate.",
             "- The paper should describe the fresh gate as a complete selected-vs-strong-baseline/v0.1 audit, not as a full SOTA leaderboard with all possible diagnostic controls.",
-            "- If more GPU budget is spent, the highest-value optional fresh rows are all-demo and all-positive oracle controls, clearly labeled as diagnostics.",
+            "- If more GPU budget is spent, optional all-demo and all-positive controls should be expanded across additional splits only as diagnostics.",
             "",
         ]
     )

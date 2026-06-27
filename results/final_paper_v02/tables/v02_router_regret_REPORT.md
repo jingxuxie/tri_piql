@@ -7,7 +7,7 @@ Important scope notes:
 - `N/A` means that branch was not part of that completed endpoint probe; it is excluded from counted combined success and regret.
 - `N/A not run` means the branch is conceptually relevant but missing from the current completed matrix; A3 should fill these cells if the paper needs a complete leaderboard.
 - Can MG is a stress/abstention diagnostic with rate-only reused branch summaries, so it is shown but excluded from counted endpoint totals.
-- Regret is measured against the best completed branch per split or aggregate probe; the oracle row is audit-only and can use endpoint outcomes.
+- Regret is measured against the best completed branch-selection row per split or aggregate probe; optional mixed-log and all-positive oracle diagnostics are excluded from the fresh Can/Lift regret oracle.
 
 ## Summary
 

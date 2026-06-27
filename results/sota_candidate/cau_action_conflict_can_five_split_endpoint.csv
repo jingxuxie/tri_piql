@@ -1,0 +1,6 @@
+split_seed,cau_successes,eval_episodes,positive_only_successes,weighted_bc_successes,triage_bc_successes,v02_selected_successes,best_old_baseline_successes,best_non_oracle_successes,delta_vs_positive_only,delta_vs_best_old_baseline,delta_vs_v02_selected,delta_vs_best_non_oracle,cau_avg_len,cau_report
+101,33,50,19,37,28,45,37,45,14,-4,-12,-12,203.9,results/sota_candidate/cau_action_conflict_can101_b005_m05_eval50/REPORT.md
+202,42,50,40,33,36,45,40,45,2,2,-3,-3,162.7,results/sota_candidate/cau_action_conflict_can202_b005_m05_eval50/REPORT.md
+303,40,50,36,25,35,39,36,39,4,4,1,1,163.6,results/sota_candidate/cau_action_conflict_can303_b005_m05_eval50/REPORT.md
+404,35,50,39,33,36,27,39,39,-4,-4,8,-4,193.5,results/sota_candidate/cau_action_conflict_can404_b005_m05_eval50/REPORT.md
+505,43,50,40,30,36,41,40,41,3,3,2,2,149.2,results/sota_candidate/cau_action_conflict_can505_b005_m05_eval50/REPORT.md

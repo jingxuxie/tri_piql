@@ -1,0 +1,47 @@
+{
+  "base_metadata": {
+    "anchor_demo_count": 50,
+    "extra_bad_demo_count": 7,
+    "extra_bad_masked_fraction": 0.039603960396039604,
+    "extra_bad_mass": 20,
+    "extra_demo_count": 80,
+    "extra_mass_fraction_total": 0.09195193008011654,
+    "extra_positive_demo_count": 9,
+    "extra_positive_mass": 485,
+    "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+    "margin_threshold": 2.0,
+    "positive_diagnostics": "results/candidate_g_fresh_preflight/per_seed/can_paired_pos40_bad80_split606_positive_only_nn_policy0/setup/diagnostics.json",
+    "score_rankings": "results/candidate_g_fresh_preflight/score_diagnostics/can_paired_pos40_bad80_split606_policy0/demo_rankings.csv",
+    "score_threshold": 0.2,
+    "split_path": "results/candidate_g_fresh_preflight/splits/can_paired_pos40_bad80_split606/split_indices.json",
+    "total_selected_mass": 5492,
+    "total_transition_count": 12426,
+    "train_demo_count": 130,
+    "weighted_diagnostics": "results/candidate_g_fresh_preflight/per_seed/can_paired_pos40_bad80_split606_weighted_bc_policy0/setup/diagnostics.json"
+  },
+  "base_weights": "results/sota_candidate/candidate_c_split606_sequence_mask_preflight/candidate_c_sequence_mask_weights.hdf5",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "negative_loss_scope": "selected",
+  "obs_keys": [
+    "robot0_eef_pos",
+    "robot0_eef_quat",
+    "robot0_gripper_qpos",
+    "object"
+  ],
+  "selected_retrieval": "action_conflict",
+  "selected_summary": {
+    "hidden_bad_negative_loss_mass": 698,
+    "hidden_positive_negative_loss_mass": 4794,
+    "negative_loss_mass": 5492,
+    "negative_loss_scope": "selected",
+    "retrieval_mode": "action_conflict",
+    "selected_negative_action_distance_mean": "3.702763",
+    "selected_negative_action_distance_p25": "2.258241",
+    "selected_negative_action_distance_p50": "3.748343",
+    "selected_negative_action_distance_p75": "5.034649",
+    "selected_negative_obs_distance_mean": "3.928986",
+    "selected_negative_state_action_distance_mean": "5.569670"
+  },
+  "split_path": "results/candidate_g_fresh_preflight/splits/can_paired_pos40_bad80_split606/split_indices.json",
+  "top_k": 16
+}

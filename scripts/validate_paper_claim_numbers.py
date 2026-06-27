@@ -430,6 +430,24 @@ def main() -> None:
         / "tables"
         / "submission_readiness_audit.csv"
     )
+    sota_candidate_sweep = read_csv(
+        ROOT
+        / "results"
+        / "sota_candidate"
+        / "sota_candidate_sweep_summary.csv"
+    )
+    sota_selector_rows = read_csv(
+        ROOT
+        / "results"
+        / "sota_candidate"
+        / "cau_selector_feature_loo_rows.csv"
+    )
+    sota_selector_baselines = read_csv(
+        ROOT
+        / "results"
+        / "sota_candidate"
+        / "cau_selector_feature_split_baselines.csv"
+    )
 
     main_counts = {
         ("Can 40p/80b", "all-positive oracle"): (147, 150),
@@ -1198,11 +1216,73 @@ def main() -> None:
     ]:
         expect_doc_contains(docs, ["latex", "iclr_latex", "markdown"], needle, failures)
 
+    sota_expected = {
+        "1": ("10/20", "17/20", "-7", "reject"),
+        "2": ("16/20", "17/20", "-1", "reject"),
+        "3": ("10/20", "12/20", "-2", "preflight_no_go"),
+        "4": ("12/20", "17/20", "-5", "reject"),
+        "5": ("16/20", "17/20", "-1", "reject"),
+        "6": ("13/20", "17/20", "-4", "reject"),
+    }
+    for candidate_id, (candidate_score, positive_score, delta, status) in sota_expected.items():
+        row = find_row(sota_candidate_sweep, failures, candidate_id=candidate_id)
+        if not row:
+            continue
+        context = f"SOTA candidate sweep {candidate_id}"
+        expected_fields = {
+            "best_candidate_score": candidate_score,
+            "positive_score": positive_score,
+            "delta_vs_positive": delta,
+            "status": status,
+        }
+        for key, expected_value in expected_fields.items():
+            if row.get(key) != expected_value:
+                fail(f"{context}: expected {key}={expected_value!r}, got {row.get(key)!r}", failures)
+    if len(sota_candidate_sweep) != 6:
+        fail(f"SOTA candidate sweep expected 6 rows, got {len(sota_candidate_sweep)}", failures)
+    for needle in ["16/20", "17/20", "13/20", "SOTA_CANDIDATE_SWEEP_REPORT.md"]:
+        expect_doc_contains(docs, ["reviewer_summary", "final_claim_contract", "checklist", "claim_package"], needle, failures)
+
+    selector_expected_totals = {
+        "episodes": 370,
+        "positive_successes": 269,
+        "cau_successes": 296,
+        "oracle_switch_successes": 331,
+    }
+    selector_totals = {
+        key: sum(as_int(row, key, failures, "CAU selector split baselines") for row in sota_selector_baselines)
+        for key in selector_expected_totals
+    }
+    if selector_totals != selector_expected_totals:
+        fail(f"CAU selector baseline totals expected {selector_expected_totals}, got {selector_totals}", failures)
+
+    def selector_mode_total(mode: str, key: str) -> int:
+        return sum(
+            as_int(row, key, failures, f"CAU selector {mode}")
+            for row in sota_selector_rows
+            if row["selector_mode"] == mode and row["heldout_split"] != "pooled_resubstitution"
+        )
+
+    selector_mode_expected = {
+        ("safe_zero_loss", "test_routed_successes"): 263,
+        ("safe_zero_loss", "test_gains_vs_positive"): 7,
+        ("safe_zero_loss", "test_losses_vs_positive"): 13,
+        ("best_delta", "test_routed_successes"): 277,
+        ("best_delta", "test_gains_vs_positive"): 31,
+        ("best_delta", "test_losses_vs_positive"): 23,
+    }
+    for (mode, key), expected_value in selector_mode_expected.items():
+        got = selector_mode_total(mode, key)
+        if got != expected_value:
+            fail(f"CAU selector {mode} expected {key}={expected_value}, got {got}", failures)
+    for needle in ["331/370", "263/370", "277/370", "CAU_SELECTOR_FEATURE_LOO_AUDIT_REPORT.md"]:
+        expect_doc_contains(docs, ["reviewer_summary", "final_claim_contract", "checklist", "claim_package"], needle, failures)
+
     readiness_counts = {
         ("high_quality_empirical_submission", "pass"): 6,
         ("high_quality_empirical_submission", "caution"): 0,
         ("top_tier_methods_dominance", "caution"): 1,
-        ("top_tier_methods_dominance", "not_met"): 4,
+        ("top_tier_methods_dominance", "not_met"): 5,
     }
     for (required_for, status), expected_count in readiness_counts.items():
         got = sum(
@@ -1216,8 +1296,8 @@ def main() -> None:
                 f"{required_for}/{status}, got {got}",
                 failures,
             )
-    if len(submission_readiness) != 11:
-        fail(f"submission-readiness audit expected 11 criteria rows, got {len(submission_readiness)}", failures)
+    if len(submission_readiness) != 12:
+        fail(f"submission-readiness audit expected 12 criteria rows, got {len(submission_readiness)}", failures)
 
     readiness_expected = {
         "empirical_v02_fresh_gate": ("pass", ["340/500", "338/500", "197/250", "192/250", "143/250", "146/250"]),
@@ -1227,6 +1307,10 @@ def main() -> None:
         "methods_candidate_breakthrough_validation": (
             "not_met",
             ["198/250", "31/40", "81/100", "84/100", "worse on 2/2", "145/250", "154/250"],
+        ),
+        "methods_sota_candidate_sweep": (
+            "not_met",
+            ["16/20", "17/20", "10/20", "12/20", "13/20"],
         ),
         "methods_second_non_can_task": ("caution", ["15/150", "5/150"]),
         "methods_validated_policy_proxy": ("not_met", ["2/11"]),
@@ -1275,7 +1359,7 @@ def main() -> None:
     expect_doc_contains(
         docs,
         ["latex", "iclr_latex", "markdown"],
-        "fresh all-demo/all-positive diagnostic rows remain unrun",
+        "fresh all-demo/all-positive diagnostic rows remain incomplete",
         failures,
     )
     expect_doc_contains(

@@ -1,0 +1,4 @@
+split,screen_id,checkpoint_name,threshold_source,gate_feature,gate_direction,gate_threshold,opened_initial_demo_ids,opened_initial_count,opened_episodes,positive_successes,cau_successes,routed_successes,eval_episodes,gains_vs_positive,losses_vs_positive,delta_vs_positive,status
+505,first20,model_epoch_100,Can404 post-hoc anchor feature-gate preflight,initial_anchor_pos_dist_mean,gt,2.883000,demo_29 demo_39 demo_53,3,6,15,12,15,20,1,1,0,fresh_screen_mixed
+505,first20,model_epoch_200,Can404 post-hoc anchor feature-gate preflight,initial_anchor_pos_dist_mean,gt,2.883000,demo_29 demo_39 demo_53,3,6,15,15,16,20,1,0,1,fresh_screen_positive
+505,eval50,model_epoch_200,Can404 post-hoc anchor feature-gate preflight,initial_anchor_pos_dist_mean,gt,2.883000,demo_29 demo_39 demo_53,3,15,40,43,41,50,1,0,1,fresh_screen_positive

@@ -1,0 +1,47 @@
+{
+  "base_metadata": {
+    "anchor_demo_count": 50,
+    "extra_bad_demo_count": 9,
+    "extra_bad_masked_fraction": 0.1576923076923077,
+    "extra_bad_mass": 41,
+    "extra_demo_count": 80,
+    "extra_mass_fraction_total": 0.047178370531663946,
+    "extra_positive_demo_count": 5,
+    "extra_positive_mass": 219,
+    "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+    "margin_threshold": 2.0,
+    "positive_diagnostics": "results/final_paper_v02/per_seed/can_paired_pos40_bad80_split303_positive_only_nn_policy0/setup/diagnostics.json",
+    "score_rankings": "results/final_paper_v02/score_diagnostics/can_paired_pos40_bad80_split303_policy0/demo_rankings.csv",
+    "score_threshold": 0.2,
+    "split_path": "results/final_paper_v02/splits/can_paired_pos40_bad80_split303/split_indices.json",
+    "total_selected_mass": 5511,
+    "total_transition_count": 12364,
+    "train_demo_count": 130,
+    "weighted_diagnostics": "results/final_paper_v02/per_seed/can_paired_pos40_bad80_split303_weighted_bc_policy0/setup/diagnostics.json"
+  },
+  "base_weights": "results/sota_candidate/candidate_c_split303_sequence_mask_preflight/candidate_c_sequence_mask_weights.hdf5",
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "negative_loss_scope": "selected",
+  "obs_keys": [
+    "robot0_eef_pos",
+    "robot0_eef_quat",
+    "robot0_gripper_qpos",
+    "object"
+  ],
+  "selected_retrieval": "action_conflict",
+  "selected_summary": {
+    "hidden_bad_negative_loss_mass": 396,
+    "hidden_positive_negative_loss_mass": 5115,
+    "negative_loss_mass": 5511,
+    "negative_loss_scope": "selected",
+    "retrieval_mode": "action_conflict",
+    "selected_negative_action_distance_mean": "3.727614",
+    "selected_negative_action_distance_p25": "2.265296",
+    "selected_negative_action_distance_p50": "3.619538",
+    "selected_negative_action_distance_p75": "5.126959",
+    "selected_negative_obs_distance_mean": "3.810515",
+    "selected_negative_state_action_distance_mean": "5.490323"
+  },
+  "split_path": "results/final_paper_v02/splits/can_paired_pos40_bad80_split303/split_indices.json",
+  "top_k": 16
+}

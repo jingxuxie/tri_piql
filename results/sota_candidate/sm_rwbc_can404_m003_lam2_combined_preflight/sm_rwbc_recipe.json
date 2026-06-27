@@ -1,0 +1,46 @@
+{
+  "hdf5_path": "data/robomimic/v1.5/can/paired/low_dim_v15.hdf5",
+  "obs_keys": [
+    "robot0_eef_pos",
+    "robot0_eef_quat",
+    "robot0_gripper_qpos",
+    "object"
+  ],
+  "reference_summary": {
+    "action_dim": 7,
+    "negative_reference_transitions": 848,
+    "obs_dim": 23,
+    "positive_reference_transitions": 1118,
+    "unlabeled_train_transitions": 11461
+  },
+  "score_rankings": "results/final_paper_v02/score_diagnostics/can_paired_pos40_bad80_split404_policy0/demo_rankings.csv",
+  "selected_recipe": {
+    "lambda_risk": 2.0,
+    "m_min": 0.03,
+    "risk_feature": "combined"
+  },
+  "selected_summary": {
+    "all_transition_weight_max": 1.0,
+    "all_transition_weight_mean": 0.33943435549736023,
+    "all_transition_weight_min": 0.009019616059958935,
+    "hidden_bad_demo_count": 80.0,
+    "hidden_bad_mass": 1184.7942434549332,
+    "hidden_bad_mean_weight": 0.16673152148723602,
+    "hidden_bad_transition_count": 7106.0,
+    "hidden_bad_unweighted_transition_fraction": 0.6200157054358258,
+    "hidden_bad_weighted_mass_fraction": 0.3759169152239423,
+    "hidden_positive_demo_count": 40.0,
+    "hidden_positive_mass": 1966.9507179260254,
+    "hidden_positive_mean_weight": 0.4516534209251404,
+    "hidden_positive_transition_count": 4355.0,
+    "labeled_positive_count": 10.0,
+    "labeled_positive_mass": 1118.0,
+    "lambda_risk": 2.0,
+    "m_min": 0.03,
+    "risk_feature": "combined",
+    "train_demo_count": 130.0,
+    "transition_effective_sample_size": 7481.5264608191255
+  },
+  "split_path": "results/final_paper_v02/splits/can_paired_pos40_bad80_split404/split_indices.json",
+  "weighted_diagnostics": "results/final_paper_v02/per_seed/can_paired_pos40_bad80_split404_weighted_bc_policy0/setup/diagnostics.json"
+}

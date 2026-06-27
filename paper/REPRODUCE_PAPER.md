@@ -95,6 +95,12 @@ python scripts/summarize_v02_fresh_gate.py --root results/final_paper_v02
 python scripts/summarize_v02_fresh_gate_uncertainty.py --root results/final_paper_v02
 python scripts/summarize_v02_fresh_baseline_coverage.py --root results/final_paper_v02 --split-seeds 101 202 303 404 505
 python scripts/summarize_v02_router_regret_table.py --root results/final_paper_v02 --out-dir results/final_paper_v02/tables
+python scripts/summarize_sota_cau_v02_portfolio_preflight.py
+python scripts/summarize_sota_cau_v02_fresh606_endpoint_validation.py
+python scripts/summarize_sota_can606_gmm_confidence_cau_router.py
+python scripts/summarize_sota_cau_gmm_router_followup.py
+python scripts/summarize_sota_cau_selector_feature_audit.py
+python scripts/summarize_sota_candidate_sweep.py
 python scripts/summarize_submission_readiness_audit.py
 python scripts/plot_score_shape_diagnostics.py
 python scripts/summarize_can20_support_audit.py
@@ -144,6 +150,12 @@ python scripts/summarize_v02_fresh_gate.py --root results/final_paper_v02
 python scripts/summarize_v02_fresh_gate_uncertainty.py --root results/final_paper_v02
 python scripts/summarize_v02_fresh_baseline_coverage.py --root results/final_paper_v02 --split-seeds 101 202 303 404 505
 python scripts/summarize_v02_router_regret_table.py --root results/final_paper_v02 --out-dir results/final_paper_v02/tables
+python scripts/summarize_sota_cau_v02_portfolio_preflight.py
+python scripts/summarize_sota_cau_v02_fresh606_endpoint_validation.py
+python scripts/summarize_sota_can606_gmm_confidence_cau_router.py
+python scripts/summarize_sota_cau_gmm_router_followup.py
+python scripts/summarize_sota_cau_selector_feature_audit.py
+python scripts/summarize_sota_candidate_sweep.py
 python scripts/summarize_submission_readiness_audit.py
 python scripts/validate_paper_claim_numbers.py
 python scripts/validate_paper_structure.py
@@ -180,6 +192,11 @@ submission shell. Refresh `../paper/iclr2026/iclr2026_conference.sty` and
 | Fresh v0.2 baseline coverage audit | `../results/final_paper_v02/tables/v02_fresh_baseline_coverage_REPORT.md` | `../scripts/summarize_v02_fresh_baseline_coverage.py` |
 | Fresh v0.2 router support audit | `../results/final_paper_v02/tables/v02_fresh_router_support_REPORT.md` | `../scripts/summarize_v02_fresh_router_support_audit.py` |
 | v0.2 router-regret table | `../results/final_paper_v02/tables/v02_router_regret_REPORT.md` | `../scripts/summarize_v02_router_regret_table.py` |
+| SOTA-candidate sweep no-go | `../results/sota_candidate/SOTA_CANDIDATE_SWEEP_REPORT.md` | `../scripts/summarize_sota_candidate_sweep.py` |
+| CAU-plus-v0.2 portfolio preflight | `../results/sota_candidate/CAU_V02_PORTFOLIO_PREFLIGHT_REPORT.md` | `../scripts/summarize_sota_cau_v02_portfolio_preflight.py` |
+| CAU-plus-v0.2 fresh606 validation | `../results/sota_candidate/CAU_V02_FRESH606_ENDPOINT_VALIDATION_REPORT.md` | `../scripts/summarize_sota_cau_v02_fresh606_endpoint_validation.py` |
+| CAU/GMM router follow-up | `../results/sota_candidate/CAU_GMM_ROUTER_FOLLOWUP_REPORT.md` | `../scripts/summarize_sota_cau_gmm_router_followup.py` |
+| CAU selector feature LOO audit | `../results/sota_candidate/CAU_SELECTOR_FEATURE_LOO_AUDIT_REPORT.md` | `../scripts/summarize_sota_cau_selector_feature_audit.py` |
 | Master evidence tables | `../results/final_paper/tables/baseline_strength_REPORT.md` | `../scripts/summarize_master_evidence_tables.py` |
 | Candidate-family audit | `../results/final_paper/tables/candidate_family_oracle_proxy_REPORT.md` | `../scripts/summarize_candidate_family_audit.py` |
 | Hybrid support audit | `../results/final_paper/tables/hybrid_candidate_support_REPORT.md` | `../scripts/summarize_hybrid_candidate_support_audit.py` |
@@ -266,6 +283,12 @@ python -m py_compile \
   scripts/summarize_policy_quality_proxy_no_go.py \
   scripts/summarize_active_abstention_evaluation.py \
   scripts/summarize_v02_fresh_gate_uncertainty.py \
+  scripts/summarize_sota_cau_v02_portfolio_preflight.py \
+  scripts/summarize_sota_cau_v02_fresh606_endpoint_validation.py \
+  scripts/summarize_sota_can606_gmm_confidence_cau_router.py \
+  scripts/summarize_sota_cau_gmm_router_followup.py \
+  scripts/summarize_sota_cau_selector_feature_audit.py \
+  scripts/summarize_sota_candidate_sweep.py \
   scripts/validate_paper_artifact_refs.py \
   scripts/validate_paper_claim_numbers.py \
   scripts/validate_paper_structure.py \
@@ -294,6 +317,10 @@ python scripts/summarize_can_prefix_length_robustness.py
 python scripts/summarize_precision_coverage_frontier.py
 python scripts/summarize_policy_quality_proxy_no_go.py
 python scripts/summarize_active_abstention_evaluation.py
+python scripts/summarize_sota_can606_gmm_confidence_cau_router.py
+python scripts/summarize_sota_cau_gmm_router_followup.py
+python scripts/summarize_sota_cau_selector_feature_audit.py
+python scripts/summarize_sota_candidate_sweep.py
 python scripts/validate_paper_claim_numbers.py
 python scripts/validate_paper_structure.py
 python scripts/validate_paper_artifact_refs.py
@@ -314,7 +341,7 @@ Expected current validator results:
 ```text
 validated paper claim numbers and claim contract against staged CSVs and manuscript text
 validated paper figure order, figure-map rows, and PDF layout
-checked 134 unique artifact references
+checked 151 unique artifact references
 validated METHOD_FREEZE_V02 against v0.2 router code and staged artifacts
 ```
 

@@ -1,0 +1,4 @@
+heldout_split,gate_label,feature_1,direction_1,threshold_1,feature_2,direction_2,threshold_2,operator,train_episodes,train_positive_successes,train_cau_successes,train_routed_successes,train_delta_vs_positive,train_gains_vs_positive,train_losses_vs_positive,train_opened_episodes,heldout_episodes,heldout_positive_successes,heldout_cau_successes,heldout_routed_successes,heldout_delta_vs_positive,heldout_gains_vs_positive,heldout_losses_vs_positive,heldout_opened_episodes
+303,two_feature,initial_anchor_pos_dist_mean,le,1.273665,initial_anchor_neg_dist_mean,gt,2.939165,or,40,32,31,35,3,3,0,12,20,15,17,16,1,1,0,8
+404,two_feature,initial_anchor_pos_dist_mean,le,0.895210,initial_anchor_neg_dist_mean,gt,2.270789,or,40,30,32,33,3,3,0,16,20,17,16,17,0,1,1,10
+505,two_feature,initial_anchor_pos_dist_mean,le,1.273665,initial_anchor_neg_dist_mean,gt,3.131861,or,40,32,33,35,3,3,0,14,20,15,15,16,1,1,0,4
